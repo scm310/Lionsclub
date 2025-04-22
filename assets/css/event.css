@@ -1,0 +1,639 @@
+
+    /* Apply style to upcoming event cards */
+
+    :root {
+        --purple: #ffcc00;
+        --aqua: #b4fee7;
+        --violet: #a16ae8;
+        --fuchsia: #fd49a0;
+        --white: #efefef;
+        --black: #222;
+        --trueBlack: #000;
+    }
+
+    *,
+    *::before,
+    *::after {
+        box-sizing: border-box;
+    }
+
+    body {
+        background-color: var(--black);
+    }
+
+    .main {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .cards {
+        display: grid;
+        width: 250px;
+        flex-wrap: wrap;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1rem;
+    }
+
+    .cards_item {
+        display: flex;
+    }
+
+    .card_image1 {
+        display: flex;
+        height: 100px;
+        border-radius: 9px;
+        box-shadow: 0 50px 100px 0 #ffcc00;
+        /* Updated color to #ffcc00 */
+    }
+
+    .card_image img {
+        display: block;
+        width: 100%;
+        height: auto;
+        object-fit: cover;
+    }
+
+    .card1 {
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        overflow: hidden;
+        /* background: linear-gradient(115deg, #ffd700, #ffe680, #aeeffb); */
+        background: linear-gradient(120deg, #ffd700, #ffe680, #aeeffb);
+
+
+        transition: transform 0.1s linear, box-shadow 0.2s;
+        box-shadow: 0 50px 100px 0 #ffcc00;
+    }
+
+    .card_text:focus,
+    .card:focus {
+        outline: 2px dashed var(--aqua);
+    }
+
+    .card:focus,
+    .card:hover {
+        transform: scale(1.01);
+        box-shadow: 0 10px 5px -5px rgba(0, 0, 0, 0.2);
+    }
+
+    .card_content {
+        padding: 0.5rem 1rem 1rem;
+        color: var(--white);
+    }
+
+    .card_title {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 90%;
+
+        height: auto;
+        color: var(--white) !important;
+        padding: 0.5rem;
+        border-radius: 5px 0 0 5px;
+        transform: rotate(-3.3deg);
+        transform-origin: left top;
+        font-family: Georgia, Times, serif;
+        font-weight: 300;
+        postition: relative;
+        overflow: hidden;
+        z-index: 1;
+        background: #00338c;
+        /* Updated background */
+        animation: 0s 0s fly-in 0 reverse both;
+    }
+
+    @media (min-width: 535px) {
+        .card_title {
+            animation: 0.5s 0.25s fly-out 1 both;
+        }
+    }
+
+    .card:focus .card_title,
+    .card:hover .card_title {
+        animation: 0.5s ease-in 0s fly-in 1 both;
+    }
+
+    .card_text {
+        font-family: Segoe UI, Frutiger, Frutiger Linotype, Dejavu Sans, Helvetica,
+            Helvetica Neue, Arial, sans-serif;
+        line-height: 1.5;
+        text-size-adjust: 0.2px;
+        padding: 0 1rem;
+    }
+
+    .card_text p:first-of-type:first-letter {
+        font-size: 1.8em;
+        font-family: Georgia, Times, serif;
+        margin-right: 0.05em;
+    }
+
+    @media (min-width: 480px) {
+        .card_text {
+            overflow: auto;
+            max-height: 20rem;
+            scrollbar-width: thin;
+            scrollbar-color: var(--aqua) var(--violet);
+        }
+
+        .card_text::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        .card_text::-webkit-scrollbar-track {
+            background: var(--violet);
+        }
+
+        .card_text::-webkit-scrollbar-thumb {
+            background-color: var(--aqua);
+        }
+    }
+
+    .card_text strong {
+        color: var(--aqua);
+    }
+
+    .upcharge {
+        position: relative;
+        font-weight: 600;
+        background-color: var(--violet);
+        padding: 0.5rem 0.75rem;
+        color: var(--trueBlack);
+        border-radius: 0 10px;
+        z-index: 0;
+        overflow: hidden;
+    }
+
+    .upcharge::after,
+    .upcharge::before {
+        content: "+";
+        display: block;
+        line-height: 0;
+        font-size: 3rem;
+        position: absolute;
+        color: var(--purple);
+        z-index: -1;
+        opacity: 0.3;
+    }
+
+    .upcharge::before {
+        left: 0;
+        top: 0.5rem;
+    }
+
+    .upcharge::after {
+        right: 0;
+        bottom: 1.25rem;
+    }
+
+    .note {
+        display: block;
+        text-align: center;
+        padding: 0.5rem;
+        font-weight: 900;
+        background-image: linear-gradient(-45deg,
+                transparent 10%,
+                var(--aqua) 10.5%,
+                var(--aqua) 90%,
+                transparent 90.5%);
+        color: var(--black);
+        font-size: 1.3em;
+        font-style: italic;
+        margin-top: 1rem;
+    }
+
+    @keyframes fly-in {
+        0% {
+            top: 0;
+            right: 0;
+            font-size: 13px;
+        }
+
+        25% {
+            top: 0;
+            right: -200%;
+            font-size: 13x;
+        }
+
+        26% {
+            font-size: 13px;
+        }
+
+        100% {
+            top: 2rem;
+            right: 0;
+            font-size: 13px;
+        }
+    }
+
+    @keyframes fly-out {
+        0% {
+            top: 2rem;
+            right: 0;
+            font-size: 12px;
+        }
+
+        50% {
+            top: 0;
+            right: -200%;
+            font-size: 12px;
+        }
+
+        100% {
+            top: 0;
+            right: 0;
+            font-size: 12px;
+        }
+    }
+
+    .member-heading {
+        font-size: 19px !important;
+        font-weight: bold !important;
+        text-align: center !important;
+        width: 100% !important;
+        color: #333 !important;
+        padding: 15px 0 !important;
+        border-radius: 5px !important;
+        margin-bottom: 15px !important;
+    }
+
+    /* Tabs should be in a single row and centered */
+    .nav-pills {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        justify-content: center !important;
+        overflow-x: auto !important;
+        white-space: nowrap !important;
+        padding: 10px !important;
+        border-radius: 5px !important;
+    }
+
+    /* Default tab styling - transparent background */
+    .nav-pills .nav-link {
+        color: #000 !important;
+        background-color: transparent !important;
+        border: .5px solid black !important;
+        font-weight: 600;
+        padding: 10px 15px;
+    }
+
+    /* Active tab styling */
+    .nav-pills .nav-link.active {
+        background-color: #003366 !important;
+        color: #ffffff !important;
+        font-weight: bold;
+        border-bottom: 2px solid #003366 !important;
+    }
+
+    /* Tab Content Styling */
+    .tab-content {
+        background: linear-gradient(115deg, #0f0b8c, #77dcf5);
+        padding: 20px !important;
+        border-radius: 5px !important;
+        min-height: 200px !important;
+        border: 1px solid #ddd !important;
+    }
+
+    /* Member Card Styling */
+    .member-card {
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease-in-out;
+        width: 200px;
+    }
+
+    .member-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .profile-img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        /* Fixed missing value */
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .profile-img:hover {
+        transform: scale(1.1);
+    }
+
+    .card {
+        width: 100%;
+
+        margin: auto;
+    }
+
+    .card-img-top {
+        height: 120px;
+        object-fit: cover;
+    }
+
+    .card-body {
+        padding: 10px;
+    }
+
+    .card-title {
+        font-size: 16px;
+        font-weight: bold;
+    }
+
+    .card-text {
+        font-size: 14px;
+    }
+
+    .tab-content {
+        animation: fadeIn 0.5s ease-in-out;
+    }
+
+    .tab-pane p {
+        opacity: 0;
+        transform: translateY(20px);
+        animation: slideUp 0.5s ease-out forwards;
+        animation-delay: 0.2s;
+    }
+
+
+
+
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+
+
+    #eventDetailsCard {
+        position: absolute;
+        top: 100px;
+        /* Adjust based on header */
+        right: 20px;
+        /* Shift it to the right */
+        width: 350px;
+        max-height: 500px;
+        overflow-y: auto;
+        background: #fff;
+        border: 1px solid #ddd;
+        box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+        padding: 15px;
+        border-radius: 8px;
+        display: none;
+        /* Hidden initially */
+        transition: all 0.3s ease-in-out;
+        z-index: 1000;
+        /* Ensure it appears above other elements */
+    }
+
+    .eventImagesContainer img {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        margin: 5px;
+        border-radius: 5px;
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .eventImagesContainer img:hover {
+        transform: scale(1.2);
+    }
+
+    #mainContent {
+        display: flex;
+        transition: margin-right 0.3s ease-in-out;
+        position: relative;
+    }
+
+
+    /* Ensure the parent containers allow sticky positioning */
+    .container {
+        position: relative;
+    }
+
+    /* Make the tab navigation sticky */
+    #customTabs {
+        position: sticky;
+        top: 0;
+        color: white;
+        z-index: 100;
+        /* Ensure a solid background */
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        /* Optional: Subtle shadow */
+    }
+
+    /* Ensure month navigation stays sticky below the tabs */
+    .month-link {
+        position: sticky;
+        top: 60px;
+        /* Adjust based on the tab height */
+        z-index: 99;
+        background-color: transparent !important;
+        color: white;
+        padding: 5px 20px;
+        border: 2px solid transparent;
+        border-radius: 8px;
+        font-weight: bold;
+        background-image:
+            linear-gradient(to right, #000000, #000000),
+            /* Button background */
+            linear-gradient(45deg, #00f, #ff0);
+        /* Border gradient */
+        background-origin: border-box;
+        background-clip: padding-box, border-box;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .month-link:hover {
+        color: yellow;
+        background-color: rgba(255, 255, 255, 0.1);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+    }
+
+    .btn.active {
+        color: yellow !important;
+        border: 2px solid transparent !important;
+        background-image:
+            linear-gradient(to right, #000000, #000000),
+            linear-gradient(45deg, #fff, #ff0) !important;
+        background-origin: border-box;
+        background-clip: padding-box, border-box;
+        box-shadow: 0 6px 16px rgba(255, 255, 0, 0.4) !important;
+    }
+
+
+
+    .sticky-tabs {
+        position: sticky;
+        background: #fff;
+        top: 0;
+        border-radius: 5px;
+        width: 1230px;
+
+        transform: translateX(-56px);
+    }
+
+    #noUpcomingEvents {
+        color: white !important;
+    }
+
+    .text-light {
+        font-size: 13px;
+    }
+
+    /* Style the main event container */
+    #eventDetailsContainer {
+        background-color: #00509e;
+        /* Gradient background */
+        border-radius: 20px;
+        /* Rounded corners */
+        color: #000;
+        /* White text */
+        padding: 20px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        border-left: 4px solid #ffc107;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    /* Card Styling */
+    .event-card {
+        background: #ffffff;
+        border-radius: 15px;
+        padding: 8px;
+        width: 330px;
+        text-align: center;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Event Images */
+    #eventImagesContainer {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    #eventImagesContainer img {
+        width: 50px;
+        height: 50px;
+        border-radius: 10px;
+        /* Circular images */
+        object-fit: fill;
+        border: 3px solid #fff;
+    }
+
+    /* Text Styles */
+    .event-card h5 {
+        font-size: 15px;
+        font-weight: bold;
+        color: black;
+    }
+
+    /* Close Button */
+    #closeEventDetails {
+        background-color: rgba(255, 255, 255, 0.6);
+        border-radius: 50%;
+        padding: 5px;
+    }
+
+
+    p {
+        margin-top: 0;
+        margin-bottom: 1rem;
+        text-align: justify;
+    }
+
+    .details-container p {
+        font-size: 11px !important;
+        margin: 2px 0;
+        color: #333;
+        text-align: center;
+        line-height: 1.2;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        #eventDetailsContainer {
+            width: 90%;
+            margin-top: 150px;
+        }
+
+        .sticky-tabs {
+            width: -webkit-fill-available;
+            transform: translateX(0px);
+            margin-bottom: 5px;
+            /* Remove horizontal shift */
+        }
+
+        /* Make the tab navigation sticky */
+        #customTabs {
+            width: fit-content;
+            position: sticky;
+            top: 0;
+            color: white;
+            z-index: 100;
+            /* Ensure a solid background */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            /* Optional: Subtle shadow */
+        }
+
+    }
+
+    @media (min-width: 992px) {
+        .col-lg-5th {
+            flex: 0 0 20%;
+            max-width: 20%;
+        }
+    }
+
+    @media (min-width: 992px) {
+
+        #eventsContainer {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+        }
+
+        #eventsContainer .event-row {
+            flex: 0 0 20%;
+            max-width: 20%;
+        }
+    }
+
+    @media (max-width: 991.98px) {
+        #eventsContainer .event-row {
+            flex: 0 0 48%;
+            max-width: 48%;
+        }
+
+        .footer p {
+            text-align: center;
+        }
+    }
