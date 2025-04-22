@@ -106,11 +106,6 @@
                                     {{ ucwords(strtolower(preg_replace('/[^a-zA-Z\s]/', '', $chapter->chapter_name))) }} - Leadership
                                 </h5>
 
-
-
-
-
-
                             </div>
                             <div class="row leader-section justify-content-center">
                                 @foreach ($members->where('account_name', $chapter->id)->whereIn('position', ['President', 'Secretary', 'Treasurer']) as $leader)
@@ -161,10 +156,11 @@
                         </div>
 
                         <div class="members-container">
-                            <h5 class="mt-1 members-title text-center text-white">
-                                {{ ucwords(strtolower(preg_replace('/[^a-zA-Z\s]/', '', $chapter->chapter_name))) }} - Members</h5>
+                            <h5 class="mt-1 members-title text-center mx-auto w-50  rounded" style="background: linear-gradient(115deg, #0f0b8c, #77dcf5); color: white;">
+                                {{ ucwords(strtolower(preg_replace('/[^a-zA-Z\s]/', '', $chapter->chapter_name))) }} - <span class="">{{ $members->where('account_name', $chapter->id)->count() }}</span> Members
+                            </h5>
                             <div class="row member-section justify-content-center">
-                                @foreach ($members->where('account_name', $chapter->id)->whereNotIn('position', ['President', 'Secretary', 'Treasurer']) as $member)
+                                @foreach ($members->where('account_name', $chapter->id) as $member)
                                     @php
                                         $fullName = $member->first_name . ' ' . $member->last_name;
                                         $displayName =

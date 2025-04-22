@@ -11,7 +11,7 @@ class DGTeam extends Model
 
     protected $table = 'dg_team';
 
-    protected $fillable = ['member_id', 'position'];
+    protected $fillable = ['member_id', 'position','year'];
 
     public function member()
     {

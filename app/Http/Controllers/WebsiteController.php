@@ -38,7 +38,7 @@ class WebsiteController extends Controller
         $images2 = AdImage2::all(); // Fetch images from AdImage2 table
         $image1s = Image1::all(); // Fetch images from image1s table
         $image2s = Image2::all(); // Fetch images from image2s table
-        $image3s = Image3::all(); 
+        $image3s = Image3::all();
 
 
 
@@ -71,8 +71,9 @@ class WebsiteController extends Controller
 
    public function dgteam()
     {
-        $dgTeamMembers = DB::table('dg_team')
+        $dgTeamMembers_current = DB::table('dg_team')
         ->join('add_members', 'dg_team.member_id', '=', 'add_members.id')
+        ->where('dg_team.year', 'CurrentYear')
         ->whereIn('dg_team.position', [
             'District Governor',
             'Past District Governor',
@@ -82,18 +83,54 @@ class WebsiteController extends Controller
             'Cabinet Treasurer'
         ])
         ->select(
+            'dg_team.year',
             'dg_team.position',
             'add_members.first_name',
             'add_members.last_name',
             'add_members.profile_photo',
             'add_members.phone_number',
             'add_members.email_address',
-            'add_members.member_id'
+            'add_members.member_id',
+            'dg_team.updated_at'
         )
-        ->get();
+        ->orderByRaw("FIELD(dg_team.position, 'District Governor', 'Past District Governor', '1st Vice Governor', '2nd Vice Governor', 'Cabinet Secretary', 'Cabinet Treasurer')")
+        ->orderBy('dg_team.updated_at', 'desc')
+        ->get()
+        ->unique('position') // Keep only the latest updated row for each position
+    ->values();
+
+        $dgTeamMembers_upcoming = DB::table('dg_team')
+        ->join('add_members', 'dg_team.member_id', '=', 'add_members.id')
+        ->where('dg_team.year', 'UpCommingYear')
+        ->whereIn('dg_team.position', [
+            'District Governor',
+            'Past District Governor',
+            '1st Vice Governor',
+            '2nd Vice Governor',
+            'Cabinet Secretary',
+            'Cabinet Treasurer'
+        ])
+        ->select(
+            'dg_team.year',
+            'dg_team.position',
+            'add_members.first_name',
+            'add_members.last_name',
+            'add_members.profile_photo',
+            'add_members.phone_number',
+            'add_members.email_address',
+            'add_members.member_id',
+            'dg_team.updated_at'
+        )
+        ->orderByRaw("FIELD(dg_team.position, 'District Governor', 'Past District Governor', '1st Vice Governor', '2nd Vice Governor', 'Cabinet Secretary', 'Cabinet Treasurer')")
+        ->orderBy('dg_team.updated_at', 'desc')
+        ->get()
+        ->unique('position')
+    ->values();
 
 
-        return view('member.teamdg', compact('dgTeamMembers'));
+
+
+        return view('member.teamdg', compact('dgTeamMembers_current','dgTeamMembers_upcoming'));
     }
 
 
