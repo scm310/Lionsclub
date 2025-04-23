@@ -13,11 +13,12 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap JS (for Tabs) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
 
 </head>
 
 <style>
-    
     .top-ad-banner {
         align-items: center;
         justify-content: center;
@@ -63,12 +64,12 @@
     .header {
         position: sticky;
         top: 1;
-        background-color:#003366;
+        background-color: #003366;
         z-index: 1000;
         padding: 10px;
         text-align: center;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        height:67px;
+        height: 67px;
     }
 
     /* Sticky Top Ad Banner */
@@ -136,14 +137,14 @@
     }
 
     .zoom-image,
-.zoom-image1 {
-    transition: transform 0.3s ease;
-}
+    .zoom-image1 {
+        transition: transform 0.3s ease;
+    }
 
-.zoom-image:hover,
-.zoom-image1:hover {
-    transform: scale(3.2) translateY(30px);
-}
+    .zoom-image:hover,
+    .zoom-image1:hover {
+        transform: scale(3.2) translateY(30px);
+    }
 
 
     .dropdown-menu {
@@ -189,21 +190,23 @@
             transform: scale(1);
         }
     }
+
     .animated-btn {
-    border: 1px solid #ffcc00;
-    background: linear-gradient(181deg, rgb(2, 0, 97) 15%, rgb(97, 149, 219) 158.5%);
-    animation: pulse 1.5s infinite ease-in-out;
-    padding: 6px 12px;
-    font-size: 12px;
-    border-radius: 4px;
-    width: auto;
-    text-align: center;
-    margin-top: 3px; /* This moves the button slightly down */
-}
+        border: 1px solid #ffcc00;
+        background: linear-gradient(181deg, rgb(2, 0, 97) 15%, rgb(97, 149, 219) 158.5%);
+        animation: pulse 1.5s infinite ease-in-out;
+        padding: 6px 12px;
+        font-size: 12px;
+        border-radius: 4px;
+        width: auto;
+        text-align: center;
+        margin-top: 3px;
+        /* This moves the button slightly down */
+    }
 
 
     .nav-menu a {
-    font-weight: normal;
+        font-weight: normal;
     }
 
 
@@ -287,50 +290,73 @@
         }
 
         .zoom-image,
-.zoom-image1 {
-    transition: transform 0.3s ease;
-}
+        .zoom-image1 {
+            transition: transform 0.3s ease;
+        }
 
-.zoom-image:hover,
-.zoom-image1:hover {
-    transform: scale(3.2) translateY(30px);
-}
+        .zoom-image:hover,
+        .zoom-image1:hover {
+            transform: scale(3.2) translateY(30px);
+        }
 
     }
 
     .nav-menu li {
-    margin: 0 10px;
-}
-
-
-
-/* On mobile: change only the top value */
-@media (max-width: 768px) {
-    .nav-container {
-        top: 370px;
+        margin: 0 10px;
     }
 
-    .mb {
-        display: none;
+
+
+    /* On mobile: change only the top value */
+    @media (max-width: 768px) {
+        .nav-container {
+            top: 370px;
+        }
+
+        .mb {
+            display: none;
+        }
+
+
     }
 
-   
-}
+    @media (max-width: 768px) {
+        .stickyhead {
+            padding: 0px !important;
+            /* padding cannot be negative */
+        }
 
-@media (max-width: 768px) {
-    .stickyhead {
-        padding: 0px !important; /* padding cannot be negative */
+        .nav-menu a:hover {
+            background-color: white;
+        }
+        .social{
+        margin-left:155px
     }
 
-    .nav-menu a:hover{
-        background-color: white;
+
+    footer {
+        flex-direction: column !important;
+        align-items: center !important;
+        text-align: center !important;
+        gap: 10px !important;
     }
-}
 
+    footer .social {
+        justify-content: center !important;
+        gap: 10px !important;
+        margin: 8px 0;
+    }
 
+    footer p {
+        font-size: 12px !important;
+        margin: 2px 0 !important;
+    }
 
+    }
 
-
+    .social{
+        margin-left:155px
+    }
 </style>
 
 {{-- popup banner start--}}
@@ -339,162 +365,191 @@
 
 {{-- popup banner End--}}
 
-    <div class="stickyhead">
+<div class="stickyhead">
 
-   <!-- Header Section -->
-        <div class="top-ad-container mobile">
-            @include('Frontend.bannersincludes.banner')
-        </div>
-
-        
-        <div class="mobilescreen">
-            @include('Frontend.mobile.mobilebanner')
-        </div>
-        </div>
+    <!-- Header Section -->
+    <div class="top-ad-container mobile">
+        @include('Frontend.bannersincludes.banner')
+    </div>
   
 
-        <!-- Navigation Menu -->
-        <div class="nav-container mb">
-            <div class="nav-menu-wrapper">
-                <ul class="nav-menu">
-                    <li><a href="{{ route('index') }}"
-                            class="{{ request()->routeIs('index') ? 'active' : '' }}">Home</a>
-                    </li>
-                    <li>
-                        <a href="{{ route('international_officers') }}"
-                            class="{{ request()->routeIs('international_officers', 'dgteam', 'pastdistrictgovernor', 'districtchairperson', 'districtgovernor', 'regionmember', 'chapter') ? 'active' : '' }}">
-                            Member Directory
-                        </a>
-                    </li>
-
-                    <!-- Resources Menu with Clickable Submenu -->
-                    <li class="nav-item dropdown">
-    <a class="nav-link dropdown-toggle {{ request()->routeIs('award.index') ? 'active' : '' }}" href="#" id="resourcesDropdown" role="button"
-       data-bs-toggle="dropdown" aria-expanded="false">
-        Resources
-    </a>
-    <ul class="dropdown-menu" aria-labelledby="resourcesDropdown">
-        <li><a class="dropdown-item" href="{{ route('award.index') }}">Awards</a></li>
-    </ul>
-</li>
+    <div class="mobilescreen">
+        @include('Frontend.mobile.mobilebanner')
+    </div>
+</div>
 
 
+<!-- Navigation Menu -->
+<div class="nav-container mb">
+    <div class="nav-menu-wrapper">
+        <ul class="nav-menu">
+            <li><a href="{{ route('index') }}"
+                    class="{{ request()->routeIs('index') ? 'active' : '' }}">Home</a>
+            </li>
+            <li>
+                <a href="{{ route('international_officers') }}"
+                    class="{{ request()->routeIs('international_officers', 'dgteam', 'pastdistrictgovernor', 'districtchairperson', 'districtgovernor', 'regionmember', 'chapter') ? 'active' : '' }}">
+                    Member Directory
+                </a>
+            </li>
 
-
-                    <li><a href="{{ route('webevents') }}"
-                            class="{{ request()->routeIs('webevents') ? 'active' : '' }}">Events</a></li>
-
-                    <li><a href="{{ route('member.gallery') }}"
-                            class="{{ request()->routeIs('member.gallery') ? 'active' : '' }}">Gallery</a></li>
-                    <li>
-                        <a href="{{ route('contact') }}"
-                            class="{{ request()->is('contact') || request()->is('membership-enquiry') || request()->is('donation') ? 'active' : '' }}">
-                            Contact
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('careerenquiry.form') }}"
-                            class="{{ request()->routeIs('careerenquiry.form') ? 'active' : '' }}">
-                            Career Enquiry
-                        </a>
-                    </li>
-                    <li class="nav-item ">
-
-                        <a href="{{ route('membership.form') }}" class=" animated-btn">Join Us</a>
-
-                    </li>
-                    <li class="nav-item ">
-
-                        <a href="{{ route('member.login') }}" class=" animated-btn">Member Login</a>
-
-                    </li>
-
+            <!-- Resources Menu with Clickable Submenu -->
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle {{ request()->routeIs('award.index') ? 'active' : '' }}" href="#" id="resourcesDropdown" role="button"
+                    data-bs-toggle="dropdown" aria-expanded="false">
+                    Resources
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="resourcesDropdown">
+                    <li><a class="dropdown-item" href="{{ route('award.index') }}">Awards</a></li>
                 </ul>
-            </div>
-        </div>
+            </li>
+
+
+
+
+            <li><a href="{{ route('webevents') }}"
+                    class="{{ request()->routeIs('webevents') ? 'active' : '' }}">Events</a></li>
+
+            <li><a href="{{ route('member.gallery') }}"
+                    class="{{ request()->routeIs('member.gallery') ? 'active' : '' }}">Gallery</a></li>
+            <li>
+                <a href="{{ route('contact') }}"
+                    class="{{ request()->is('contact') || request()->is('membership-enquiry') || request()->is('donation') ? 'active' : '' }}">
+                    Contact
+                </a>
+            </li>
+            <li>
+                <a href="{{ route('careerenquiry.form') }}"
+                    class="{{ request()->routeIs('careerenquiry.form') ? 'active' : '' }}">
+                    Career Enquiry
+                </a>
+            </li>
+            <li class="nav-item ">
+
+                <a href="{{ route('membership.form') }}" class=" animated-btn">Join Us</a>
+
+            </li>
+            <li class="nav-item ">
+
+                <a href="{{ route('member.login') }}" class=" animated-btn">Member Login</a>
+
+            </li>
+
+        </ul>
     </div>
-    <!-- JavaScript to toggle dropdown on click -->
-    <script>
-        function toggleDropdown() {
-            var dropdown = document.getElementById("resourcesDropdown");
-            dropdown.classList.toggle("show");
-        }
-    </script>
+</div>
+</div>
+<!-- JavaScript to toggle dropdown on click -->
+<script>
+    function toggleDropdown() {
+        var dropdown = document.getElementById("resourcesDropdown");
+        dropdown.classList.toggle("show");
+    }
+</script>
 
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            document.querySelectorAll(".resources-link").forEach(function(link) {
-                link.addEventListener("click", function(event) {
-                    event.preventDefault(); // Prevent navigation
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        document.querySelectorAll(".resources-link").forEach(function(link) {
+            link.addEventListener("click", function(event) {
+                event.preventDefault(); // Prevent navigation
 
-                    let menu = this.nextElementSibling;
+                let menu = this.nextElementSibling;
 
-                    // Close other open dropdowns
-                    document.querySelectorAll(".dropdown-menu").forEach(function(otherMenu) {
-                        if (otherMenu !== menu) {
-                            otherMenu.style.display = "none";
-                        }
-                    });
-
-                    // Toggle visibility of the clicked dropdown
-                    menu.style.display = (menu.style.display === "block") ? "none" : "block";
+                // Close other open dropdowns
+                document.querySelectorAll(".dropdown-menu").forEach(function(otherMenu) {
+                    if (otherMenu !== menu) {
+                        otherMenu.style.display = "none";
+                    }
                 });
-            });
 
-            // Close dropdown when clicking outside
-            document.addEventListener("click", function(event) {
-                if (!event.target.closest(".dropdown")) {
-                    document.querySelectorAll(".dropdown-menu").forEach(function(menu) {
-                        menu.style.display = "none";
-                    });
-                }
+                // Toggle visibility of the clicked dropdown
+                menu.style.display = (menu.style.display === "block") ? "none" : "block";
             });
         });
-    </script>
 
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            document.querySelector("#resourcesDropdown").addEventListener("click", function(event) {
-                event.preventDefault(); // Prevent default link behavior
-
-                let menu = this.nextElementSibling; // Get the dropdown menu
-
-                // Toggle only this dropdown
-                menu.classList.toggle("show");
-            });
-
-            // Close dropdown when clicking outside
-            document.addEventListener("click", function(event) {
-                if (!event.target.closest(".dropdown")) {
-                    document.querySelectorAll(".dropdown-menu").forEach(function(menu) {
-                        menu.classList.remove("show");
-                    });
-                }
-            });
+        // Close dropdown when clicking outside
+        document.addEventListener("click", function(event) {
+            if (!event.target.closest(".dropdown")) {
+                document.querySelectorAll(".dropdown-menu").forEach(function(menu) {
+                    menu.style.display = "none";
+                });
+            }
         });
-    </script>
+    });
+</script>
 
 
-    <!-- Main Content Area -->
-    <div class="content">
-        @yield('content')
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        document.querySelector("#resourcesDropdown").addEventListener("click", function(event) {
+            event.preventDefault(); // Prevent default link behavior
+
+            let menu = this.nextElementSibling; // Get the dropdown menu
+
+            // Toggle only this dropdown
+            menu.classList.toggle("show");
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener("click", function(event) {
+            if (!event.target.closest(".dropdown")) {
+                document.querySelectorAll(".dropdown-menu").forEach(function(menu) {
+                    menu.classList.remove("show");
+                });
+            }
+        });
+    });
+</script>
+
+
+<!-- Main Content Area -->
+<div class="content">
+    @yield('content')
+</div>
+
+<!-- Footer -->
+<br> <br>
+
+<footer class="site-footer"  style="bottom: 0; left: 0; width: 100%; background-color: #003366; padding: 15px 16px; box-shadow: 0 -2px 5px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center; color: white; font-size: 11px; line-height: 1.4; z-index: 9999; margin-top:-45px;">
+
+<?php
+
+$footer = \App\Models\FooterSetting::first();
+
+?>
+   <p style="margin: 0;">&copy; {{ date('Y') }} {{ $footer->copyright_text ?? '@copyright' }}</p>
+
+    @if($footer)
+    <div style="display: flex; gap: 15px;" class="social">
+        @if($footer->facebook_link)
+        <a href="{{ $footer->facebook_link }}" target="_blank" style="color: white;"><i class="fab fa-facebook-f"></i></a>
+        @endif
+        @if($footer->twitter_link)
+        <a href="{{ $footer->twitter_link }}" target="_blank" style="color: white;"><i class="fab fa-twitter"></i></a>
+        @endif
+        @if($footer->instagram_link)
+        <a href="{{ $footer->instagram_link }}" target="_blank" style="color: white;"><i class="fab fa-instagram"></i></a>
+        @endif
     </div>
 
-    <!-- Footer -->
-     <br>   <br>
-     
-     <footer style="bottom: 0; margin-top:-48px;   left: 0; width: 100%; height: 50px; background-color: #003366; padding: 4px 16px; box-shadow: 0 -2px 5px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center; color: white; font-size: 11px; line-height: 1.4; z-index: 9999;">
-    <p style="margin: 0;">&copy; {{ date('Y') }} Lions Club. All Rights Reserved.</p>
     <p style="margin: 0;">Powered by Accelerated Development Machines</p>
+    @else
+    <div style="display: flex; gap: 30px;">
+        <p style="margin: 0;">&copy; {{ date('Y') }} Lions Club. All Rights Reserved.</p>
+        <p style="margin: 0;">Powered by Accelerated Development Machines</p>
+    </div>
+    @endif
+
 </footer>
 
 
 
 
+
+
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function() {
         const activeItem = document.querySelector(".nav-menu a.active");
 
         if (activeItem && window.innerWidth <= 768) {
@@ -513,4 +568,3 @@
 </body>
 
 </html>
-

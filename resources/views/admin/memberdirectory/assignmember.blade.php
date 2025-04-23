@@ -114,6 +114,20 @@
     </script>
 @endif
 
+@if(session('error'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: '{{ session('error') }}',
+                confirmButtonColor: '#d33',
+                confirmButtonText: 'OK'
+            });
+        });
+    </script>
+@endif
+
 
         <script>
             setTimeout(function() {
@@ -145,7 +159,7 @@
                 <option value="International officers">International Officers</option>
                 <option value="DG Team">DG Team</option>
                 <option value="District Governor">District Governor</option>
-                <option value="Club Position">Club Position</option>
+             
                 <option value="Region member">Region Member</option>
                 <option value="Past Governor">Past Governor</option>
                 <option value="District Chairperson">District Chairperson</option>

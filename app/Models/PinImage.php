@@ -5,12 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ClubPosition extends Model
+class PinImage extends Model
 {
     use HasFactory;
 
-    protected $table = 'club_positions';
+    protected $table = 'pin_images';
 
-    protected $fillable = ['member_id', 'position','password'];
+    protected $fillable = [
+        'image_path',
+    ];
 }
-

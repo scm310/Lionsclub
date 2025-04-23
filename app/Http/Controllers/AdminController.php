@@ -11,29 +11,56 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 class AdminController extends Controller
 {
-    public function dashboard() {
+    public function dashboard()
+    {
         $memberCount = DB::table('add_members')->count();
         $chapterCount = DB::table('chapters')->count();
         $districtCount = DB::table('district')->count();
-    
-        // ✅ Unique IP addresses only
+
+        // ✅ Unique visitor IPs
         $visitorCount = DB::table('visitors')
             ->select('ip_address')
             ->distinct()
             ->count('ip_address');
-    
+
+        // ✅ Get upcoming birthdays: from 8 to 14 days from today
+        $start = Carbon::today()->addDays(7);
+        $end = Carbon::today()->addDays(14);
+
+        $startDayOfYear = $start->dayOfYear;
+        $endDayOfYear = $end->dayOfYear;
+
+        if ($endDayOfYear < $startDayOfYear) {
+            // Handles year-end wraparound
+            $upcomingBirthdays = DB::table('add_members')
+                ->whereRaw("DAYOFYEAR(dob) >= ? OR DAYOFYEAR(dob) <= ?", [
+                    $startDayOfYear, $endDayOfYear
+                ])
+                ->select('first_name', 'last_name', 'dob')
+                ->get();
+        } else {
+            $upcomingBirthdays = DB::table('add_members')
+                ->whereRaw("DAYOFYEAR(dob) BETWEEN ? AND ?", [
+                    $startDayOfYear, $endDayOfYear
+                ])
+                ->select('first_name', 'last_name', 'dob')
+                ->get();
+        }
+
+        $birthdayCount = $upcomingBirthdays->count();
+
         return view('admin.dashboard', [
             'memberCount' => $memberCount,
             'chapterCount' => $chapterCount,
             'districtCount' => $districtCount,
             'visitorCount' => $visitorCount,
+            'birthdayCount' => $birthdayCount,
+            'upcomingBirthdays' => $upcomingBirthdays,
         ]);
     }
-    
-    
-    
 
-    
+
+
 
     public function logout(Request $request)
 {
@@ -64,18 +91,18 @@ public function viewBannerClicks(Request $request)
     $topClicks = BannerClick::where('banner_type', 'top')->sum('click_count');
 
     $bottomClicks = BannerClick::where('banner_type', 'bottom')->sum('click_count');
-    $leftClicks = BannerClick::where('banner_type', 'left')->sum('click_count'); 
+    $leftClicks = BannerClick::where('banner_type', 'left')->sum('click_count');
 
     $rightClicks = BannerClick::where('banner_type', 'right')->sum('click_count');
     $popupClicks = BannerClick::where('banner_type', 'popup')->sum('click_count');
-    
+
     // Apply same filters for charts
     $chartQuery = BannerClick::query();
 
     if ($request->filled('type')) {
         $chartQuery->where('banner_type', $request->type);
     }
-    
+
     if ($request->filled('start_date')) {
         $chartQuery->whereDate('created_at', '>=', $request->start_date);
     }

@@ -163,7 +163,9 @@
         <h4 class="m-0 text-light text-nowrap"> Lions International District 3241 E</h4>
 
         <!-- Right Image -->
-        <img src="{{ asset('assets/images/lo4.png') }}" alt="Logo" class="strip-logo">
+        @foreach($images as $image)
+    <img src="{{ asset('storage/app/public/' . $image->image_path) }}" alt="Pin Image" class="strip-logo">
+@endforeach
     </div>
 </div>
 
@@ -202,9 +204,10 @@
                 <form method="POST" action="{{ route('admin.login') }}">
                     @csrf
                     <div class="mb-3">
-                        <label for="email" class="form-label">Email</label>
-                        <input type="email" name="email" id="email" class="form-control" required>
-                    </div>
+    <label for="email_or_memberid" class="form-label">Email or Member ID</label>
+    <input type="text" name="email_or_memberid" id="email_or_memberid" class="form-control" required>
+</div>
+
                     <div class="mb-3 password-container">
                         <label for="password" class="form-label">Password</label>
                         <input type="password" name="password" id="password" class="form-control" required>

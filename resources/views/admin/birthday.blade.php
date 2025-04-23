@@ -97,8 +97,7 @@ box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow effect */
 overflow: hidden; /* Ensures rounded corners work */
 width:100%;
 border-radius: 10px;
-
-margin-top:-36px;
+margin-top:-20px;
 
 }
 .table-responsive th,td{
@@ -210,19 +209,19 @@ background-size: 20px;
     width: 100%; /* Ensures it spans across the container */
 }
 #birthdaysTable tbody tr:nth-child(odd) {
-        background-color: #F0F8FF; 
+        background-color: #F0F8FF;
 }
 
 #birthdaysTable tbody tr:nth-child(even) {
-    background-color: #B9D9EB; 
+    background-color: #B9D9EB;
 }
 
 #anniversariesTable tbody tr:nth-child(odd) {
-        background-color: #F0F8FF; 
+        background-color: #F0F8FF;
 }
 
 #anniversariesTable tbody tr:nth-child(even) {
-    background-color: #B9D9EB; 
+    background-color: #B9D9EB;
 }
 </style>
     <div class="container mt-4 ">

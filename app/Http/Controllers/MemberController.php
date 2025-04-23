@@ -12,20 +12,47 @@ use App\Models\ParentsMultipleDistrict;
 use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 
 class MemberController extends Controller
 {
 
     public function index()
-{
-    // Fetch members with related data to minimize queries
-    $members = Member::with(['membershipType', 'parentMultipleDistrict', 'parentDistrict', 'account'])
-                     ->orderBy('created_at', 'desc')
-                     ->get();
-
-    return view('admin.addmembers.list', compact('members'));
-}
+    {
+        // Get session values
+        $adminId = session('admin_id');
+        $adminRole = session('admin_role');
+        $memberId = session('member_id');
+       
+        
+        // If a specific member is logged in
+        if (!is_null($memberId)) {
+            // Step 1: Get the account_name of the logged-in user from add_members
+            $targetAccountName = DB::table('add_members')
+                ->where('member_id', $memberId)
+                ->value('account_name');
+    
+            // Step 2: Fetch all members with the same account_name via the account relationship
+            $members = Member::with(['membershipType', 'parentMultipleDistrict', 'parentDistrict', 'account'])
+                ->whereHas('account', function ($query) use ($targetAccountName) {
+                    $query->where('account_name', $targetAccountName);
+                })
+                ->orderBy('created_at', 'desc')
+                ->get();
+    
+            return view('admin.addmembers.list', compact('members'));
+        }
+    
+        // Otherwise, fetch all members
+        $members = Member::with(['membershipType', 'parentMultipleDistrict', 'parentDistrict', 'account'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+    
+        return view('admin.addmembers.list', compact('members'));
+    }
+    
+    
 
     
 

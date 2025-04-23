@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Models\Event;
 use App\Models\AdImages1;
+use App\Models\FooterSetting;
 use App\Models\Banner1000;
 use App\Models\Banner10000;
 use App\Models\Banner5000;
@@ -31,14 +32,13 @@ use App\Models\BannerClick;
 class WebsiteController extends Controller
 {
 
-
     public function index()
     {
         $images1 = AdImage1::all(); // Fetch images from AdImage1 table
         $images2 = AdImage2::all(); // Fetch images from AdImage2 table
         $image1s = Image1::all(); // Fetch images from image1s table
         $image2s = Image2::all(); // Fetch images from image2s table
-        $image3s = Image3::all();
+        $image3s = Image3::all(); // Fetch images from image3s table
 
 
 
@@ -52,8 +52,9 @@ class WebsiteController extends Controller
         $bottomBanners = BottomBanner::select('image', 'website_link')->get(); // Fetch image and link
 
         $members = MemberDetail::all(); // Fetch all members from the database
+        $footer = FooterSetting::latest()->first(); // Fetch the latest footer record
 
-        return view('website.index', compact('images1', 'images2', 'image1s', 'image2s', 'image3s','events','bottomBanners','members'));
+        return view('website.index', compact('images1', 'images2', 'image1s', 'image2s', 'image3s','events','bottomBanners','members','footer'));
     }
 
 
@@ -501,5 +502,27 @@ public function trackBannerClick(Request $request)
     return redirect()->away($url);
 }
 
+
+public function showLandingPage()
+{
+    return view('website.landingpage');
+}
+
+public function login(Request $request)
+{
+    $email = $request->input('email');
+    $password = $request->input('password');
+
+    $user = DB::table('website_access')
+        ->where('email', $email) // corrected from 'email' to 'mail'
+        ->where('password', $password)
+        ->first();
+
+    if ($user) {
+        return redirect()->route('index');
+    } else {
+        return back()->with('error', 'Invalid email or password');
+    }
+}
 
 }

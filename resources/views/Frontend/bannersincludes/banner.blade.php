@@ -38,6 +38,7 @@
     use Illuminate\Support\Facades\DB;
     $member = \App\Models\MemberDetail::first(); // Fetch first member from the table
 
+
     $banners_10000 = DB::table('banner_10000')->select('image_path', 'url')->get();
     $banners_5000 = DB::table('banner_5000')->select('image_path', 'url')->get();
     $banners_1000 = DB::table('banner_1000')->select('image_path', 'url')->get();

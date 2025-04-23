@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Chapter;
 use App\Models\ClubPosition;
 use App\Models\DGTeam;
 use App\Models\DistrictChairperson;
@@ -19,23 +20,46 @@ use Illuminate\Support\Facades\Validator;
 class AssignMemberController extends Controller
 {
     // Display the page
+
     public function index()
     {
         $members = Member::selectRaw("id, CONCAT(first_name, ' ', last_name) as full_name")->get();
         return view('admin.memberdirectory.assignmember', compact('members'));
     }
+ 
+
+
+    public function clubindex(Request $request)
+    {
+        $chapters = Chapter::all();
+        $members = [];
+    
+        if ($request->has('chapter_id') && $request->chapter_id != '') {
+            $members = Member::where('account_name', $request->chapter_id)->get();
+        }
+    
+        return view('admin.memberdirectory.assignclub', compact('chapters', 'members'));
+    }
+    
+
+    
 
     // Handle search request
     public function searchMember(Request $request)
     {
         $query = $request->input('query');
-
+        $clubId = $request->input('club_id'); // Accept club_id if provided
+    
         $members = Member::selectRaw("id, CONCAT(first_name, ' ', last_name) as full_name")
+            ->when($clubId, function ($q) use ($clubId) {
+                $q->where('club_id', $clubId); // Adjust column name if needed
+            })
             ->whereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ["%{$query}%"])
             ->get();
-
+    
         return response()->json($members);
     }
+    
 
 
     public function storeInternationalOfficer(Request $request)
@@ -56,21 +80,34 @@ class AssignMemberController extends Controller
 }
 
 
-
 public function storedg(Request $request)
-    {
-        $request->validate([
-            'member_id' => 'required|exists:add_members,id',
-            'position' => 'required|string|max:255',
-        ]);
+{
+    $request->validate([
+        'member_id' => 'required|exists:add_members,id',
+        'position' => 'required|string|max:255',
+        'year' => 'required|in:CurrentYear,UpCommingYear',
+    ]);
 
-        DGTeam::create([
-            'member_id' => $request->member_id,
-            'position' => $request->position,
-        ]);
+    // Check if the same position is already assigned for the same year
+    $exists = DGTeam::where('position', $request->position)
+                    ->where('year', $request->year)
+                    ->exists();
 
-        return redirect()->back()->with('success', 'DG Team position assigned successfully.');
+    if ($exists) {
+        return redirect()->back()->with('error', 'This position is already assigned for the selected year.');
     }
+
+    // Store new position
+    DGTeam::create([
+        'member_id' => $request->member_id,
+        'position' => $request->position,
+        'year' => $request->year,
+    ]);
+
+    return redirect()->back()->with('success', 'DG Team position assigned successfully.');
+}
+
+
 
     public function storeDistrictGovernor(Request $request) {
         // Debugging: Check the received data
@@ -103,22 +140,26 @@ public function storedg(Request $request)
     public function storeClubPosition(Request $request)
 {
     $request->validate([
-        'member_id' => 'required|exists:add_members,id',
+        'member_ids' => 'required|array|min:1',
+        'member_ids.*' => 'exists:add_members,id',
         'position' => 'required|in:President,Secretary,Treasurer,Member'
     ]);
 
     try {
-        ClubPosition::create([
-            'member_id' => $request->member_id,
-            'position' => $request->position
-        ]);
+        foreach ($request->member_ids as $memberId) {
+            ClubPosition::create([
+                'member_id' => $memberId,
+                'position' => $request->position
+            ]);
+        }
 
-        return redirect()->back()->with('success', 'Club Position assigned successfully.');
+        return redirect()->back()->with('success', 'Members assigned to position successfully.');
     } catch (\Exception $e) {
-        Log::error("Error assigning Club Position: " . $e->getMessage());
-        return redirect()->back()->with('error', 'Failed to assign Club Position.');
+        Log::error("Error assigning Club Positions: " . $e->getMessage());
+        return redirect()->back()->with('error', 'Failed to assign positions.');
     }
 }
+
     
 
 public function storeRegionMember(Request $request)

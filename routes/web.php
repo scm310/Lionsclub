@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\Admin\HomepageController;
 use App\Http\Controllers\AwardController;
 use App\Http\Controllers\BirthdayController;
+use App\Http\Controllers\ClubPositionController;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\MemberDirectoryController;
 use App\Http\Controllers\RoleController;
@@ -30,18 +32,23 @@ use App\Http\Controllers\AdminMemberLoungeController;
 use App\Http\Controllers\Admin\ApproveController;
 use App\Http\Controllers\Admin\VisitorStatsController;
 use App\Http\Controllers\CareerEnquiryController;
+
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
 
 //WebsiteController
 
-Route::get('/', [WebsiteController::class, 'index'])->name('index');
+Route::get('/index', [WebsiteController::class, 'index'])->name('index');
+
+Route::get('/', [WebsiteController::class, 'showLandingPage'])->name('website.landingpage');
+
+Route::get('/', [WebsiteController::class, 'showLandingPage'])->name('website.landingpage');
 Route::get('/get-banners', [WebsiteController::class, 'getAdBanners'])->name('get.banners');
 Route::get('/teamdg', [WebsiteController::class, 'dgteam'])->name('dgteam');
 Route::get('/international_officers', [WebsiteController::class, 'intofficer'])->name('international_officers');
 
-
+Route::get('/districtgovernor', [WebsiteController::class, 'districtgovernor'])->name('districtgovernor');
 Route::get('/pastdistrictgovernor', [WebsiteController::class, 'pastdistrictgovernor'])->name('pastdistrictgovernor');
 Route::get('/districtchairperson', [WebsiteController::class, 'districtchairperson'])->name('districtchairperson');
 Route::get('/regionmember', [WebsiteController::class, 'regionmember'])->name('regionmember');
@@ -170,7 +177,7 @@ Route::delete('/international-officers/{id}', [InternationalOfficerController::c
 
 Route::post('/international-officers/store-governor', [InternationalOfficerController::class, 'storeGovernor'])
     ->name('international.officers.storeGovernor');
-
+    
 Route::get('/district-chairperson/form', [InternationalOfficerController::class, 'showDistrictChairpersonForm'])->name('districtchairperson.form');
 Route::post('/district-chairperson/store', [InternationalOfficerController::class, 'addDistrictChairperson'])->name('districtchairperson.store');
 
@@ -184,8 +191,8 @@ Route::prefix('international-officers')->group(function () {
 });
 
 
-Route::post('/dg-team/store', [InternationalOfficerController::class, 'storeDgTeam'])->name('dg.team.store');
-Route::get('/add-chapter-member', [InternationalOfficerController::class, 'showAddChapterMemberForm'])->name('showAddChapterMemberForm');
+    Route::post('/dg-team/store', [InternationalOfficerController::class, 'storeDgTeam'])->name('dg.team.store');
+    Route::get('/add-chapter-member', [InternationalOfficerController::class, 'showAddChapterMemberForm'])->name('showAddChapterMemberForm');
 Route::post('/add-chapter-member', [InternationalOfficerController::class, 'addChapterMember'])->name('addChapterMember');
 
 
@@ -256,8 +263,8 @@ Route::prefix('admin')->group(function () {
     Route::get('/events', [EventController::class, 'index'])->name('event_index');
     Route::post('/addevents', [EventController::class, 'store'])->name('events_store');
     Route::get('/edit/{id}', [EventController::class, 'edit'])->name('event.edit');  // Edit page
-    Route::post('/update/{id}', [EventController::class, 'update'])->name('event.update'); // Form submit
-
+Route::post('/update/{id}', [EventController::class, 'update'])->name('event.update'); // Form submit
+  
 });
 
 
@@ -289,6 +296,11 @@ Route::get('/chapter', [WebsiteController::class, 'chapter'])->name('chapter');
 
 //AssignMemberController
 Route::get('/assign-member', [AssignMemberController::class, 'index'])->name('assign.member');
+
+Route::get('/assign-club', [AssignMemberController::class, 'clubindex'])->name('assign.club');
+Route::get('/get-members-by-chapter/{id}', [AssignMemberController::class, 'getMembersByChapter'])->name('get.members.by.chapter');
+
+
 Route::post('/search-member', [AssignMemberController::class, 'searchMember'])->name('search.member');
 
 Route::post('/store-international-officer', [AssignMemberController::class, 'storeInternationalOfficer'])->name('store.international.officer');
@@ -307,6 +319,7 @@ Route::get('/admin/remove-members', [AssignMemberController::class, 'remove'])->
 
 
 Route::get('/get-celebrations', [BirthdayController::class, 'getCelebrations']);
+Route::get('/admin/birthday/future-week', [BirthdayController::class, 'showFutureWeekBirthdays'])->name('admin.birthday.future');
 
 
 //import
@@ -370,17 +383,17 @@ Route::post('/import/dg-team', [AssignImportController::class, 'importDGTeam'])-
 
 Route::post('/import-past-governors', [AssignImportController::class, 'importPastGovernors'])
     ->name('import.past.governors');
-Route::post('/import-district-chairpersons', [AssignImportController::class, 'importDistrictChairpersons'])->name('import.district.chairpersons');
+    Route::post('/import-district-chairpersons', [AssignImportController::class, 'importDistrictChairpersons'])->name('import.district.chairpersons');
 
-Route::post('/import/district-governors', [AssignImportController::class, 'importDistrictGovernors'])->name('import.district.governors');
+    Route::post('/import/district-governors', [AssignImportController::class, 'importDistrictGovernors'])->name('import.district.governors');
 
-Route::post('/import/region-members', [AssignImportController::class, 'importRegionMembers'])->name('import.region.members');
-Route::post('/import/club-positions', [AssignImportController::class, 'importClubPositions'])->name('import.club.positions');
-
-
+    Route::post('/import/region-members', [AssignImportController::class, 'importRegionMembers'])->name('import.region.members');
+    Route::post('/import/club-positions', [AssignImportController::class, 'importClubPositions'])->name('import.club.positions');
 
 
-Route::post('/admin/add-member', [BannerUploadController::class, 'addMember'])->name('admin.addMember');
+
+
+    Route::post('/admin/add-member', [BannerUploadController::class, 'addMember'])->name('admin.addMember');
 
 Route::delete('/admin/delete-member/{id}', [BannerUploadController::class, 'deleteMember'])->name('admin.deleteMember');
 
@@ -405,17 +418,17 @@ Route::middleware(['member.auth'])->group(function () {
 
 
 
-    Route::middleware(['member.auth'])->group(function () {
-        Route::get('member/edit', [MemberLoginController::class, 'edit'])->name('member.edit');
-        Route::post('member/update', [MemberLoginController::class, 'update'])->name('member.update');
-    });
+Route::middleware(['member.auth'])->group(function () {
+    Route::get('member/edit', [MemberLoginController::class, 'edit'])->name('member.edit');
+    Route::post('member/update', [MemberLoginController::class, 'update'])->name('member.update');
+});
 
 });
 
 
-// Member Lounge Routes
-Route::get('/member/lounge', [MemberLoungeController::class, 'index'])->name('member.lounge');
-Route::get('/member/details/{id}', [MemberLoungeController::class, 'show'])->name('member.details');
+ // Member Lounge Routes
+    Route::get('/member/lounge', [MemberLoungeController::class, 'index'])->name('member.lounge');
+    Route::get('/member/details/{id}', [MemberLoungeController::class, 'show'])->name('member.details');
 
 
 
@@ -423,7 +436,7 @@ Route::get('/member/details/{id}', [MemberLoungeController::class, 'show'])->nam
 
 //admin (enquiry management)
 Route::prefix('admin')->group(function () {
-    Route::get('/enquiries', [EnquiryController::class, 'index'])->name('admin.enquiries.index');
+   Route::get('/enquiries', [EnquiryController::class, 'index'])->name('admin.enquiries.index');
 
 
     Route::get('/donate', [EnquiryController::class, 'donateindex'])->name('admin.enquiries.donate');
@@ -459,10 +472,9 @@ Route::get('/admin/approve-members', [ApproveController::class, 'index'])->name(
 Route::post('/admin/approve-member/{id}', [ApproveController::class, 'approve'])->name('admin.approve-member');
 Route::post('/admin/reject-member/{id}', [ApproveController::class, 'reject'])->name('admin.reject-member');
 
-//adminmemberlounge
+//adminmemberrole remove
 Route::get('/admin/member-role-remove', [AssignMemberController::class, 'remove'])->name('members.remove');
 Route::delete('/admin/member-role-data/{role}/{id}', [AssignMemberController::class, 'destroy'])->name('admin.member.role.delete');
-
 
 
 //admin member lounge routes
@@ -480,3 +492,27 @@ Route::get('/admin/career-enquiry', [CareerEnquiryController::class, 'showForm']
 Route::delete('/admin/career-enquiry/{id}', [CareerEnquiryController::class, 'destroy'])->name('career.enquiry.delete');
 Route::get('/admin/career/{id}/edit', [CareerEnquiryController::class, 'edit'])->name('career.edit');
 Route::post('/admin/career/{id}/update', [CareerEnquiryController::class, 'update'])->name('career.update');
+
+
+
+
+
+// footer settings
+
+Route::get('/admin/footer-settings', [HomepageController::class, 'footerSettings'])->name('footer.index');
+Route::post('/admin/footer-settings/store', [HomepageController::class, 'store'])->name('footer.store');
+Route::delete('/footer/{id}', [HomepageController::class, 'destroy'])->name('footer.delete');
+// Route for displaying images and upload form
+Route::get('/admin/homepage/pinimage', [HomepageController::class, 'index'])->name('admin.homepage.pinimage');
+
+// Route for handling image upload (POST request)
+Route::post('/admin/pinimage', [HomepageController::class, 'pinimagestore'])->name('pinimage.store');
+Route::delete('/images/{id}', [HomepageController::class, 'pinimagedestroy'])->name('images.destroy');
+
+
+
+/// landing page 
+
+Route::post('/login-submit', [WebsiteController::class, 'login'])->name('login.submit');
+
+

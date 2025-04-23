@@ -5,6 +5,8 @@ use App\Models\Member;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log; // Import Log for debugging
+use Illuminate\Support\Facades\DB;
+
 
 
 class BirthdayController extends Controller
@@ -19,6 +21,8 @@ class BirthdayController extends Controller
         $birthdays = Member::whereMonth('dob', $currentMonth)
                            ->select('first_name','last_name', 'dob')
                            ->get();
+
+
 
         // Fetch members with anniversaries this month
         $anniversaries = Member::whereMonth('anniversary_date', $currentMonth)
@@ -48,6 +52,64 @@ public function getCelebrations(Request $request)
         'birthdays' => $birthdays,
         'anniversaries' => $anniversaries
     ]);
+}
+
+public function getFutureWeekBirthdayCount()
+{
+    $start = Carbon::today()->addDays(7); // Start from 8th day
+    $end = Carbon::today()->addDays(14);  // Up to 14th day
+
+    $startDayOfYear = $start->dayOfYear;
+    $endDayOfYear = $end->dayOfYear;
+
+    if ($endDayOfYear < $startDayOfYear) {
+        // Year wrap-around (e.g., Dec 28 to Jan 4)
+        $birthdays = Member::whereRaw("DAYOFYEAR(dob) >= ? OR DAYOFYEAR(dob) <= ?", [
+            $startDayOfYear, $endDayOfYear
+        ])->count();
+    } else {
+        $birthdays = Member::whereRaw("DAYOFYEAR(dob) BETWEEN ? AND ?", [
+            $startDayOfYear, $endDayOfYear
+        ])->count();
+    }
+
+    return $birthdays;
+}
+public function showFutureWeekBirthdays()
+{
+    $start = Carbon::today()->addDays(7);
+    $end = Carbon::today()->addDays(14);
+
+    $startDayOfYear = $start->dayOfYear;
+    $endDayOfYear = $end->dayOfYear;
+
+    // Join add_members with chapters and select required fields
+    $membersQuery = DB::table('add_members as m')
+        ->leftJoin('chapters as c', 'm.account_name', '=', 'c.id')
+        ->select('m.*', 'c.chapter_name');
+
+    // Apply birthday filter based on whether date range crosses year-end
+    if ($endDayOfYear < $startDayOfYear) {
+        $membersQuery->where(function ($query) use ($startDayOfYear, $endDayOfYear) {
+            $query->whereRaw("DAYOFYEAR(m.dob) >= ?", [$startDayOfYear])
+                  ->orWhereRaw("DAYOFYEAR(m.dob) <= ?", [$endDayOfYear]);
+        });
+    } else {
+        $membersQuery->whereRaw("DAYOFYEAR(m.dob) BETWEEN ? AND ?", [$startDayOfYear, $endDayOfYear]);
+    }
+
+    $members = $membersQuery->get();
+
+    // Sort the result by closest upcoming birthday (ignoring year)
+    $members = $members->sortBy(function ($member) {
+        $nextBirthday = Carbon::parse($member->dob)->setYear(now()->year);
+        if ($nextBirthday->lt(now())) {
+            $nextBirthday->addYear();
+        }
+        return $nextBirthday->dayOfYear;
+    });
+
+    return view('admin.future_birthdays', ['members' => $members]);
 }
 
 }

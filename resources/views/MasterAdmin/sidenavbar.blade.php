@@ -147,14 +147,20 @@
 
         {{-- //Member Role --}}
 
-        <li class="menu-item {{ request()->routeIs(['assign.member', 'members.remove']) ? 'active open' : '' }}">
+        <li class="menu-item {{ request()->routeIs(['assign.club','assign.member', 'members.remove']) ? 'active open' : '' }}">
             <a href="javascript:void(0);" class="menu-link has-dropdown">
                 <i class="menu-icon tf-icons bx bx-user-check"></i>
                 <div class="text-truncate">Member Role</div>
                 <i class="bx bx-chevron-down menu-arrow"></i>
             </a>
-            <ul class="menu-sub" style="{{ request()->routeIs(['assign.member', 'members.remove']) ? 'display: block;' : 'display: none;' }}">
+            <ul class="menu-sub" style="{{ request()->routeIs(['assign.club','assign.member', 'members.remove']) ? 'display: block;' : 'display: none;' }}">
                 <!-- Members List -->
+
+                <li class="menu-item {{ request()->routeIs('assign.club') ? 'active' : '' }}">
+                    <a href="{{ route('assign.club') }}" class="menu-link">
+                        <div class="text-truncate">Assign club</div>
+                    </a>
+                </li>
 
                 <li class="menu-item {{ request()->routeIs('assign.member') ? 'active' : '' }}">
                     <a href="{{ route('assign.member') }}" class="menu-link">
@@ -230,6 +236,27 @@
                 <div class="text-truncate">Post Job</div>
             </a>
         </li>
+    </ul>
+</li>
+
+
+<li class="menu-item {{ request()->routeIs('admin.homepage.pinimage') ? 'active open' : '' }}">
+    <a href="javascript:void(0);" class="menu-link has-dropdown">
+        <i class="menu-icon tf-icons bx bx-cog"></i>
+        <div class="text-truncate">Homepage Setting</div>
+        <i class="bx bx-chevron-down menu-arrow"></i>
+    </a>
+    <ul class="menu-sub" style="{{ request()->routeIs('admin.homepage.pinimage') ? 'display: block;' : 'display: none;' }}">
+        <li class="menu-item {{ request()->routeIs('admin.homepage.pinimage') ? 'active' : '' }}">
+            <a href="{{ route('admin.homepage.pinimage') }}" class="menu-link">
+                <div class="text-truncate">Pin Image</div>
+            </a>
+        </li>
+        <li class="menu-item">
+    <a href="{{ route('footer.index') }}" class="menu-link">
+        <div class="text-truncate">Footer Settings</div>
+    </a>
+</li>
     </ul>
 </li>
 

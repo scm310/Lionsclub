@@ -126,7 +126,49 @@
     margin-bottom: 20px;
     color: #fff;
 }
+.notification-dropdown {
+        position: absolute;
+        top: 40px;
+        right: 0;
+        width: 250px;
+        color:black !important;
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        display: none;
+        z-index: 9999;
+    }
+    .notification-dropdown p {
+        list-style: none;
+    margin: 3px;
+    padding: 0px;
+    color: rgb(59, 58, 58) !important;
+    font-size: 13px !important;
 
+    }
+    .notification-dropdown li {
+        padding: 10px;
+        border-bottom: 1px solid #eee;
+        font-size: 14px;
+    }
+    .notification-dropdown li:last-child {
+        border-bottom: none;
+    }
+    .notification-bell-wrapper {
+        position: fixed;
+        top: 20px;
+        right: 30px;
+        z-index: 10000;
+    }
+    .notification-icon {
+        cursor: pointer;
+        color: rgb(12, 12, 12)000;
+        background-color: #007bff;
+        padding: 10px;
+        border-radius: 50%;
+        position: relative;
+    }
 </style>
 
 @section('content')
@@ -135,6 +177,27 @@
     <img src="{{ asset('assets/images/logo.png') }}" alt="Lions Club Logo" width="70" height="70" class="mb-1">
     Welcome to Lions Club Admin!
 </h2>
+<div class="notification-bell-wrapper">
+    <div class="notification-icon" onclick="toggleDropdown()">
+        <i class="fas fa-bell fa-lg"></i>
+        @if($birthdayCount > 0)
+        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+            {{ $birthdayCount }}
+        </span>
+        @endif
+    </div>
+
+  <div class="notification-dropdown" id="birthdayDropdown" style="display: none;">
+    <p>
+        {{ count($upcomingBirthdays) }}
+        {{ count($upcomingBirthdays) === 1 ? 'member has a birthday' : 'members have birthdays' }} coming up this week.
+        <a href="{{ route('admin.birthday.future') }}" style="color: rgb(81, 81, 247); text-decoration: underline;">
+            Click to view
+        </a>
+    </p>
+</div>
+</div>
+
 
 <!-- Cards Section -->
 <div class="container">
@@ -190,5 +253,21 @@
     </div>
 </div>
 
+
+<script>
+    function toggleDropdown() {
+        var dropdown = document.getElementById('birthdayDropdown');
+        dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+    }
+
+    // Optional: Close dropdown when clicking outside
+    document.addEventListener('click', function(event) {
+        var dropdown = document.getElementById('birthdayDropdown');
+        var icon = document.querySelector('.notification-icon');
+        if (!icon.contains(event.target) && !dropdown.contains(event.target)) {
+            dropdown.style.display = 'none';
+        }
+    });
+</script>
 
 @endsection
