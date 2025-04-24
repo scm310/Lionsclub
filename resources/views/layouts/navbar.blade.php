@@ -357,6 +357,10 @@
     .social{
         margin-left:155px
     }
+
+    .awards{
+        transform: translateY(-5px);
+    }
 </style>
 
 {{-- popup banner start--}}
@@ -399,7 +403,7 @@
                     data-bs-toggle="dropdown" aria-expanded="false">
                     Resources
                 </a>
-                <ul class="dropdown-menu" aria-labelledby="resourcesDropdown">
+                <ul class="dropdown-menu awards" aria-labelledby="resourcesDropdown">
                     <li><a class="dropdown-item" href="{{ route('award.index') }}">Awards</a></li>
                 </ul>
             </li>

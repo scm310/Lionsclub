@@ -11,7 +11,7 @@ class RegionMember extends Model
 
     protected $table = 'region_members';
 
-    protected $fillable = ['member_id', 'position', 'year', 'zone', 'region'];
+    protected $fillable = ['member_id', 'position', 'year', 'zone', 'region','chapter_id'];
 
 
     public function user()

@@ -15,22 +15,46 @@ class BirthdayController extends Controller
 
     public function index()
     {
+        $memberId = session('member_id');
         $currentMonth = Carbon::now()->month; // Get current month number (1-12)
-
-        // Fetch members with birthdays this month
-        $birthdays = Member::whereMonth('dob', $currentMonth)
-                           ->select('first_name','last_name', 'dob')
+    
+        if ($memberId !== null) {
+            // Fetch account name of the logged-in member
+            $accountName = DB::table('add_members')
+                             ->where('member_id', $memberId)
+                             ->value('account_name');
+    
+            // Fetch birthdays for same account
+            $birthdays = DB::table('add_members')
+                           ->whereMonth('dob', $currentMonth)
+                           ->where('account_name', $accountName)
+                           ->select('first_name', 'last_name', 'dob')
                            ->get();
-
-
-
-        // Fetch members with anniversaries this month
-        $anniversaries = Member::whereMonth('anniversary_date', $currentMonth)
-                               ->select('first_name','last_name', 'anniversary_date')
+    
+            // Fetch anniversaries for same account
+            $anniversaries = DB::table('add_members')
+                               ->whereMonth('anniversary_date', $currentMonth)
+                               ->where('account_name', $accountName)
+                               ->select('first_name', 'last_name', 'anniversary_date')
                                ->get();
-
+    
+        } else {
+            // Fetch all birthdays
+            $birthdays = DB::table('add_members')
+                           ->whereMonth('dob', $currentMonth)
+                           ->select('first_name', 'last_name', 'dob')
+                           ->get();
+    
+            // Fetch all anniversaries
+            $anniversaries = DB::table('add_members')
+                               ->whereMonth('anniversary_date', $currentMonth)
+                               ->select('first_name', 'last_name', 'anniversary_date')
+                               ->get();
+        }
+    
         return view('admin.birthday', compact('birthdays', 'anniversaries'));
     }
+    
 
 
 public function getCelebrations(Request $request)
@@ -77,18 +101,33 @@ public function getFutureWeekBirthdayCount()
 }
 public function showFutureWeekBirthdays()
 {
+    $memberId = session('member_id');
+
     $start = Carbon::today()->addDays(7);
     $end = Carbon::today()->addDays(14);
 
     $startDayOfYear = $start->dayOfYear;
     $endDayOfYear = $end->dayOfYear;
 
-    // Join add_members with chapters and select required fields
+    // Get the logged-in member's account name
+    $memberWithChapter = DB::table('add_members as m')
+        ->leftJoin('chapters as c', 'm.account_name', '=', 'c.id')
+        ->select('m.*', 'c.chapter_name')
+        ->where('m.member_id', $memberId)
+        ->first();
+
+    if (!$memberWithChapter) {
+        return redirect()->back()->with('error', 'Member not found.');
+    }
+
+    $accountName = $memberWithChapter->account_name;
+
+    // Get all members in the same account with upcoming birthdays
     $membersQuery = DB::table('add_members as m')
         ->leftJoin('chapters as c', 'm.account_name', '=', 'c.id')
-        ->select('m.*', 'c.chapter_name');
+        ->select('m.*', 'c.chapter_name')
+        ->where('m.account_name', $accountName);
 
-    // Apply birthday filter based on whether date range crosses year-end
     if ($endDayOfYear < $startDayOfYear) {
         $membersQuery->where(function ($query) use ($startDayOfYear, $endDayOfYear) {
             $query->whereRaw("DAYOFYEAR(m.dob) >= ?", [$startDayOfYear])
@@ -100,7 +139,7 @@ public function showFutureWeekBirthdays()
 
     $members = $membersQuery->get();
 
-    // Sort the result by closest upcoming birthday (ignoring year)
+    // Sort the result by closest upcoming birthday
     $members = $members->sortBy(function ($member) {
         $nextBirthday = Carbon::parse($member->dob)->setYear(now()->year);
         if ($nextBirthday->lt(now())) {
@@ -111,5 +150,6 @@ public function showFutureWeekBirthdays()
 
     return view('admin.future_birthdays', ['members' => $members]);
 }
+
 
 }

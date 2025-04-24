@@ -185,6 +185,12 @@
     }
 }
 
+.active>.page-link, .page-link.active {
+    z-index: 3;
+    color: var(--bs-pagination-active-color);
+    background: linear-gradient(181deg, rgb(2, 0, 97) 15%, rgb(97, 149, 219) 158.5%);
+    border-color: var(--bs-pagination-active-border-color);
+}
 </style>
 
 <div class="award-container">

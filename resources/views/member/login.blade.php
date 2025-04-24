@@ -220,7 +220,7 @@
 
     .mainlogo img {
         margin-left: 20px;
-        width: 50px !important;
+        width: 74px !important;
         height: 50px !important;
     }
 
@@ -231,7 +231,7 @@
    .tittle{
     transform: translateY(-20px);
    }
-    
+
     .zoom-image{
         transform: translateX(265px);
     }
@@ -258,7 +258,7 @@
     .card{
         height: 285px !important;
         transform:translateY(90px);
-    } 
+    }
 
 
     @keyframes pulse {
@@ -304,7 +304,7 @@
         margin-top:-22px !important;
     }
 
-        
+
         .zoom-image1{
         transform: translateX(0px);
         margin-top:-10px;
@@ -327,7 +327,7 @@
 .card{
         height: 285px !important;
         transform:translateY(0px);
-    } 
+    }
 
 .js-fullheight{
     height:107vh !important;
@@ -367,9 +367,11 @@
 
     <!-- Right Logo -->
     <div class="mainlogo">
-        <img src="{{ asset('assets/images/lo4.png') }}" alt="Logo" class="zoom-image1" loading="lazy"
-            style="height:100px; width:100px;" />
+        @foreach($images as $image)
+            <img src="{{ asset('storage/app/public/' . $image->image_path) }}" alt="Logo" class="zoom-image1" loading="lazy" style="height:100px; width:100px;" />
+        @endforeach
     </div>
+
 </div>
 
 <section class="ftco-section">
@@ -448,7 +450,7 @@
     }
 
 
-   
+
 
     .header img {
         max-width:75px;

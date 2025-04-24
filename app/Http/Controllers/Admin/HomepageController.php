@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\PinImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use App\Models\FooterSetting;
+use App\Models\ContactSetting;
 
 
 class HomepageController extends Controller
@@ -107,6 +109,48 @@ public function footerSettings()
     
         return redirect()->back()->with('success', 'Footer deleted successfully!');
     }
+
+
+    public function contactSettings()
+    {
+        $contacts = ContactSetting::all();
+        return view('admin.homepagesettings.contactsettings', compact('contacts'));
+    }
+    
+
+public function storeContactSettings(Request $request)
+{
+    $request->validate([
+        'address' => 'nullable|string',
+    ]);
+
+    $contact = ContactSetting::first();
+
+    if ($contact) {
+        $contact->update(['address' => $request->address]);
+    } else {
+        ContactSetting::create(['address' => $request->address]);
+    }
+
+    return redirect()->back()->with('success', 'Contact address updated successfully!');
+}
+
+public function editContactSettings($id)
+{
+    $contact = ContactSetting::findOrFail($id);
+    return view('admin.homepagesettings.contactsettings', compact('contact'));
+}
+
+public function deleteContactSettings($id)
+{
+    $contact = ContactSetting::findOrFail($id);
+    $contact->delete();
+
+    return redirect()->route('contact.index')->with('success', 'Contact setting deleted successfully!');
+}
+
+
+
 
 }
 

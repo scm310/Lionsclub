@@ -51,7 +51,23 @@
         <a class="nav-link text-white px-4 py-2 rounded text-center" id="tab-parent" data-toggle="tab" href="#parent" role="tab"
             style="background: linear-gradient(115deg, #0f0b8c, #77dcf5); border: none;">Parent & Account Details</a>
     </li>
+
+    <li class="nav-item m-1">
+        <a class="nav-link text-white px-4 py-2 rounded text-center" id="tab-clients" data-toggle="tab" href="#clients" role="tab"
+            style="background: linear-gradient(115deg, #0f0b8c, #77dcf5); border: none;">Clients</a>
+    </li>
+    <!-- New Tabs -->
+    <li class="nav-item m-1">
+        <a class="nav-link text-white px-4 py-2 rounded text-center" id="tab-testimonials" data-toggle="tab" href="#testimonials" role="tab"
+            style="background: linear-gradient(115deg, #0f0b8c, #77dcf5); border: none;">Testimonials</a>
+    </li>
+    <li class="nav-item m-1">
+        <a class="nav-link text-white px-4 py-2 rounded text-center" id="tab-project" data-toggle="tab" href="#project" role="tab"
+            style="background: linear-gradient(115deg, #0f0b8c, #77dcf5); border: none;">Project</a>
+    </li>
+ 
 </ul>
+
 
 
 
@@ -247,7 +263,31 @@
         </div>
     </div>
 
+    <div class="tab-pane fade" id="testimonials" role="tabpanel">
+    <div class="container p-4" style="background-color:#87cefa; border-radius: 8px;">
+        </div>
+</div>
 
+
+
+
+
+
+<div class="tab-pane fade" id="project" role="tabpanel">
+    <div class="container p-4" style="background-color:#87cefa; border-radius: 8px;">
+
+@include('member.partials.project')
+
+    </div>
+</div>
+
+
+<div class="tab-pane fade" id="clients" role="tabpanel">
+    <div class="container p-4" style="background-color:#87cefa; border-radius: 8px;">
+        @include('member.partials.clients')
+     
+    </div>
+</div>
 
             </div>
         </div>

@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Client;
 use App\Models\PendingMemberUpdate;
+use App\Models\Project;
+use App\Models\Testimonial;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -18,7 +21,9 @@ class MemberLoginController extends Controller
 {
     public function membershowLoginForm()
     {
-        return view('member.login');
+        $images = DB::table('pin_images')->select('image_path')->get();
+
+        return view('member.login',compact('images'));
     }
 
     public function login(Request $request)
@@ -55,40 +60,51 @@ class MemberLoginController extends Controller
 
     public function edit()
     {
-        // ✅ Get authenticated member using the 'member' guard
         $member = Auth::guard('member')->user();
-
-        // ❌ Redirect if not logged in
+    
         if (!$member) {
             Log::error('❌ Member not found in edit() - Not authenticated.');
             return redirect()->route('member.login')->with('error', 'Please log in again.');
         }
-
-        // ✅ Get related data from other tables
+    
         $parentMultipleDistrict = DB::table('parents_multiple_district')
             ->where('id', $member->parent_multiple_district)
             ->value('name');
-
+    
         $parentDistrict = DB::table('district')
             ->where('id', $member->parent_district)
             ->value('name');
-
+    
         $accountName = DB::table('chapters')
             ->where('id', $member->account_name)
             ->value('chapter_name');
-
+    
         $membershipFullType = DB::table('membership_type')
             ->where('id', $member->membership_full_type)
             ->value('name');
-
+    
+        // Fetch member's testimonials
+        $testimonials = Testimonial::where('member_id', $member->id)->get();
+    
+        // Fetch member's projects
+        $projects = Project::where('member_id', $member->id)->get();
+    
+        // Fetch member's clients
+        $clients = Client::where('member_id', $member->id)->get(); // Assuming you have a Client model that stores the clients
+    
         return view('member.profileedit', compact(
             'member',
             'parentMultipleDistrict',
             'parentDistrict',
             'accountName',
-            'membershipFullType'
+            'membershipFullType',
+            'testimonials',
+            'projects',
+            'clients' // Pass the clients data to the view
         ));
     }
+    
+    
 
 
 
@@ -178,6 +194,223 @@ class MemberLoginController extends Controller
         return redirect()->route('member.edit')->with('success', 'Your profile update has been submitted for approval.');
     }
 
+
+    
+    public function storeTestimonials(Request $request)
+    {
+        $member = Auth::guard('member')->user();
+    
+        foreach ($request->client_name as $index => $name) {
+            $testimonialId = $request->testimonial_id[$index];
+            $imagePath = null;
+    
+            // Handle image upload if a new image is uploaded
+            if ($request->hasFile("image.$index")) {
+                $imagePath = $request->file("image.$index")->store('testimonials', 'public');
+            }
+    
+            if ($testimonialId) {
+                // Update existing testimonial
+                $testimonial = Testimonial::find($testimonialId);
+                if ($testimonial) {
+                    $testimonial->client_name = $name;
+                    $testimonial->company_name = $request->company_name[$index];
+                    $testimonial->designation = $request->designation[$index];
+                    $testimonial->testimonial = $request->testimonial[$index];
+                    if ($imagePath) {
+                        $testimonial->image = $imagePath;
+                    }
+                    $testimonial->save();
+                }
+            } else {
+                // Create new testimonial
+                Testimonial::create([
+                    'member_id' => $member->id,
+                    'client_name' => $name,
+                    'company_name' => $request->company_name[$index],
+                    'designation' => $request->designation[$index],
+                    'testimonial' => $request->testimonial[$index],
+                    'image' => $imagePath,
+                ]);
+            }
+        }
+    
+        return redirect()->back()->with('success', 'Testimonials saved successfully!');
+    }
+
+    public function destroy($id)
+    {
+        $testimonial = Testimonial::findOrFail($id);
+    
+        // Optionally delete the image
+        if ($testimonial->image && \Storage::exists('public/' . $testimonial->image)) {
+            \Storage::delete('public/' . $testimonial->image);
+        }
+    
+        $testimonial->delete();
+    
+        return redirect()->back()->with('success', 'Testimonial deleted successfully.');
+    }
+
+
+
+
+    public function storeTestimonial(Request $request)
+    {
+        $member = Auth::guard('member')->user();
+
+        foreach ($request->client_name as $index => $name) {
+            $imageName = null;
+        
+            if ($request->hasFile('image') && isset($request->file('image')[$index])) {
+                $image = $request->file('image')[$index];
+                $imageName = time() . $index . '.' . $image->getClientOriginalExtension();
+                $image->storeAs('public/testimonial_images', $imageName);
+            }
+        
+            Testimonial::create([
+                'member_id' => $member->id,
+                'client_name' => $name,
+                'company_name' => $request->company_name[$index],
+                'image' => $imageName ? 'testimonial_images/' . $imageName : null,
+                'designation' => $request->designation[$index],
+                'testimonial_content' => $request->testimonial_content[$index],
+            ]);
+        }
+        
+
+        return back()->with('success', 'Testimonial(s) added successfully.');
+    }
+
+    public function updateTestimonial(Request $request, $id)
+    {
+        $testimonial = Testimonial::findOrFail($id);
+
+        if ($request->hasFile('image')) {
+            Storage::delete('public/' . $testimonial->image);
+            $image = $request->file('image');
+            $imageName = time() . '.' . $image->getClientOriginalExtension();
+            $image->storeAs('public/testimonial_images', $imageName);
+            $testimonial->image = 'testimonial_images/' . $imageName;
+        }
+
+        $testimonial->update([
+            'client_name' => $request->client_name,
+            'company_name' => $request->company_name,
+            'designation' => $request->designation,
+            'testimonial_content' => $request->testimonial_content,
+        ]);
+
+        return back()->with('success', 'Testimonial updated successfully.');
+    }
+
+    public function deleteTestimonial($id)
+    {
+        $testimonial = Testimonial::findOrFail($id);
+        Storage::delete('public/' . $testimonial->image);
+        $testimonial->delete();
+
+        return back()->with('success', 'Testimonial deleted successfully.');
+    }
+    
+
+    public function projectTab()
+{
+    $member = Auth::guard('member')->user();
+    $projects = Project::where('user_id', $member->id)->get();
+    return view('member.partial.project', compact('projects'));
+}
+
+public function storeProject(Request $request)
+{
+    $member = Auth::guard('member')->user();
+
+    foreach ($request->project_name as $index => $name) {
+        $projectImage = $request->file('project_image')[$index];
+        
+        // Generate a unique file name using time() and index to avoid conflicts
+        $imageName = time() . $index . '.' . $projectImage->getClientOriginalExtension();
+
+        // Store the file in the correct folder with the generated file name
+        $projectImage->storeAs('public/project_images', $imageName);
+    
+        // Create a new project entry with the correct image path
+        Project::create([
+            'member_id'     => $member->id,
+            'project_name'  => $name,
+            'project_image' => 'project_images/' . $imageName, // Ensure the path is consistent
+            'location'      => $request->location[$index],
+            'client_name'   => $request->client_name[$index],
+            'company_name'  => $request->company_name[$index],
+        ]);
+    }
+    
+    return back()->with('success', 'Project added successfully.');
+}
+
+
+
+public function updateProject(Request $request, $id)
+{
+    $member = Auth::guard('member')->user();
+
+    $project = Project::where('id', $id)->where('member_id', $member->id)->firstOrFail();
+
+    $project->project_name = $request->project_name;
+    $project->location = $request->location;
+    $project->client_name = $request->client_name;
+    $project->company_name = $request->company_name;
+
+    if ($request->hasFile('project_image')) {
+        $image = $request->file('project_image')->store('project_images', 'public');
+        $project->project_image = $image;
+    }
+
+    $project->save();
+
+    return back()->with('success', 'Project updated successfully.');
+}
+
+public function deleteProject($id)
+{
+    $member = Auth::guard('member')->user();
+
+    Project::where('id', $id)->where('member_id', $member->id)->delete();
+
+    return back()->with('success', 'Project deleted.');
+}
+    
+
+public function storeClient(Request $request)
+{
+    $member = Auth::guard('member')->user();
+
+    foreach ($request->client_name as $index => $name) {
+        Client::create([
+            'member_id' => $member->id,
+            'client_name' => $name,
+            'company_name' => $request->company_name[$index],
+            'comapny_fullform' => $request->comapny_fullform[$index],
+            'designation' => $request->designation[$index],
+        ]);
+    }
+
+    return back()->with('success', 'Clients added successfully.');
+}
+
+public function updateClient(Request $request, $id)
+{
+    $client = Client::findOrFail($id);
+    $client->update($request->only('client_name', 'company_name', 'comapny_fullform', 'designation'));
+
+    return back()->with('success', 'Client updated successfully.');
+}
+
+public function deleteClient($id)
+{
+    Client::findOrFail($id)->delete();
+    return back()->with('success', 'Client deleted successfully.');
+}
 
 
 

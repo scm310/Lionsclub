@@ -13,51 +13,79 @@ class AdminController extends Controller
 {
     public function dashboard()
     {
-        $memberCount = DB::table('add_members')->count();
-        $chapterCount = DB::table('chapters')->count();
-        $districtCount = DB::table('district')->count();
-
-        // ✅ Unique visitor IPs
-        $visitorCount = DB::table('visitors')
-            ->select('ip_address')
-            ->distinct()
-            ->count('ip_address');
-
-        // ✅ Get upcoming birthdays: from 8 to 14 days from today
+        $memberId = session('member_id');
+    
         $start = Carbon::today()->addDays(7);
         $end = Carbon::today()->addDays(14);
-
         $startDayOfYear = $start->dayOfYear;
         $endDayOfYear = $end->dayOfYear;
-
-        if ($endDayOfYear < $startDayOfYear) {
-            // Handles year-end wraparound
-            $upcomingBirthdays = DB::table('add_members')
-                ->whereRaw("DAYOFYEAR(dob) >= ? OR DAYOFYEAR(dob) <= ?", [
-                    $startDayOfYear, $endDayOfYear
-                ])
-                ->select('first_name', 'last_name', 'dob')
-                ->get();
+    
+        // Initialize all variables
+        $memberCount = null;
+        $chapterCount = null;
+        $districtCount = null;
+        $visitorCount = null;
+        $birthdayCount = 0;
+        $upcomingBirthdays = collect();
+        $accountName = null;
+    
+        if ($memberId !== null) {
+            // For logged-in member
+            $member = DB::table('add_members')
+                ->where('member_id', $memberId)
+                ->select('account_name')
+                ->first();
+    
+            if ($member) {
+                $accountName = $member->account_name;
+    
+                $upcomingBirthdays = DB::table('add_members')
+                    ->where('account_name', $accountName)
+                    ->whereRaw(
+                        $endDayOfYear < $startDayOfYear
+                            ? "(DAYOFYEAR(dob) >= ? OR DAYOFYEAR(dob) <= ?)"
+                            : "DAYOFYEAR(dob) BETWEEN ? AND ?",
+                        [$startDayOfYear, $endDayOfYear]
+                    )
+                    ->select('first_name', 'last_name', 'dob')
+                    ->get();
+    
+                $birthdayCount = $upcomingBirthdays->count();
+            }
         } else {
+            // For admin dashboard
+            $memberCount = DB::table('add_members')->count();
+            $chapterCount = DB::table('chapters')->count();
+            $districtCount = DB::table('district')->count();
+            $visitorCount = DB::table('visitors')->select('ip_address')->distinct()->count('ip_address');
+    
             $upcomingBirthdays = DB::table('add_members')
-                ->whereRaw("DAYOFYEAR(dob) BETWEEN ? AND ?", [
-                    $startDayOfYear, $endDayOfYear
-                ])
+                ->whereRaw(
+                    $endDayOfYear < $startDayOfYear
+                        ? "(DAYOFYEAR(dob) >= ? OR DAYOFYEAR(dob) <= ?)"
+                        : "DAYOFYEAR(dob) BETWEEN ? AND ?",
+                    [$startDayOfYear, $endDayOfYear]
+                )
                 ->select('first_name', 'last_name', 'dob')
                 ->get();
+    
+            $birthdayCount = $upcomingBirthdays->count();
         }
-
-        $birthdayCount = $upcomingBirthdays->count();
-
-        return view('admin.dashboard', [
-            'memberCount' => $memberCount,
-            'chapterCount' => $chapterCount,
-            'districtCount' => $districtCount,
-            'visitorCount' => $visitorCount,
-            'birthdayCount' => $birthdayCount,
-            'upcomingBirthdays' => $upcomingBirthdays,
-        ]);
+    
+        return view('admin.dashboard', compact(
+            'memberCount',
+            'chapterCount',
+            'districtCount',
+            'visitorCount',
+            'birthdayCount',
+            'upcomingBirthdays',
+            'accountName'
+        ));
     }
+    
+    
+    
+
 
 
 

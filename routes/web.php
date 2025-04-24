@@ -408,6 +408,11 @@ Route::get('member/login', [MemberLoginController::class, 'membershowLoginForm']
 Route::post('member/login', [MemberLoginController::class, 'login']);
 Route::get('member/logout', [MemberLoginController::class, 'logout'])->name('member.logout');
 
+Route::post('/profile/testimonials/save', [MemberLoginController::class, 'saveTestimonials'])->name('testimonials.save');
+Route::delete('/member/testimonials/{testimonial}', [MemberLoginController::class, 'destroy'])->name('member.testimonials.destroy');
+
+
+
 // Protected Route Example (Dashboard)
 Route::middleware(['member.auth'])->group(function () {
     Route::middleware(['auth:member'])->group(function () {
@@ -421,9 +426,29 @@ Route::middleware(['member.auth'])->group(function () {
 Route::middleware(['member.auth'])->group(function () {
     Route::get('member/edit', [MemberLoginController::class, 'edit'])->name('member.edit');
     Route::post('member/update', [MemberLoginController::class, 'update'])->name('member.update');
+    Route::delete('member/testimonials/{id}', [MemberLoginController::class, 'destroy'])->name('member.testimonials.destroy');
+
 });
 
 });
+
+Route::prefix('member')->middleware('auth:member')->group(function () {
+    Route::get('/project-tab', [MemberLoginController::class, 'projectTab'])->name('project.tab');
+    Route::post('/project-store', [MemberLoginController::class, 'storeProject'])->name('project.store');
+    Route::put('/project-update/{id}', [MemberLoginController::class, 'updateProject'])->name('project.update');
+    Route::get('/project-delete/{id}', [MemberLoginController::class, 'deleteProject'])->name('project.delete');
+});
+
+Route::post('/client/store', [MemberLoginController::class, 'storeClient'])->name('client.store');
+Route::put('/client/update/{id}', [MemberLoginController::class, 'updateClient'])->name('client.update');
+Route::get('/client/delete/{id}', [MemberLoginController::class, 'deleteClient'])->name('client.delete');
+
+Route::middleware(['auth:member'])->group(function () {
+    Route::post('testimonials/store', [MemberLoginController::class, 'storeTestimonial'])->name('testimonials.store');
+    Route::put('testimonials/update/{id}', [MemberLoginController::class, 'updateTestimonial'])->name('testimonials.update');
+    Route::delete('testimonials/delete/{id}', [MemberLoginController::class, 'deleteTestimonial'])->name('testimonials.delete');
+});
+
 
 
  // Member Lounge Routes
@@ -516,3 +541,26 @@ Route::delete('/images/{id}', [HomepageController::class, 'pinimagedestroy'])->n
 Route::post('/login-submit', [WebsiteController::class, 'login'])->name('login.submit');
 
 
+Route::middleware(['auth:member'])->group(function () {
+    Route::get('/member/testimonials', [App\Http\Controllers\MemberLoginController::class, 'showTestimonials'])->name('member.testimonials');
+    Route::post('/member/testimonials', [App\Http\Controllers\MemberLoginController::class, 'storeTestimonials'])->name('member.testimonials.store');
+});
+
+
+Route::get('/contact-settings', [HomepageController::class, 'contactSettings'])->name('contact.index');
+Route::post('/contact-settings', [HomepageController::class, 'storeContactSettings'])->name('contact.store');
+Route::get('/contact-settings/{id}/edit', [HomepageController::class, 'editContactSettings'])->name('contact.edit');
+Route::delete('/contact-settings/{id}', [HomepageController::class, 'deleteContactSettings'])->name('contact.delete');
+
+
+///////Membership
+Route::put('/admin/settings/membership/update/{id}', [SettingsController::class, 'updateMembership'])->name('admin.settings.updateMembership');
+
+///////Chapter
+Route::put('/admin/settings/chapter/update/{id}', [SettingsController::class, 'updateChapter'])->name('admin.settings.updateChapter');
+
+///////District
+Route::put('/districts/update/{id}', [SettingsController::class, 'updateDistrict'])->name('districts.update');
+
+///////ParentDistrict
+Route::put('/settings/districts/{id}', [SettingsController::class, 'editParentDistrict'])->name('editdistricts.update');

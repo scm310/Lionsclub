@@ -160,5 +160,77 @@ class SettingsController extends Controller
         return redirect()->back()->with('success', 'District deleted successfully.');
     }
 
-    
+
+
+    public function updateMembership(Request $request, $id)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+        ]);
+
+        $membership = MembershipType::findOrFail($id);
+        $membership->name = $request->name;
+        $membership->save();
+
+        return redirect()->back()->with('success', 'Membership updated successfully!');
+    }
+
+
+    public function update(Request $request, $id)
+{
+    $request->validate([
+        'name' => 'required|string|max:255',
+    ]);
+
+    $district = District::findOrFail($id);
+    $district->name = $request->name;
+    $district->save();
+
+    return redirect()->back()->with('success', 'District updated successfully!');
+}
+
+
+public function updateChapter(Request $request, $id)
+{
+    $request->validate([
+        'chapter_name' => 'required|string|max:255',
+    ]);
+
+    $chapter = Chapter::findOrFail($id);
+    $chapter->chapter_name = $request->chapter_name;
+    $chapter->save();
+
+    return redirect()->back()->with('success', 'Chapter updated successfully!');
+}
+
+
+public function updateDistrict(Request $request, $id)
+{
+    $request->validate([
+        'name' => 'required|string|max:255',
+    ]);
+
+    $district = District::findOrFail($id);
+    $district->name = $request->name;
+    $district->save();
+
+    return redirect()->back()->with('success', 'District updated successfully!');
+}
+
+
+public function editParentDistrict(Request $request, $id)
+{
+    $request->validate([
+        'name' => 'required|string|max:255',
+    ]);
+
+    $district = ParentsMultipleDistrict::findOrFail($id);
+    $district->name = $request->name;
+    $district->save();
+
+    return redirect()->back()->with('success', 'District updated successfully.');
+}
+
+
+
 }

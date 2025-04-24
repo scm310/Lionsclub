@@ -55,6 +55,19 @@
             </div>
         </div>
 
+        <div class="col-md-4" id="chapterField" style="display: none;">
+    <div class="form-group">
+        <label for="chapter_id">Chapters:</label>
+        <select name="chapter_id[]" id="chapter_id" class="form-control" multiple required>
+            @foreach($chapters as $chapter)
+                <option value="{{ $chapter->id }}">{{ $chapter->chapter_name }}</option>
+            @endforeach
+        </select>
+    </div>
+</div>
+
+
+
         <div class="col-md-4" id="zoneField" style="display: none;">
             <div class="form-group">
                 <label for="region_zone">Zone:</label>
@@ -74,3 +87,22 @@
         <button type="submit" class="btn custom-btn mt-3">Assign</button>
     </div>
 </form>
+
+<script>
+    $(document).ready(function () {
+        $('#region_position').on('change', function () {
+            const selected = $(this).val();
+
+            if (selected === 'Zone Chairperson') {
+                $('#zoneField').show();
+                $('#chapterField').show();
+                $('#chapter_id').prop('required', true);
+            } else {
+                $('#zoneField').hide();
+                $('#chapterField').hide();
+                $('#chapter_id').prop('required', false);
+            }
+        });
+    });
+</script>
+

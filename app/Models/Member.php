@@ -48,7 +48,7 @@
         protected $casts = [
             'anniversary_date' => 'date',
         ];
-        
+
 
 
         public function getAuthIdentifierName()
@@ -80,5 +80,9 @@
         return $this->belongsTo(Chapter::class, 'account_name', 'id');
     }
 
+    public function team()
+{
+    return $this->hasOne(\App\Models\DGTeam::class, 'member_id', 'id');
+}
+
     }
-    

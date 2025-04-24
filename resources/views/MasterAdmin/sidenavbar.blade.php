@@ -257,6 +257,13 @@
         <div class="text-truncate">Footer Settings</div>
     </a>
 </li>
+
+<li class="menu-item {{ request()->routeIs('contact.index') ? 'active' : '' }}">
+    <a href="{{ route('contact.index') }}" class="menu-link">
+        <div class="text-truncate">Contact Settings</div>
+    </a>
+</li>
+
     </ul>
 </li>
 

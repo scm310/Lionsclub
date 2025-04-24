@@ -37,7 +37,15 @@
 </style>
 @php
     $banners_1000m = DB::table('banner_1000')->get();
-    $member = \App\Models\MemberDetail::first();
+
+    $member = \App\Models\Member::with('team')
+    ->whereHas('team', function ($query) {
+        $query->where('position', 'District Governor')
+              ->where('year', 'CurrentYear');
+    })
+    ->first();
+
+    $pinImages = DB::table('pin_images')->select('image_path')->get(); // Fetch all pin images
 
     $banners_10000 = DB::table('banner_10000')->select('image_path', 'url')->get();
     $banners_5000 = DB::table('banner_5000')->select('image_path', 'url')->get()->chunk(2);
@@ -65,8 +73,11 @@
 
             <!-- Member Role Image -->
             <div class="me-2 shadow-lg p-2">
-                <img src="{{ asset('assets/images/lo4.png') }}" alt="Logo" class="zoom-image1" loading="lazy"
-                    style="width: 40px; height: 40px; z-index: 999;" />
+                @foreach ($pinImages as $image)
+                <img src="{{ asset('storage/app/public/' . $image->image_path) }}" alt="Logo" class="zoom-image1" loading="lazy"
+                style="width: 40px; height: 40px; z-index: 999;" />
+            @endforeach
+
             </div>
 
             <!-- Member Login Button -->
@@ -135,7 +146,7 @@
         </div>
     </div>
 
-    
+
 
 </div>
 
@@ -145,15 +156,15 @@
     @if ($member)
         <div class="d-flex align-items-center move-horizontal">
             <!-- Member Image (Full Display) -->
-            <img src="{{ asset('storage/app/public/' . $member->image) }}" alt="{{ $member->name }}"
+            <img src="{{ asset('storage/app/public/' . $member->image) }}" alt="{{ $member->first_name.' '.$member->last_name}}"
                  class="me-3 "
                  style="
                   width: 50px; height: 50px;border-radius: 20px; object-fit: contain;" />
 
             <!-- Member Name and Role -->
             <div class="d-flex">
-                <div class="fw-bold me-2" style="font-size: 12px;">{{ $member->name }}</div>
-                <div style="font-size: 12px;">{{ $member->role }}</div>
+                <div class="fw-bold me-2" style="font-size: 12px;">{{ $member->first_name.' '.$member->last_name}} </div>
+                <div style="font-size: 12px;">{{ $member->team->position }}</div>
             </div>
         </div>
     @endif

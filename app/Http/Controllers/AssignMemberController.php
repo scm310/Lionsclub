@@ -24,9 +24,10 @@ class AssignMemberController extends Controller
     public function index()
     {
         $members = Member::selectRaw("id, CONCAT(first_name, ' ', last_name) as full_name")->get();
-        return view('admin.memberdirectory.assignmember', compact('members'));
+        $chapters = Chapter::all(); // Fetch all chapters
+    
+        return view('admin.memberdirectory.assignmember', compact('members', 'chapters'));
     }
- 
 
 
     public function clubindex(Request $request)
@@ -169,6 +170,8 @@ public function storeRegionMember(Request $request)
         'position' => 'required|in:Region Chairperson,Zone Chairperson',
         'region' => 'required|in:Region 1,Region 2,Region 3,Region 4',
         'zone' => 'nullable|required_if:position,Zone Chairperson|in:Zone 1,Zone 2,Zone 3',
+        'chapter_id' => 'required|array',
+        'chapter_id.*' => 'exists:chapters,id',
     ]);
 
     RegionMember::create([
@@ -177,6 +180,7 @@ public function storeRegionMember(Request $request)
         'year' => $request->year,
         'region' => $request->region,
         'zone' => $request->position === 'Zone Chairperson' ? $request->zone : null,
+        'chapter_id' => json_encode($request->chapter_id), // Store as JSON array
     ]);
 
     return redirect()->back()->with('success', 'Region Member assigned successfully.');

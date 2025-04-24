@@ -54,8 +54,10 @@
     border-radius: 10px;
     padding: 20px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    height: 600px;
+    min-height: 600px; /* Keeps initial height but allows growth */
+    height: auto;       /* Grows based on content */
 }
+
 
 .table th{
     color: white !important;

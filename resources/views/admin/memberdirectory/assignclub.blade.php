@@ -114,7 +114,17 @@ table.table {
     background-color: #B9D9EB;
 }
 
+@media (max-width: 767px) {
+        #chapterDropdown {
+            width: 100% !important;
+        }
+    }
 
+    @media (max-width: 767px) {
+        #searchInput {
+            width: 100% !important;
+        }
+    }
 </style>
 
 <div class="container mt-4">
@@ -122,30 +132,25 @@ table.table {
         <!-- Header -->
         <h3 class="mb-3 custom-heading">Assign Member Position</h3>
 
-        <!-- Import Button in Next Row, Right-Aligned -->
-        <div class="row mb-3">
-            <div class="col-12 text-end">
-                <a href="{{ route('show.import.form') }}" class="btn custom-btn">
-                    + Import
-                </a>
-            </div>
-        </div>
 
        <!-- Member Selection & Role -->
         <div class="card shadow-sm p-4 mt-4">
     <h5 class="text-center mb-4">Assign Club Position</h5>
     <form action="{{ route('assign.club') }}" method="GET" id="chapterForm">
     <div class="mb-4">
-    <label for="chapterDropdown" class="form-label fw-bold">Select Chapter</label>
+    <label for="chapterDropdown" class="form-label fw-bold">Select Club</label>
 
-        <select name="chapter_id" class="form-select select2" id="chapterDropdown" style="width: 30%;" onchange="document.getElementById('chapterForm').submit();">
-            <option value="">-- Select Chapter --</option>
-            @foreach($chapters as $chapter)
-                <option value="{{ $chapter->id }}" {{ request('chapter_id') == $chapter->id ? 'selected' : '' }}>
-                    {{ $chapter->chapter_name }}
-                </option>
-            @endforeach
-        </select>
+    <select name="chapter_id" class="form-select select2" id="chapterDropdown" style="width: 30%;" onchange="document.getElementById('chapterForm').submit();">
+    <option value="">-- Select Club --</option>
+    @foreach($chapters as $chapter)
+        <option value="{{ $chapter->id }}" {{ request('chapter_id') == $chapter->id ? 'selected' : '' }}>
+            {{ $chapter->chapter_name }}
+        </option>
+    @endforeach
+</select>
+
+
+
     </div>
 </form>
 
@@ -160,8 +165,10 @@ table.table {
 
     <!-- Search Field -->
     <div class="d-flex justify-content-center mb-3">
-        <input type="text" class="form-control w-50" id="searchInput" placeholder="Search Member ID or Name...">
-    </div>
+    <input type="text" class="form-control w-50" id="searchInput" placeholder="Search Member ID or Name...">
+</div>
+
+
 
     <!-- Select All Checkbox (Right-aligned) -->
     <div class="d-flex justify-content-end mb-2" id="selectAllContainer" style="display: none; margin-right: 40px;">
@@ -204,7 +211,7 @@ table.table {
                 <div class="mb-3">
                     <label for="position" class="form-label fw-bold">Select Position</label>
                     <select name="position" id="position" class="form-select">
-                        <option value="">-- Select Position --</option>
+                        <option value="">Select Position</option>
                         <option value="President">President</option>
                         <option value="Secretary">Secretary</option>
                         <option value="Treasurer">Treasurer</option>
@@ -301,11 +308,26 @@ table.table {
                 icon: 'success',
                 title: 'Success',
                 text: '{{ session('success') }}',
-                confirmButtonText: 'OK'
+                confirmButtonText: 'OK',
+                customClass: {
+                    confirmButton: 'swal-ok-button'
+                }
             });
+
+            // Custom button style
+            const style = document.createElement('style');
+            style.innerHTML = `
+                .swal-ok-button {
+                    background: linear-gradient(115deg, #0f0b8c, #77dcf5) !important;
+                    border: none;
+                    color: white !important;
+                }
+            `;
+            document.head.appendChild(style);
         });
     </script>
 @endif
+
 
 @if(session('error'))
     <script>

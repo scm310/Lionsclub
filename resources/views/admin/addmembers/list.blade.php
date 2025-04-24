@@ -106,6 +106,12 @@
     #membersTable td:nth-child(4) {
         width: 30%;
     }
+    .btn-light:hover {
+        color:rgb(242, 245, 248) !important;
+    background-color: #e4e6e8 !important;
+    border-color: #dfe1e3 !important;
+
+    }
 </style>
 <div class="container mt-4">
     <div class="white-container">
