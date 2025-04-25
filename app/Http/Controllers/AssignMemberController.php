@@ -25,7 +25,7 @@ class AssignMemberController extends Controller
     {
         $members = Member::selectRaw("id, CONCAT(first_name, ' ', last_name) as full_name")->get();
         $chapters = Chapter::all(); // Fetch all chapters
-    
+
         return view('admin.memberdirectory.assignmember', compact('members', 'chapters'));
     }
 
@@ -34,33 +34,33 @@ class AssignMemberController extends Controller
     {
         $chapters = Chapter::all();
         $members = [];
-    
+
         if ($request->has('chapter_id') && $request->chapter_id != '') {
             $members = Member::where('account_name', $request->chapter_id)->get();
         }
-    
+
         return view('admin.memberdirectory.assignclub', compact('chapters', 'members'));
     }
-    
 
-    
+
+
 
     // Handle search request
     public function searchMember(Request $request)
     {
         $query = $request->input('query');
         $clubId = $request->input('club_id'); // Accept club_id if provided
-    
+
         $members = Member::selectRaw("id, CONCAT(first_name, ' ', last_name) as full_name")
             ->when($clubId, function ($q) use ($clubId) {
                 $q->where('club_id', $clubId); // Adjust column name if needed
             })
             ->whereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ["%{$query}%"])
             ->get();
-    
+
         return response()->json($members);
     }
-    
+
 
 
     public function storeInternationalOfficer(Request $request)
@@ -113,14 +113,14 @@ public function storedg(Request $request)
     public function storeDistrictGovernor(Request $request) {
         // Debugging: Check the received data
         Log::info('Received Data:', $request->all());
-    
+
         // Validate the incoming request
         $validated = $request->validate([
             'member_id' => 'required|exists:add_members,id',
             'position' => 'required|string',
             'year' => 'required|string',
         ]);
-    
+
         // Try to store data in the database
         try {
             $districtGovernor = new DistrictGovernor();
@@ -128,16 +128,16 @@ public function storedg(Request $request)
             $districtGovernor->position = $request->position;
             $districtGovernor->year = $request->year;
             $districtGovernor->save();
-    
+
             Log::info('District Governor Stored Successfully', ['id' => $districtGovernor->id]);
-    
+
             return redirect()->back()->with('success', 'District Governor saved successfully!');
         } catch (\Exception $e) {
             Log::error('Error storing District Governor:', ['message' => $e->getMessage()]);
             return redirect()->back()->with('error', 'Failed to save District Governor!');
         }
     }
-    
+
     public function storeClubPosition(Request $request)
 {
     $request->validate([
@@ -161,7 +161,7 @@ public function storedg(Request $request)
     }
 }
 
-    
+
 
 public function storeRegionMember(Request $request)
 {
@@ -259,7 +259,7 @@ public function remove(Request $request)
 
 
 
- 
+
 
 
 
@@ -274,19 +274,19 @@ public function remove(Request $request)
             'past_governors' => PastGovernor::class,
             'district_chairpersons' => DistrictChairperson::class,
         ];
-    
+
         if (!array_key_exists($role, $modelMap)) {
             return redirect()->back()->with('error', 'Invalid role');
         }
-    
+
         $model = $modelMap[$role];
         $model::findOrFail($id)->delete();
-    
+
         return redirect()->back()->with('success', 'Member role removed successfully');
     }
-    
 
-    
+
+
 
 
 }

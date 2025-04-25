@@ -43,7 +43,7 @@
     .custom-heading {
         text-align: center;
         white-space: nowrap;
-        padding: 10px;
+        padding: 5px;
         color: white;
         /* Ensures text is readable */
         background: linear-gradient(115deg, #0f0b8c, #77dcf5);

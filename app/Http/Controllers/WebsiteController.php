@@ -6,6 +6,7 @@ use App\Models\AdImage1;
 use App\Models\AdImage2;
 use App\Models\Image2;
 use App\Models\Image3;
+use App\Models\Member;
 use App\Models\RegionMember;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -205,67 +206,8 @@ class WebsiteController extends Controller
 
     public function regionmember()
     {
-        $regions = [
-            'Region 1' => DB::table('region_members')
-                ->join('add_members', 'region_members.member_id', '=', 'add_members.id')
-                ->where('region_members.region', 'Region 1')
-                ->select(
-                    'region_members.position',
-                    'region_members.year',
-                    'add_members.first_name',
-                    'add_members.last_name',
-                    'add_members.phone_number',
-                    'add_members.email_address',
-                    'add_members.profile_photo',
-                    'add_members.member_id'
-                )
-                ->get(),
-
-            'Region 2' => DB::table('region_members')
-                ->join('add_members', 'region_members.member_id', '=', 'add_members.id')
-                ->where('region_members.region', 'Region 2')
-                ->select(
-                    'region_members.position',
-                    'region_members.year',
-                    'add_members.first_name',
-                    'add_members.last_name',
-                    'add_members.phone_number',
-                    'add_members.email_address',
-                    'add_members.profile_photo',
-                    'add_members.member_id'
-                )
-                ->get(),
-
-            'Region 3' => DB::table('region_members')
-                ->join('add_members', 'region_members.member_id', '=', 'add_members.id')
-                ->where('region_members.region', 'Region 3')
-                ->select(
-                    'region_members.position',
-                    'region_members.year',
-                    'add_members.first_name',
-                    'add_members.last_name',
-                    'add_members.phone_number',
-                    'add_members.email_address',
-                    'add_members.profile_photo',
-                    'add_members.member_id'
-                )
-                ->get(),
-
-            'Region 4' => DB::table('region_members')
-                ->join('add_members', 'region_members.member_id', '=', 'add_members.id')
-                ->where('region_members.region', 'Region 4')
-                ->select(
-                    'region_members.position',
-                    'region_members.year',
-                    'add_members.first_name',
-                    'add_members.last_name',
-                    'add_members.phone_number',
-                    'add_members.email_address',
-                    'add_members.profile_photo',
-                    'add_members.member_id'
-                )
-                ->get(),
-        ];
+        $regions = RegionMember::with(['member', 'chapter'])
+        ->get();
 
         return view('member.regionmember', compact('regions'));
     }
@@ -524,5 +466,49 @@ public function login(Request $request)
         return back()->with('error', 'Invalid email or password');
     }
 }
+
+
+
+// regions big card data
+
+public function fetchRegionData($regionName)
+    {
+
+
+        // Step 1: Get all region_members where region matches
+        $regionMembers = DB::table('region_members')
+            ->where('region', $regionName)
+            ->get();
+
+
+        // Step 2: Collect all chapter_ids from JSON arrays
+        $allChapterIds = collect();
+
+        foreach ($regionMembers as $member) {
+            $ids = json_decode($member->chapter_id, true);
+            if (is_array($ids)) {
+                $allChapterIds = $allChapterIds->merge($ids);
+            }
+        }
+
+
+        $uniqueChapterIds = $allChapterIds->unique()->values();
+
+        // Step 4: Get chapters matching those IDs
+        $chapters = DB::table('chapters')
+            ->whereIn('id', $uniqueChapterIds)
+            ->get();
+
+        // Step 5: Return data
+        return response()->json([
+            'success' => true,
+            'region' => $regionName,
+
+            'chapters' => $chapters,
+        ]);
+
+
+}
+
 
 }

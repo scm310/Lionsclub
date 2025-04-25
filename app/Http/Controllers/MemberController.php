@@ -15,25 +15,25 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 
 
+
+
 class MemberController extends Controller
 {
 
     public function index()
     {
-        // Get session values
         $adminId = session('admin_id');
         $adminRole = session('admin_role');
         $memberId = session('member_id');
-       
-        
-        // If a specific member is logged in
+    
+        // ✅ Use Chapter model instead of Account
+        $clubs = Chapter::all();
+    
         if (!is_null($memberId)) {
-            // Step 1: Get the account_name of the logged-in user from add_members
             $targetAccountName = DB::table('add_members')
                 ->where('member_id', $memberId)
                 ->value('account_name');
     
-            // Step 2: Fetch all members with the same account_name via the account relationship
             $members = Member::with(['membershipType', 'parentMultipleDistrict', 'parentDistrict', 'account'])
                 ->whereHas('account', function ($query) use ($targetAccountName) {
                     $query->where('account_name', $targetAccountName);
@@ -41,16 +41,16 @@ class MemberController extends Controller
                 ->orderBy('created_at', 'desc')
                 ->get();
     
-            return view('admin.addmembers.list', compact('members'));
+            return view('admin.addmembers.list', compact('members', 'clubs'));
         }
     
-        // Otherwise, fetch all members
         $members = Member::with(['membershipType', 'parentMultipleDistrict', 'parentDistrict', 'account'])
             ->orderBy('created_at', 'desc')
             ->get();
     
-        return view('admin.addmembers.list', compact('members'));
+        return view('admin.addmembers.list', compact('members', 'clubs'));
     }
+    
     
     
 
@@ -277,6 +277,31 @@ public function import(Request $request)
         return redirect()->back()->with('error', 'Import failed. Check logs.');
     }
 }
+
+public function transfer(Request $request)
+{
+  
+    $request->validate([
+        'member_id' => 'required|exists:add_members,id',
+        'new_club_id' => 'required|string|max:255',
+    ]);
+
+    // Find the member
+    $member = \DB::table('add_members')->where('id', $request->member_id)->first();
+
+    if (!$member) {
+        return redirect()->back()->with('error', 'Member not found.');
+    }
+
+    // Update the account_name
+    \DB::table('add_members')
+        ->where('id', $request->member_id)
+        ->update(['account_name' => $request->new_club_id]);
+
+    return redirect()->back()->with('success', 'Member transferred to new club successfully!');
+}
+
+
 
     
 }

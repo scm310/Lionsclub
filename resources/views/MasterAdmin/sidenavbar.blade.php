@@ -116,12 +116,7 @@
             </a>
         </li>
 
-        <!-- Add Members -->
-        <li class="menu-item {{ request()->routeIs('members.add') ? 'active' : '' }}">
-            <a href="{{ route('members.add') }}" class="menu-link">
-                <div class="text-truncate">Add Members</div>
-            </a>
-        </li>
+       
 
         <!-- Approve Member -->
         @if(session('admin_role') === 'club_administrator')

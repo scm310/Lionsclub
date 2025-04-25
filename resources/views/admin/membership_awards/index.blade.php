@@ -134,7 +134,7 @@
 
 @media (max-width: 767.98px) {
     .dataTables_length {
-      
+
         padding-bottom: 0.5rem;
         margin-bottom: 0.5rem;
     }
@@ -151,7 +151,10 @@
     }
 }
 
-
+.alert{
+        width: 370px;
+    margin-left: 406px;
+    }
 </style>
 
 
@@ -171,14 +174,19 @@
     </button>
 </div>
 
+@if(session('success'))
+<div class="alert alert-success alert-dismissible fade show mt-3" role="alert" style="font-size:14px;">
+    {{ session('success') }}
 
+</div>
+@endif
 
         @include('admin.partial.alerts')
 
     <!-- Membership Award Form -->
     <div class="card mb-4" style="background-color:#87cefa;">
     <div class="d-flex flex-column flex-md-row justify-content-end align-items-start align-items-md-center p-3">
-        
+
     </div>
 
 
@@ -215,7 +223,7 @@
                     </div>
                 </div>
 
-      
+
             </form>
         </div>
 
@@ -313,7 +321,7 @@ $(document).on('click', '.delete-btn', function () {
         text: `You are about to delete the membership award record: "${recordTitle}"`,
         icon: "warning",
         showCancelButton: true,
-       
+
         confirmButtonText: "Yes, delete it!",
         cancelButtonText: "Cancel",
         customClass: {
@@ -380,7 +388,19 @@ $(document).on('click', '.delete-btn', function () {
         });
     });
 </script>
-
+<script>
+    // Auto fade up and remove the alert
+    setTimeout(() => {
+        const alertBox = document.querySelector('.alert');
+        if(alertBox) {
+            alertBox.classList.remove('show');
+            alertBox.classList.add('fade');
+            setTimeout(() => {
+                alertBox.remove();
+            }, 500); // remove after fade-out
+        }
+    }, 3000); // show for 3 seconds
+</script>
 
 
 @endsection

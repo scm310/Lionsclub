@@ -18,4 +18,16 @@ class RegionMember extends Model
     {
         return $this->belongsTo(User::class, 'member_id');
     }
+
+    public function member()
+    {
+        return $this->belongsTo(Member::class, 'member_id');
+    }
+
+
+    public function chapter()
+    {
+        return $this->belongsTo(Chapter::class, 'chapter_id');
+    }
+
 }

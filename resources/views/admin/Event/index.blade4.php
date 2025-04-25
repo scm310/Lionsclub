@@ -326,29 +326,16 @@
         transition: transform 0.3s ease-in-out; /* Smooth zoom transition */
         cursor: pointer;
     }
-
+    
     .zoom-image:hover {
         transform: scale(1.8); /* Zoom in on hover */
-    }
-
-    .alert{
-        width: 254px;
-    margin-left: 406px;
     }
 </style>
 
 <div class="container mt-4 ">
     <div class="white-container">
         <h3 class="mb-3 custom-heading">Events</h3>
-
-        @if(session('success'))
-    <div class="alert alert-success alert-dismissible fade show mt-3" role="alert" style="font-size:14px;">
-        {{ session('success') }}
-
-    </div>
-@endif
         @include('admin.partial.alerts')
-
 
         <ul class="nav nav-tabs d-flex flex-wrap" id="bannerTabs">
             <li class="nav-item">
@@ -547,7 +534,7 @@
             <td style="max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: wrap;">
                 {{ Str::title($event->event->event_name ?? 'N/A') }}
             </td>
-
+            
             <td style="max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="{{ $event->venue }}">
                 {{ Str::title($event->venue) }}
             </td>
@@ -795,20 +782,5 @@
 
 <!-- Select2 JS -->
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-
-
-<script>
-    // Auto fade up and remove the alert
-    setTimeout(() => {
-        const alertBox = document.querySelector('.alert');
-        if(alertBox) {
-            alertBox.classList.remove('show');
-            alertBox.classList.add('fade');
-            setTimeout(() => {
-                alertBox.remove();
-            }, 500); // remove after fade-out
-        }
-    }, 3000); // show for 3 seconds
-</script>
 
         @endsection

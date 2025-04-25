@@ -153,10 +153,11 @@
 
 
 <div class="card shadow-2xl animated-bg p-1 rounded-xl d-flex  mb-1 justify-content-center align-items-center overflow-hidden" style="width: 100%;">
+
     @if ($member)
         <div class="d-flex align-items-center move-horizontal">
             <!-- Member Image (Full Display) -->
-            <img src="{{ asset('storage/app/public/' . $member->image) }}" alt="{{ $member->first_name.' '.$member->last_name}}"
+            <img src="{{ $member->profile_photo ? asset('storage/app/public/' . $member->profile_photo) : asset('assets/images/default.png') }}" alt="{{ $member->first_name.' '.$member->last_name}}"
                  class="me-3 "
                  style="
                   width: 50px; height: 50px;border-radius: 20px; object-fit: contain;" />

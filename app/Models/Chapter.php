@@ -10,7 +10,13 @@ class Chapter extends Model
     use HasFactory;
 
     protected $fillable = [
+        'id',
         'chapter_name',
         'location',
     ];
+
+    public function regionMembers()
+    {
+        return $this->hasMany(RegionMember::class, 'chapter_id');
+    }
 }

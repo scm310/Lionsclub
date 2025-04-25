@@ -52,6 +52,9 @@ Route::get('/districtgovernor', [WebsiteController::class, 'districtgovernor'])-
 Route::get('/pastdistrictgovernor', [WebsiteController::class, 'pastdistrictgovernor'])->name('pastdistrictgovernor');
 Route::get('/districtchairperson', [WebsiteController::class, 'districtchairperson'])->name('districtchairperson');
 Route::get('/regionmember', [WebsiteController::class, 'regionmember'])->name('regionmember');
+
+Route::get('/regions/{regionName}', [WebsiteController::class,'fetchRegionData']);
+
 Route::get('/chapter', [WebsiteController::class, 'chapter'])->name('chapter');
 Route::get('/career-enquiry', [WebsiteController::class, 'showCareerEnquiryForm'])->name('careerenquiry.form');
 Route::post('/career-enquiry/submit', [WebsiteController::class, 'submitCareerEnquiry'])->name('careerenquiry.submit');
@@ -177,7 +180,7 @@ Route::delete('/international-officers/{id}', [InternationalOfficerController::c
 
 Route::post('/international-officers/store-governor', [InternationalOfficerController::class, 'storeGovernor'])
     ->name('international.officers.storeGovernor');
-    
+
 Route::get('/district-chairperson/form', [InternationalOfficerController::class, 'showDistrictChairpersonForm'])->name('districtchairperson.form');
 Route::post('/district-chairperson/store', [InternationalOfficerController::class, 'addDistrictChairperson'])->name('districtchairperson.store');
 
@@ -264,7 +267,7 @@ Route::prefix('admin')->group(function () {
     Route::post('/addevents', [EventController::class, 'store'])->name('events_store');
     Route::get('/edit/{id}', [EventController::class, 'edit'])->name('event.edit');  // Edit page
 Route::post('/update/{id}', [EventController::class, 'update'])->name('event.update'); // Form submit
-  
+
 });
 
 
@@ -411,6 +414,11 @@ Route::get('member/logout', [MemberLoginController::class, 'logout'])->name('mem
 Route::post('/profile/testimonials/save', [MemberLoginController::class, 'saveTestimonials'])->name('testimonials.save');
 Route::delete('/member/testimonials/{testimonial}', [MemberLoginController::class, 'destroy'])->name('member.testimonials.destroy');
 
+//products
+Route::post('/store-product', [MemberLoginController::class, 'storeProduct'])->name('store.product');
+Route::put('/product/update/{id}', [MemberLoginController::class, 'updateProduct'])->name('update.product');
+Route::get('/product/delete/{id}', [MemberLoginController::class, 'deleteProduct'])->name('delete.product');
+
 
 
 // Protected Route Example (Dashboard)
@@ -536,7 +544,7 @@ Route::delete('/images/{id}', [HomepageController::class, 'pinimagedestroy'])->n
 
 
 
-/// landing page 
+/// landing page
 
 Route::post('/login-submit', [WebsiteController::class, 'login'])->name('login.submit');
 

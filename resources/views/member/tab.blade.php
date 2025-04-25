@@ -72,16 +72,16 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('pastdistrictgovernor') ? 'active' : '' }}"
-                       href="{{ route('pastdistrictgovernor') }}">Past District Governor</a>
+                       href="{{ route('pastdistrictgovernor') }}">Past District Governors</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('districtchairperson') ? 'active' : '' }}"
-                       href="{{ route('districtchairperson') }}">District Chairperson</a>
+                       href="{{ route('districtchairperson') }}">District Chairpersons</a>
                 </li>
 
                 <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('regionmember') ? 'active' : '' }}"
-                       href="{{ route('regionmember') }}">Region Member</a>
+                       href="{{ route('regionmember') }}">Regions Member</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('chapter') ? 'active' : '' }}"

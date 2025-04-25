@@ -12,6 +12,7 @@
         protected $table = 'add_members'; // Define the table name
 
         protected $fillable = [
+            'id',
             'parent_multiple_district',
             'parent_district',
             'account_name',
@@ -83,6 +84,11 @@
     public function team()
 {
     return $this->hasOne(\App\Models\DGTeam::class, 'member_id', 'id');
+}
+
+public function regionMembers()
+{
+    return $this->hasMany(RegionMember::class, 'member_id');
 }
 
     }

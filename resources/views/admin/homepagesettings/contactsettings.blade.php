@@ -125,9 +125,14 @@ margin-top:-20px;
     <div class="white-container">
         <h3 class="mb-3 custom-heading">Contact Settings</h3>
 
-    @if(session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
+        @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show w-50 mx-auto text-center" role="alert">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
     @endif
+
+
     <div class="card" style="max-width: 500px; margin: 0 auto; background-color:#87cefa;">
     <div class="card-body">
     <form method="POST" action="{{ route('contact.store') }}">
@@ -161,11 +166,11 @@ margin-top:-20px;
 
                     <td>{{ $contact->address ?? 'No address available' }}</td>
                     <td>{{ $contact->created_at->format('d-m-Y H:i:s') }}</td>
-z
+
 
                     <td>
                         <!-- Edit Button -->
-                        <a href="{{ route('contact.edit', $contact->id) }}" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>
+                        {{-- <a href="{{ route('contact.edit', $contact->id) }}" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a> --}}
 
                         <!-- Delete Button -->
                         <form action="{{ route('contact.delete', $contact->id) }}" method="POST" style="display:inline;" class="delete-form">
