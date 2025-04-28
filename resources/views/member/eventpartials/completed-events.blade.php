@@ -1,4 +1,39 @@
- <!-- Completed Events Tab -->
+<style>
+.card_title {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 90%;
+
+    height: auto;
+    color: var(--white) !important;
+    padding: 0.5rem;
+    border-radius: 5px 0 0 5px;
+    transform: rotate(-3.3deg);
+    transform-origin: left top;
+    font-family: Georgia, Times, serif;
+    font-weight: 300;
+    postition: relative;
+    overflow: hidden;
+    z-index: 1;
+    background: #00338c;
+    /* Updated background */
+    animation: 0s 0s fly-in 0 reverse both;
+}
+
+@media (min-width: 535px) {
+    .card_title {
+        animation: 0.5s 0.25s fly-out 1 both;
+    }
+}
+
+.card:focus .card_title,
+.card:hover .card_title {
+    animation: 0.5s ease-in 0s fly-in 1 both;
+}
+
+</style>
+<!-- Completed Events Tab -->
  <div class="tab-pane fade {{ $activeTab === 'tab1' ? 'show active' : '' }}" id="tab1">
             <!-- Sticky Header for Completed Events -->
             <div class="sticky-header text-white py-3 px-2"
@@ -23,7 +58,7 @@
 
                     @foreach($months as $index => $month)
                     @if($index < $currentMonthIndex)
-                        <a href="#" class="month-link btn btn-outline-light btn-sm 
+                        <a href="#" class="month-link btn btn-outline-light btn-sm
             {{ $month === $currentMonth ? 'active' : '' }}"
                         data-month="{{ $month }}">
                         {{ $month }}
@@ -42,9 +77,9 @@
         @endphp
 
         <div class="event-row cards_item col-6 col-lg-auto" data-month="{{ $eventMonth }}" style="{{ $eventMonth !== $currentMonth ? 'display: none;' : '' }}">
-            <div class="card1 completed-event-card rounded shadow-sm d-flex flex-column justify-content-center align-items-center"
+            <div class="card1 completed-event-card rounded shadow-sm d-flex mb-2 flex-column justify-content-center align-items-center"
                 tabindex="0"
-                style="width:225px; height:195px; cursor: pointer; border: 2px solid #ffcc00; background:#fff; transition: transform 0.3s ease-in-out;"
+                style="width:210px !important; height:150px; cursor: pointer; border: 2px solid #ffcc00; background:#fff; transition: transform 0.3s ease-in-out; margin-left:20px;"
                 data-event-id="{{ $event->id }}"
                 data-event-name="{{ $event->event_name }}"
                 data-event-date="{{ \Carbon\Carbon::parse($event->event_date)->format('M d, Y') }}"
@@ -52,7 +87,7 @@
                 data-event-details="{{ $event->details }}"
                 data-event-images="{{ json_encode($event->images) }}"
                 onclick="showCompletedEventDetails(this)">
-                
+
                 @php
                     $images = is_array($event->images) ? $event->images : json_decode($event->images, true);
                     $images = is_array($images) ? $images : [];
@@ -89,9 +124,9 @@
 
            <!-- Completed Event Details Modal Container -->
     <div id="eventDetailsContainer" class="position-fixed top-0 end-0 shadow-lg p-4 d-none"
-        style="width: 400px; height:60vh; z-index: 1055; overflow-y: auto; 
-            margin-top:240px; 
-             border-top-left-radius: 20px; border-bottom-left-radius: 20px;">
+        style="width: 400px; height:60vh; z-index: 1055; overflow-y: auto;
+            margin-top:240px;
+             border-top-left-radius: 20px; border-bottom-left-radius: 20px; overflow-x: hidden">
 
         <!-- Close Button -->
         <button class="btn-close position-absolute top-0 end-0 m-1" id="closeEventDetails" onclick="closeEventDetails()"></button>

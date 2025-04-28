@@ -35,9 +35,9 @@
     <div class="tab-content">
     @include('member.eventpartials.completed-events', ['completedEvents' => $completedEvents])
     @include('member.eventpartials.upcoming-events', ['completedEvents' => $completedEvents])
-    
+
     </div>
- 
+
 </div>
 
 <script>

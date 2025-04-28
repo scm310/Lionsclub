@@ -43,7 +43,7 @@
         <a class="nav-link active text-white px-4 py-2 rounded text-center" id="tab-personal" data-toggle="tab" href="#personal" role="tab"
             style="background: linear-gradient(115deg, #0f0b8c, #77dcf5); border: none;">Member Details</a>
     </li>
-    
+
 
     <li class="nav-item m-1">
         <a class="nav-link text-white px-4 py-2 rounded text-center" id="tab-clients" data-toggle="tab" href="#clients" role="tab"
@@ -136,11 +136,12 @@
 
                 <!-- ✅ Profile Photo Upload Section -->
                 <div class="row mt-3">
-    <!-- Upload Field -->
-    <div class="col-12 col-md-4 mb-3 mb-md-0">
-        <label>Upload Profile Photo</label>
-        <input type="file" name="profile_photo" class="form-control">
-    </div>
+  <!-- Upload Field -->
+<div class="col-12 col-md-4 mb-3 mb-md-0">
+    <label>Upload Profile Photo</label>
+    <input type="file" name="profile_photo" class="form-control">
+    <small class="form-text text-muted">Note: Image Size 80x80 pixels</small>
+</div>
 
     <!-- Display Image -->
     <div class="col-12 col-md-4 d-flex align-items-center">
@@ -159,7 +160,7 @@
                     </button>
                 </div>
             </form>
-        
+
 
             <form action="{{ route('member.update') }}" method="POST">
                 @csrf
@@ -390,10 +391,7 @@
         </div>
     </div> --}}
 
-    <div class="tab-pane fade" id="testimonials" role="tabpanel">
-    <div class="container p-4" style="background-color:#87cefa; border-radius: 8px;">
-        </div>
-</div>
+
 
 
 
@@ -409,6 +407,14 @@
 </div>
 
 
+<div class="tab-pane fade" id="product" role="tabpanel">
+    <div class="container p-4" style="background-color:#87cefa; border-radius: 8px;">
+        @include('member.partials.products')
+
+    </div>
+</div>
+
+
 <div class="tab-pane fade" id="clients" role="tabpanel">
     <div class="container p-4" style="background-color:#87cefa; border-radius: 8px;">
         @include('member.partials.clients')
@@ -416,9 +422,9 @@
     </div>
 </div>
 
-<div class="tab-pane fade" id="product" role="tabpanel">
+<div class="tab-pane fade" id="testimonials" role="tabpanel">
     <div class="container p-4" style="background-color:#87cefa; border-radius: 8px;">
-        @include('member.partials.products')
+        @include('member.partials.testimonials')
 
     </div>
 </div>

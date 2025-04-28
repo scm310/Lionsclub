@@ -8,7 +8,7 @@
             $savedTestimonials = \App\Models\Testimonial::where('member_id', Auth::guard('member')->id())->get();
         @endphp
 
-<form action="{{ route('member.testimonials.store') }}" method="POST" enctype="multipart/form-data">
+<form action="{{ route('member.testimonials.store') }}"  method="POST" enctype="multipart/form-data">
     @csrf
     <div id="testimonial-wrapper">
         @forelse($testimonials as $index => $testimonial)
@@ -45,11 +45,12 @@
                     @endif
                 </div>
                 @if(!empty($testimonial->id))
-                <form action="{{ route('member.testimonials.destroy', $testimonial->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this testimonial?');" style="display:inline-block;">
+                <form action="{{ route('member.testimonials.destroy', $testimonial->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this testimonial?');">
     @csrf
     @method('DELETE')
-    <button type="submit" class="btn btn-danger mt-4">Remove</button>
+    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
 </form>
+
 
                 @else
                     <button type="button" class="btn btn-danger mt-4 remove-btn">Remove</button>
@@ -111,6 +112,14 @@
         $(document).on('click', '.remove-btn', function () {
     if (confirm('Are you sure you want to delete this testimonial?')) {
         $(this).closest('.testimonial-row').remove();  // Removes the testimonial row from the DOM
+    }
+});
+
+
+
+$(document).on('click', '.remove-btn', function () {
+    if (confirm('Are you sure you want to delete this testimonial?')) {
+        $(this).closest('.testimonial-row').remove();
     }
 });
 

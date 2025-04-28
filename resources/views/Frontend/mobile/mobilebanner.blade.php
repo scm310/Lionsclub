@@ -164,7 +164,7 @@
 
             <!-- Member Name and Role -->
             <div class="d-flex">
-                <div class="fw-bold me-2" style="font-size: 12px;">{{ $member->first_name.' '.$member->last_name}} </div>
+                <div class="fw-bold me-2" style="font-size: 12px;">{{ $member->salutation.' '.$member->first_name.' '.$member->last_name}} </div>
                 <div style="font-size: 12px;">{{ $member->team->position }}</div>
             </div>
         </div>

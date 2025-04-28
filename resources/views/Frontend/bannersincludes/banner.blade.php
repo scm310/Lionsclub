@@ -41,6 +41,7 @@
         })
         ->first();
 
+
     $pinImages = DB::table('pin_images')->select('image_path')->get(); // Fetch all pin images
 
     $banners_10000 = DB::table('banner_10000')->select('image_path', 'url')->get();
@@ -90,7 +91,7 @@
             <div class="top-ad-banner1"
                 style="flex-shrink: 0; margin-right: 15px; overflow: visible; position: relative;">
                 <img src="{{ $member->profile_photo ? asset('storage/app/public/' . $member->profile_photo) : asset('assets/images/default.png') }}"
-                    alt="{{ $member->first_name . ' ' . $member->last_name }} " class="ban zoom-image"
+                    alt="{{ $member->salutation.' '.$member->first_name . ' ' . $member->last_name }} " class="ban zoom-image"
                     style="height: 102px; margin-left: -100px; margin-top: 10px;" />
             </div>
 

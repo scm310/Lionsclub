@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\AdImage1;
 use App\Models\AdImage2;
+use App\Models\Chapter;
 use App\Models\Image2;
 use App\Models\Image3;
 use App\Models\Member;
@@ -136,8 +137,6 @@ class WebsiteController extends Controller
     }
 
 
-
-
     public function intofficer()
     {
         $internationalOfficers = DB::table('internationalofficers')
@@ -202,14 +201,18 @@ class WebsiteController extends Controller
 
 
 
-
-
     public function regionmember()
     {
-        $regions = RegionMember::with(['member', 'chapter'])
-        ->get();
+        $regions = RegionMember::with('member')->get();
 
-        return view('member.regionmember', compact('regions'));
+
+
+        $groupedRegions = $regions->groupBy('region');
+
+
+
+
+        return view('member.regionmember', ['regions' => $groupedRegions]);
     }
 
 
@@ -245,10 +248,10 @@ class WebsiteController extends Controller
 
         $completedEvents = Event::where('event_date', '<', $currentDate)
             ->orderBy('event_date', 'asc')
-            ->with('pastEvents') // Load past event details correctly
+            ->with('pastEvents')
             ->get()
             ->map(function ($event) {
-                $pastEvent = $event->pastEvents->first(); // Get the first past event record if available
+                $pastEvent = $event->pastEvents->first();
                 $event->venue = $pastEvent->venue ?? 'N/A';
                 $event->details = $pastEvent->details ?? 'N/A';
                 $event->images = $pastEvent->images ?? [];
@@ -259,7 +262,7 @@ class WebsiteController extends Controller
             ->orderBy('event_date', 'asc')
             ->get();
 
-        // Get the 'tab' parameter from the request, default to 'tab2' (Upcoming Events)
+
         $activeTab = $request->query('tab', 'tab2');
 
         return view('member.webevents', compact('completedEvents', 'upcomingEvents', 'activeTab'));

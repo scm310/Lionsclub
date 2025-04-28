@@ -123,7 +123,7 @@
             Helvetica Neue, Arial, sans-serif;
         line-height: 1.5;
         text-size-adjust: 0.2px;
-        padding: 0 1rem;
+        padding: -1px 1rem !important;
     }
 
     .card_text p:first-of-type:first-letter {
@@ -326,9 +326,9 @@
     }
 
     .card {
-        width: 100%;
-
+        width: 82%;
         margin: auto;
+        padding: 0px !important;
     }
 
     .card-img-top {
@@ -406,6 +406,7 @@
         /* Hidden initially */
         transition: all 0.3s ease-in-out;
         z-index: 1000;
+
         /* Ensure it appears above other elements */
     }
 

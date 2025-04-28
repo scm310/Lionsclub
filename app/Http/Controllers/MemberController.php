@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Imports\MembersImport;
+use App\Models\Announcement;
 use App\Models\Chapter;
 use App\Models\District;
 use Illuminate\Http\Request;
 use App\Models\Member;
 use App\Models\MembershipType;
 use App\Models\ParentsMultipleDistrict;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Log;
@@ -22,33 +24,78 @@ class MemberController extends Controller
 
     public function index()
     {
+        // Get session values
         $adminId = session('admin_id');
         $adminRole = session('admin_role');
         $memberId = session('member_id');
-    
-        // ✅ Use Chapter model instead of Account
+
+// ✅ Use Chapter model instead of Account
         $clubs = Chapter::all();
-    
+        // If a specific member is logged in
         if (!is_null($memberId)) {
+            // Step 1: Get the account_name of the logged-in user from add_members
             $targetAccountName = DB::table('add_members')
                 ->where('member_id', $memberId)
                 ->value('account_name');
-    
+
+            // Step 2: Fetch all members with the same account_name via the account relationship
             $members = Member::with(['membershipType', 'parentMultipleDistrict', 'parentDistrict', 'account'])
                 ->whereHas('account', function ($query) use ($targetAccountName) {
                     $query->where('account_name', $targetAccountName);
                 })
                 ->orderBy('created_at', 'desc')
                 ->get();
-    
-            return view('admin.addmembers.list', compact('members', 'clubs'));
+
+            return view('admin.addmembers.list', compact('members'));
         }
-    
+
+        // Otherwise, fetch all members
         $members = Member::with(['membershipType', 'parentMultipleDistrict', 'parentDistrict', 'account'])
             ->orderBy('created_at', 'desc')
             ->get();
+
+       return view('admin.addmembers.list', compact('members', 'clubs'));
+    }
+
+
+
+    public function showAnnouncements()
+    {
+        // Get the currently authenticated member using the 'member' guard
+        $member = Auth::guard('member')->user();
     
-        return view('admin.addmembers.list', compact('members', 'clubs'));
+        // Get the account_name of the member from add_members table
+        $accountName = Member::where('id', $member->id)->value('account_name');
+    
+        // Fetch announcements where chapter_id is null (for all) or matches member's account_name
+        $announcements = Announcement::where(function ($query) use ($accountName) {
+            $query->whereNull('chapter_id')
+                  ->orWhere('chapter_id', $accountName);
+        })->get();
+    
+        return view('member.announcementlist', compact('announcements'));
+    }
+
+    
+
+    public function dashboard()
+    {
+        // Fetch the logged-in member's chapter ID
+        $member = Auth::guard('member')->user();
+        $account_name = $member->account_name;
+
+        // Get announcements
+        $announcements = Announcement::where(function ($query) use ($account_name) {
+            // If chapter_id is null, fetch for all members
+            $query->whereNull('chapter_id')
+                  ->orWhere('chapter_id', $account_name);
+        })->get();
+
+        // Use dd() to inspect the announcements data
+        // dd($announcements);
+
+        // Return the view with announcements
+        return view('member.dashboard', compact('announcements'));
     }
     
     

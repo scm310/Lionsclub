@@ -68,6 +68,7 @@ class MemberLoginController extends Controller
             return redirect()->route('member.login')->with('error', 'Please log in again.');
         }
 
+        // Fetch additional information as you have in your original code
         $parentMultipleDistrict = DB::table('parents_multiple_district')
             ->where('id', $member->parent_multiple_district)
             ->value('name');
@@ -91,8 +92,15 @@ class MemberLoginController extends Controller
         $projects = Project::where('member_id', $member->id)->get();
 
         // Fetch member's clients
-        $clients = Client::where('member_id', $member->id)->get(); // Assuming you have a Client model that stores the clients
+        $clients = Client::where('member_id', $member->id)->get();
 
+        // Fetch member's products
+        $products = DB::table('products')
+            ->where('member_id', $member->id)  // Assuming there's a 'member_id' column in the products table
+            ->select('id', 'product_name', 'product_image', 'created_at', 'updated_at')
+            ->get();
+
+        // Return the view with all the data
         return view('member.profileedit', compact(
             'member',
             'parentMultipleDistrict',
@@ -101,17 +109,17 @@ class MemberLoginController extends Controller
             'membershipFullType',
             'testimonials',
             'projects',
-            'clients' // Pass the clients data to the view
+            'clients',
+            'products' // Pass the products data to the view
         ));
     }
-
 
 
 
     public function update(Request $request)
     {
         Log::info('Update Request Data:', $request->all());
-    
+
         $request->validate([
             'salutation' => 'nullable|string',
             'first_name' => 'sometimes|required|string',
@@ -122,7 +130,7 @@ class MemberLoginController extends Controller
             'anniversary_date' => 'nullable|date',
             'membership_type' => 'nullable|string',
             'profile_photo' => 'nullable|image|max:2048',
-    
+
             // Mailing address
             'mailing_address_line_1' => 'nullable|string',
             'mailing_address_line_2' => 'nullable|string',
@@ -131,7 +139,7 @@ class MemberLoginController extends Controller
             'mailing_state'         => 'nullable|string',
             'mailing_country'       => 'nullable|string',
             'mailing_zip'           => 'nullable|string',
-    
+
             // Contact & email
             'preferred_email'       => 'nullable|string',
             'email_address'         => 'nullable|email',
@@ -143,55 +151,55 @@ class MemberLoginController extends Controller
             'home_number'           => 'nullable|string',
             'fax'                   => 'nullable|string',
         ]);
-    
+
         $member = Auth::guard('member')->user();
-    
+
         if (!$member) {
             Log::error("❌ Authenticated member not found.");
             return redirect()->back()->with('error', 'Member not found or not logged in.');
         }
-    
+
         $original = $member->toArray();
         $input = $request->except(['member_id', 'profile_photo', '_token']);
         $changes = [];
-    
+
         // Compare submitted data with current data
         foreach ($input as $key => $newValue) {
             if (!is_null($newValue) && $newValue !== '' && ($original[$key] ?? null) != $newValue) {
                 $changes[$key] = $newValue;
             }
         }
-    
+
         // ✅ Save profile photo directly
         if ($request->hasFile('profile_photo')) {
             Log::info('📸 Profile Photo Uploaded');
-    
+
             if (!Storage::exists('public/profile_photos')) {
                 Storage::makeDirectory('public/profile_photos');
             }
-    
+
             if ($member->profile_photo) {
                 Storage::delete('public/' . $member->profile_photo);
             }
-    
+
             $path = $request->file('profile_photo')->store('profile_photos', 'public');
             $member->profile_photo = $path;
             $member->save();
         }
-    
+
         // ✅ Save changes for approval (DO NOT UPDATE members table)
         if (!empty($changes)) {
             Log::info('🔄 Storing pending changes:', $changes);
-    
+
             PendingMemberUpdate::updateOrCreate(
                 ['member_id' => $member->id, 'status' => 'pending'],
                 ['data' => json_encode($changes)]
             );
         }
-    
+
         return redirect()->route('member.edit')->with('success', 'Your profile update has been submitted for approval.');
     }
-    
+
 
 
     public function storeTestimonials(Request $request)
@@ -214,7 +222,7 @@ class MemberLoginController extends Controller
                     $testimonial->client_name = $name;
                     $testimonial->company_name = $request->company_name[$index];
                     $testimonial->designation = $request->designation[$index];
-                    $testimonial->testimonial = $request->testimonial[$index];
+                    $testimonial->testimonial_content = $request->testimonial[$index]; // ✅ fixed here
                     if ($imagePath) {
                         $testimonial->image = $imagePath;
                     }
@@ -227,7 +235,7 @@ class MemberLoginController extends Controller
                     'client_name' => $name,
                     'company_name' => $request->company_name[$index],
                     'designation' => $request->designation[$index],
-                    'testimonial' => $request->testimonial[$index],
+                    'testimonial_content' => $request->testimonial[$index], // ✅ fixed here
                     'image' => $imagePath,
                 ]);
             }
@@ -411,22 +419,27 @@ public function deleteClient($id)
 }
 
 
-
 public function productTab()
 {
     $member = Auth::guard('member')->user();
+
+    // Safety check
+    if (!$member) {
+        return redirect()->route('member.login')->with('error', 'Please log in to view your products.');
+    }
+
+    // ✅ Fetch products belonging to logged-in member
     $products = Product::where('member_id', $member->id)->get();
-    
-    return view('member.partial.products', compact('products'));
+
+    return view('member.partial.products', compact('products')); // <-- this is critical
 }
 
 public function storeProduct(Request $request)
 {
-
     $member = Auth::guard('member')->user();
 
     foreach ($request->product_name as $index => $name) {
-        $productId = $request->product_id[$index] ?? null;
+        // Skip existing products by ignoring product_id
         $productImage = $request->file('product_image')[$index] ?? null;
 
         $imageName = null;
@@ -435,27 +448,23 @@ public function storeProduct(Request $request)
             $productImage->storeAs('public/product_images', $imageName);
         }
 
-        if ($productId) {
-            // Update existing
-            $product = Product::where('id', $productId)->where('member_id', $member->id)->first();
-            if ($product) {
-                $product->product_name = $name;
-                if ($imageName) {
-                    $product->product_image = 'product_images/' . $imageName;
-                }
-                $product->save();
-            }
-        } else {
-            // Create new
-            Product::create([
-                'member_id' => $member->id,
-                'product_name' => $name,
-                'product_image' => $imageName ? 'product_images/' . $imageName : null,
-            ]);
-        }
+        // Always create new product
+        Product::create([
+            'member_id' => $member->id,
+            'product_name' => $name,
+            'product_image' => $imageName ? 'product_images/' . $imageName : null,
+        ]);
     }
 
-    return redirect()->back()->with('success', 'Products saved successfully.');
+    return redirect()->back()->with('success', 'New products saved successfully.');
+}
+
+public function editProfile()
+{
+    $member = Auth::guard('member')->user();
+    $products = Product::where('member_id', $member->id)->get();
+
+    return view('member.profileedit', compact('products'));
 }
 
 
@@ -468,6 +477,34 @@ public function deleteProduct($id)
 
     return back()->with('success', 'Product deleted.');
 }
+
+public function updateProduct(Request $request, $id)
+{
+    $member = Auth::guard('member')->user();
+
+    $product = Product::where('id', $id)->where('member_id', $member->id)->firstOrFail();
+
+    $product->product_name = $request->product_name;
+
+    if ($request->hasFile('product_image')) {
+        // Delete old image if exists
+        if ($product->product_image && Storage::exists('public/' . $product->product_image)) {
+            Storage::delete('public/' . $product->product_image);
+        }
+
+        // Upload new image
+        $image = $request->file('product_image');
+        $imageName = time() . '.' . $image->getClientOriginalExtension();
+        $image->storeAs('public/product_images', $imageName);
+
+        $product->product_image = 'product_images/' . $imageName;
+    }
+
+    $product->save();
+
+    return back()->with('success', 'Product updated successfully.');
+}
+
 
 
 }

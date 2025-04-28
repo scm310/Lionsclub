@@ -175,13 +175,13 @@
     top: 2.6875rem;
     right: 2.8125rem;
     color:#222;
-   
+
 }
 .custom-gradient-btn {
         background: linear-gradient(115deg, #0f0b8c, #77dcf5);
         color: white;
         border: none;
- 
+
     }
 
     .custom-gradient-btn:hover {
@@ -224,7 +224,7 @@
                     <li class="nav-item" role="presentation">
                         <a class="nav-link" data-bs-toggle="tab" href="#tab4" role="tab">Upload Bottom AD</a>
                     </li>
-                   
+
                     <li class="nav-item" role="presentation">
                         <a class="nav-link" data-bs-toggle="tab" href="#tab6" role="tab">Upload Popup AD</a>
                     </li>
@@ -365,11 +365,11 @@
             @csrf
             <label for="image">AD size should be (1353x180)*</label>
             <input type="file" name="image" required class="form-control mt-2">
-            
+
             <label>Enter Website Link* </label>
             <input type="text" name="website_link" placeholder="Enter Website Link" class="form-control mt-1">
-            
-           
+
+
             <div class="text-center">
     <button type="submit" class="btn w-40 mt-3 text-white"
         style="background: linear-gradient(115deg, #0f0b8c, #77dcf5); border-radius: 5%; align-items: center;">
@@ -388,7 +388,7 @@
                     <!-- Display Uploaded Banners in Table -->
                     <div class="row mt-5">
                         <div class="col-md-12">
-      
+
                         <div class="card">
     <div class="card-header text-white" style="background: linear-gradient(115deg, #0f0b8c, #77dcf5);">
         <h5 class="mb-0 text-center text-white">Bottom AD List</h5>
