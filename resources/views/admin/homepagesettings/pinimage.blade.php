@@ -132,7 +132,7 @@ margin-top:-20px;
 <div class="container mt-4">
     <div class="white-container p-4 shadow rounded bg-white">
 
-        <h3 class="mb-3 custom-heading">Upload Pin Image</h3>
+        <h3 class="mb-3 custom-heading">Upload District Logo</h3>
 
         <div class="card" style="max-width: 500px; margin: 0 auto; background-color:#87cefa;">
             <div class="card-body">
@@ -167,14 +167,14 @@ margin-top:-20px;
     <!-- Display uploaded images -->
     @if($images->count())
     <div class="mt-4">
-        <h4 class="custom-heading">Uploaded Images</h4>
+        <h4 class="custom-heading">Uploaded District Logo</h4>
         <div class="table-responsive">
         <table id="imageTable1" class="table table-bordered table-striped" style="width: 100%;">
         <thead style="background-color:#003366 !important;">
         <tr>
                         <th>S.No</th>
-                        <th>Image</th>
-                        <th>Uploaded At</th>
+                        <th>Logo</th>
+                        <th>Date & time</th>
                         <th>Action</th>
                     </tr>
                 </thead>

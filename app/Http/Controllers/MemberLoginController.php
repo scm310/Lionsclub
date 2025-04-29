@@ -16,6 +16,8 @@ use App\Models\product;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
+use App\Models\Service; // Import the Service model
+
 
 
 class MemberLoginController extends Controller
@@ -62,44 +64,47 @@ class MemberLoginController extends Controller
     public function edit()
     {
         $member = Auth::guard('member')->user();
-
+    
         if (!$member) {
             Log::error('❌ Member not found in edit() - Not authenticated.');
             return redirect()->route('member.login')->with('error', 'Please log in again.');
         }
-
+    
         // Fetch additional information as you have in your original code
         $parentMultipleDistrict = DB::table('parents_multiple_district')
             ->where('id', $member->parent_multiple_district)
             ->value('name');
-
+    
         $parentDistrict = DB::table('district')
             ->where('id', $member->parent_district)
             ->value('name');
-
+    
         $accountName = DB::table('chapters')
             ->where('id', $member->account_name)
             ->value('chapter_name');
-
+    
         $membershipFullType = DB::table('membership_type')
             ->where('id', $member->membership_full_type)
             ->value('name');
-
+    
         // Fetch member's testimonials
         $testimonials = Testimonial::where('member_id', $member->id)->get();
-
+    
         // Fetch member's projects
         $projects = Project::where('member_id', $member->id)->get();
-
+    
         // Fetch member's clients
         $clients = Client::where('member_id', $member->id)->get();
-
+    
         // Fetch member's products
         $products = DB::table('products')
             ->where('member_id', $member->id)  // Assuming there's a 'member_id' column in the products table
             ->select('id', 'product_name', 'product_image', 'created_at', 'updated_at')
             ->get();
 
+            $services = DB::table('services')->where('member_id', $member->id)->get();
+
+    
         // Return the view with all the data
         return view('member.profileedit', compact(
             'member',
@@ -110,37 +115,43 @@ class MemberLoginController extends Controller
             'testimonials',
             'projects',
             'clients',
+            'services',
             'products' // Pass the products data to the view
         ));
     }
-
+    
 
 
     public function update(Request $request)
     {
-        Log::info('Update Request Data:', $request->all());
-
+        // dd($request);
+        // Log the entire request for debugging
+        Log::info('📝 Update Request Data:', $request->all());
+    
+        // Validate the request data
         $request->validate([
             'salutation' => 'nullable|string',
-            'first_name' => 'sometimes|required|string',
-            'last_name' => 'sometimes|required|string',
+            'first_name' => 'required|string',
+            'last_name' => 'required|string',
             'suffix' => 'nullable|string',
             'spouse_name' => 'nullable|string',
             'dob' => 'nullable|date',
             'anniversary_date' => 'nullable|date',
+            'membership_full_type' => 'nullable|string',
             'membership_type' => 'nullable|string',
-            'profile_photo' => 'nullable|image|max:2048',
-
-            // Mailing address
+            'password' => 'nullable|string|min:6',
+            'profile_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+    
+            // Address
             'mailing_address_line_1' => 'nullable|string',
             'mailing_address_line_2' => 'nullable|string',
             'mailing_address_line_3' => 'nullable|string',
-            'mailing_city'          => 'nullable|string',
-            'mailing_state'         => 'nullable|string',
-            'mailing_country'       => 'nullable|string',
-            'mailing_zip'           => 'nullable|string',
-
-            // Contact & email
+            'mailing_city' => 'nullable|string',
+            'mailing_state' => 'nullable|string',
+            'mailing_country' => 'nullable|string',
+            'mailing_zip' => 'nullable|string',
+    
+            // Contact
             'preferred_email'       => 'nullable|string',
             'email_address'         => 'nullable|email',
             'work_email'            => 'nullable|email',
@@ -151,70 +162,88 @@ class MemberLoginController extends Controller
             'home_number'           => 'nullable|string',
             'fax'                   => 'nullable|string',
         ]);
-
+    
+        // Get the authenticated member
         $member = Auth::guard('member')->user();
-
+    
+        // Log if member is authenticated
+        Log::info('Authenticated Member:', [$member]);
+    
+        // Check if member is found
         if (!$member) {
             Log::error("❌ Authenticated member not found.");
             return redirect()->back()->with('error', 'Member not found or not logged in.');
         }
-
-        $original = $member->toArray();
-        $input = $request->except(['member_id', 'profile_photo', '_token']);
-        $changes = [];
-
-        // Compare submitted data with current data
-        foreach ($input as $key => $newValue) {
-            if (!is_null($newValue) && $newValue !== '' && ($original[$key] ?? null) != $newValue) {
-                $changes[$key] = $newValue;
-            }
+    
+        // Prepare input data excluding certain fields
+        $input = $request->except(['_token', 'profile_photo', 'created_at', 'updated_at']);
+    
+        // Update password if provided
+        if (!empty($input['password'])) {
+            $input['password'] = bcrypt($input['password']);
+        } else {
+            unset($input['password']); // Don't overwrite if empty
         }
-
-        // ✅ Save profile photo directly
+    
+        // Handle profile photo if uploaded
         if ($request->hasFile('profile_photo')) {
             Log::info('📸 Profile Photo Uploaded');
-
+            
+            // Check if directory exists, if not create it
             if (!Storage::exists('public/profile_photos')) {
                 Storage::makeDirectory('public/profile_photos');
             }
-
+    
+            // Delete old profile photo if it exists
             if ($member->profile_photo) {
                 Storage::delete('public/' . $member->profile_photo);
             }
-
+    
+            // Store the new photo and update the input array
             $path = $request->file('profile_photo')->store('profile_photos', 'public');
-            $member->profile_photo = $path;
-            $member->save();
+            $input['profile_photo'] = $path;
         }
-
-        // ✅ Save changes for approval (DO NOT UPDATE members table)
-        if (!empty($changes)) {
-            Log::info('🔄 Storing pending changes:', $changes);
-
-            PendingMemberUpdate::updateOrCreate(
-                ['member_id' => $member->id, 'status' => 'pending'],
-                ['data' => json_encode($changes)]
-            );
+    
+        // Begin database transaction to ensure atomic updates
+        DB::beginTransaction();
+        try {
+            // Update the member record
+            $member->update($input);
+    
+            // Commit the transaction
+            DB::commit();
+    
+            // Log success
+            Log::info('✅ Member record updated successfully', $input);
+    
+            // Return success response
+            return redirect()->route('member.edit')->with('success', 'Your profile has been updated successfully.');
+        } catch (\Exception $e) {
+            // Rollback the transaction in case of error
+            DB::rollBack();
+    
+            // Log the error
+            Log::error('❌ Error updating member:', [$e->getMessage()]);
+    
+            // Return error response
+            return redirect()->back()->with('error', 'Something went wrong. Please try again.');
         }
-
-        return redirect()->route('member.edit')->with('success', 'Your profile update has been submitted for approval.');
     }
-
-
+    
 
     public function storeTestimonials(Request $request)
     {
         $member = Auth::guard('member')->user();
-
+    
         foreach ($request->client_name as $index => $name) {
             $testimonialId = $request->testimonial_id[$index];
             $imagePath = null;
-
+    
             // Handle image upload if a new image is uploaded
             if ($request->hasFile("image.$index")) {
                 $imagePath = $request->file("image.$index")->store('testimonials', 'public');
             }
-
+    
             if ($testimonialId) {
                 // Update existing testimonial
                 $testimonial = Testimonial::find($testimonialId);
@@ -240,10 +269,10 @@ class MemberLoginController extends Controller
                 ]);
             }
         }
-
+    
         return redirect()->back()->with('success', 'Testimonials saved successfully!');
     }
-
+    
     public function destroy($id)
     {
         $testimonial = Testimonial::findOrFail($id);
@@ -315,10 +344,10 @@ class MemberLoginController extends Controller
         $testimonial = Testimonial::findOrFail($id);
         Storage::delete('public/' . $testimonial->image);
         $testimonial->delete();
-
+    
         return back()->with('success', 'Testimonial deleted successfully.');
     }
-
+    
 
     public function projectTab()
 {
@@ -504,6 +533,71 @@ public function updateProduct(Request $request, $id)
 
     return back()->with('success', 'Product updated successfully.');
 }
+
+
+public function store(Request $request)
+{
+    $request->validate([
+        'service_name' => 'required|array',
+        'service_name.*' => 'required|string|max:255',
+        'image' => 'nullable|array',
+        'image.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+    ]);
+
+    $member = Auth::guard('member')->user();
+
+    foreach ($request->service_name as $index => $name) {
+        $service = new Service();
+        $service->member_id = $member->id;
+        $service->service_name = $name;
+
+        if ($request->hasFile("image.$index")) {
+            $service->image = $request->file("image.$index")->store('services', 'public');
+        }
+
+        $service->save();
+    }
+
+    return back()->with('success', 'Services added successfully.');
+}
+
+public function updateservice(Request $request, $id)
+{
+    $request->validate([
+        'service_name' => 'required|string|max:255',
+        'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+    ]);
+
+    $service = Service::findOrFail($id);
+    $service->service_name = $request->service_name;
+
+    if ($request->hasFile('image')) {
+        if ($service->image_path) {
+            Storage::delete('public/' . $service->image_path);
+        }
+        $service->image_path = $request->file('image')->store('services', 'public');
+    }
+
+    $service->save();
+
+    return back()->with('success', 'Service updated successfully.');
+}
+
+public function delete($id)
+{
+    $service = Service::findOrFail($id);
+
+    // Delete image if it exists
+    if ($service->image_path) {
+        Storage::delete('public/' . $service->image_path);
+    }
+
+    $service->delete();
+
+    return back()->with('success', 'Service deleted successfully.');
+}
+
+
 
 
 

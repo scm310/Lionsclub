@@ -10,8 +10,16 @@ class MemberLoungeController extends Controller
 {
     public function index(Request $request)
     {
-        $members = Member::with('account')->orderBy('first_name', 'asc');
-    
+
+        $members = Member::with([
+            'account',
+            'client',
+            'testimonial',
+            'project',
+            'service'
+        ])
+        ->orderBy('first_name', 'asc');
+
         if ($request->has('search')) {
             $search = $request->input('search');
             $members->where(function ($query) use ($search) {
@@ -25,9 +33,21 @@ class MemberLoungeController extends Controller
                       });
             });
         }
-    
+
         $members = $members->paginate(30);
-    
+
+
+
+
+        // Dump and die to see the output
+        // dd($members->pluck('ser'));
+
+
+
+
+
+
+
         return view('member.memberlounge.index', compact('members'));
     }
 
@@ -38,5 +58,5 @@ class MemberLoungeController extends Controller
     }
 }
 
-        
+
 

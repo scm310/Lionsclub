@@ -4,6 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="{{ asset('assets/images/logo.png') }}" type="image/x-icon">
   <title>Lions International District 3241 E</title>
 
   <!-- Poppins font -->
@@ -373,13 +374,13 @@
     </div>
   </div>
 
-  <section class="hero" style="background: url('http://localhost/assets/images/Member Login.png') no-repeat center center; background-size: cover; min-height: 100vh;">
+  <section class="hero" style="background: url('/assets/images/Member Login.png') no-repeat center center; background-size: cover; min-height: 100vh;">
     <div class="container hero-inner">
       <!-- left side text -->
       <div class="hero-text w-100 ">
         <h1 class="text-warning">Site Is Under Construction</h1>
 
-        <!-- Right-aligned button -->
+        <!-- Right-aligned-button -->
 
         <br>
         <div class="text-center">
@@ -402,28 +403,33 @@
 
         <!-- Modal Body with Form -->
         <div class="login-box modal-body">
-          <form method="POST" action="{{ route('login.submit') }}">
-            @csrf
-            <div class="text-center mb-3">
-              <img src="{{ asset('assets/images/logo.png') }}" alt="Logo" class="logo-img">
-            </div>
+            <form method="POST" action="{{ route('login.submit') }}">
+              @csrf
+              <div class="text-center mb-3">
+                <img src="{{ asset('assets/images/logo.png') }}" alt="Logo" class="logo-img">
+              </div>
 
-            <div class="mb-3">
-              <label for="email" class="form-label text-white">Email</label>
-              <input type="email" class="form-control input-field" id="email" name="email" placeholder="Enter your email" required>
-            </div>
+              <div class="mb-3">
+                <label for="email" class="form-label text-white">Email</label>
+                <input type="email" class="form-control input-field" id="email" name="email" placeholder="Enter your email" required>
+              </div>
 
-            <div class="mb-3 position-relative">
-              <label for="password" class="form-label text-white">Password</label>
-              <input type="password" class="form-control input-field pr-5" id="password" name="password" placeholder="Enter your password" required>
-              <span class="toggle-password" onclick="togglePassword()">
-                <i class="fas fa-eye"></i>
-              </span>
-            </div>
+              <div class="mb-3 position-relative">
+                <label for="password" class="form-label text-white">Password</label>
+                <input type="password" class="form-control input-field pr-5" id="password" name="password" placeholder="Enter your password" required>
+                <span class="toggle-password" onclick="togglePassword()">
+                  <i class="fas fa-eye"></i>
+                </span>
+              </div>
 
-            <button type="submit" class="btn login-btn w-50 align-center">Login</button>
-          </form>
-        </div>
+              <div class="form-check mb-3">
+                <input type="checkbox" class="form-check-input" id="remember" name="remember">
+                <label class="form-check-label text-white" for="remember">Remember Me</label>
+              </div>
+
+              <button type="submit" class="btn login-btn w-50 align-center">Login</button>
+            </form>
+          </div>
 
 
         {{-- SweetAlert2 Error Message --}}
@@ -449,19 +455,42 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
   <script>
-    function togglePassword() {
-      const input = document.getElementById("password");
-      const icon = document.querySelector(".toggle-password i");
-      if (input.type === "password") {
-        input.type = "text";
-        icon.classList.remove("fa-eye");
-        icon.classList.add("fa-eye-slash");
-      } else {
-        input.type = "password";
-        icon.classList.remove("fa-eye-slash");
-        icon.classList.add("fa-eye");
-      }
-    }
+ // Function to toggle password visibility
+function togglePassword() {
+  const passwordField = document.getElementById('password');
+  const icon = document.querySelector('.toggle-password i');
+  if (passwordField.type === 'password') {
+    passwordField.type = 'text';
+    icon.classList.remove('fa-eye');
+    icon.classList.add('fa-eye-slash');
+  } else {
+    passwordField.type = 'password';
+    icon.classList.remove('fa-eye-slash');
+    icon.classList.add('fa-eye');
+  }
+}
+
+// Check if 'remember me' was selected and restore email/password from localStorage
+document.addEventListener('DOMContentLoaded', function() {
+  if (localStorage.getItem('rememberMe') === 'true') {
+    document.getElementById('email').value = localStorage.getItem('email');
+    document.getElementById('password').value = localStorage.getItem('password');
+    document.getElementById('remember').checked = true;
+  }
+});
+
+// Save the email and password to localStorage if 'Remember Me' is checked
+document.querySelector('form').addEventListener('submit', function(event) {
+  if (document.getElementById('remember').checked) {
+    localStorage.setItem('email', document.getElementById('email').value);
+    localStorage.setItem('password', document.getElementById('password').value);
+    localStorage.setItem('rememberMe', 'true');
+  } else {
+    localStorage.removeItem('email');
+    localStorage.removeItem('password');
+    localStorage.setItem('rememberMe', 'false');
+  }
+});
   </script>
 </body>
 

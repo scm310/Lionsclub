@@ -1,7 +1,11 @@
+<!-- SweetAlert2 CDN -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.5.0/dist/sweetalert2.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.5.0/dist/sweetalert2.min.js"></script>
+
 <style>
     .custom-btn {
-        background: rgb(30,144,255);
-        background: linear-gradient(159deg, rgba(30,144,255,1) 0%, rgba(153,186,221,1) 100%);
+        background: rgb(30, 144, 255);
+        background: linear-gradient(159deg, rgba(30, 144, 255, 1) 0%, rgba(153, 186, 221, 1) 100%);
         border: none;
         color: white;
         padding: 10px 20px;
@@ -11,7 +15,7 @@
     }
 
     .custom-btn:hover {
-        background: linear-gradient(159deg, rgba(153,186,221,1) 0%, rgba(30,144,255,1) 100%);
+        background: linear-gradient(159deg, rgba(153, 186, 221, 1) 0%, rgba(30, 144, 255, 1) 100%);
         color: white;
     }
 </style>
@@ -48,7 +52,12 @@
         let year = $('#district_year').val();
 
         if (!memberId || !position || !year) {
-            alert("Please fill all fields.");
+            // Show SweetAlert if fields are empty
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Please fill all fields.',
+            });
             return;
         }
 
@@ -62,11 +71,23 @@
                 _token: "{{ csrf_token() }}"
             },
             success: function(response) {
-                alert(response.message);
+                // Show success message with SweetAlert
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Assigned!',
+                    text: response.message,
+                });
+
+                // Clear the input fields after success
                 $('#district_position, #district_year').val('');
             },
             error: function(xhr) {
-                alert("Error: " + xhr.responseJSON.message);
+                // Show error message with SweetAlert
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: "Error: " + xhr.responseJSON.message,
+                });
             }
         });
     }

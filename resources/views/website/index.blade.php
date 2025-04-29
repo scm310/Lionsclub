@@ -288,105 +288,109 @@
             </div>
         </div>
 
-        <!-- Center Column -->
-        <div class="center">
-            <div class="content1">
-                <h2>Welcome to Lions Club</h2>
-                <h5>Lions Club: A Beacon of Service and Community Empowerment</h5>
-                <p>The Lions Club is one of the largest and most respected international service organizations in the world.
-                    Founded in 1917 by Melvin Jones in Chicago, Illinois, the Lions Club was established with a mission to
-                    empower volunteers to serve their communities, meet humanitarian needs, encourage peace, and promote
-                    international understanding. Today, the organization has a presence in over 200 countries, with more
-                    than 1.4 million members committed to creating meaningful change in their communities and beyond.</p>
-            </div>
-            {{-- mobile screen --}}
-            <div class="additional-containers" id="mobilescreen">
-                @foreach ([$images1, $images2] as $images)
-                    <div class="additional-container ad-carousel">
-                        <button class="prev-btn">&#10094;</button> <!-- Previous Button -->
-                        <div class="ad-images">
-                            @foreach ($images as $image)
-                               <a href="{{ route('track.banner.click', ['type' => 'left', 'url' => $image->website_link, 'image' => $image->image_path]) }}" target="_blank">
+      <!-- Rounded Edge Container -->
+<div style="max-width: 1200px; margin: 20px auto; padding: 8px; background: #fff; border-radius: 20px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); text-align:justify;">
 
-                                    <img src="{{ asset('storage/app/public/' . $image->image_path) }}" alt="Ad Image"
-                                        loading="lazy" />
-                                </a>
-                            @endforeach
-                        </div>
-                        <button class="next-btn">&#10095;</button> <!-- Next Button -->
-                    </div>
-                    <br>
-                @endforeach
-            </div>
-
-            <div class="content2">
-                <h4>Vision and Mission</h4>
-                <p>The Lions Club’s vision is encapsulated in its motto, "We Serve." This guiding principle drives the
-                    organization’s activities, which focus on helping those in need, whether through direct action,
-                    advocacy, or resource mobilization. The Lions Club aims to tackle some of the world’s most pressing
-                    challenges, such as hunger, poverty, environmental sustainability, and health crises. Through
-                    collaborative efforts, the Lions Club fosters a sense of solidarity and shared responsibility, uniting
-                    people from diverse backgrounds to work toward common goals.</p>
-            </div>
-
-            <div class="content4">
-                <h4>Key Areas of Focus</h4>
-                <p>The Lions Club’s initiatives are wide-ranging, reflecting its commitment to comprehensive community
-                    betterment. Some of its major areas of focus include:</p>
-                <ul>
-                    <li><strong>Vision and Eye Health:</strong> The Lions Club has long been associated with initiatives to
-                        combat blindness and
-                        support eye health. The SightFirst program, for example, funds cataract surgeries, provides glasses,
-                        and
-                        raises awareness about eye care globally.</li>
-                    <li><strong>Youth Empowerment:</strong> Through programs like the Leo Club, the Lions Club nurtures
-                        young leaders by
-                        involving them in community service and leadership development. These efforts inspire the next
-                        generation to carry forward the spirit of service.</li>
-                    <li><strong>Disaster Relief:</strong> The Lions Club is often at the forefront of providing emergency
-                        relief in the wake of
-                        natural disasters, offering food, shelter, and medical aid to affected communities.</li>
-                    <li><strong>Environmental Sustainability:</strong> Recognizing the importance of protecting the planet,
-                        the Lions Club
-                        engages in tree-planting campaigns, recycling initiatives, and other efforts aimed at preserving
-                        natural
-                        resources.</li>
-                    <li><strong>Health and Hunger:</strong> From combating diabetes and cancer to addressing food
-                        insecurity, the Lions Club is
-                        dedicated to improving public health and ensuring that no one goes hungry.</li>
-                </ul>
-            </div>
-
-            {{-- mobile screen --}}
-            <div class="right " id="mobilescreen">
-                @foreach ([$image1s, $image2s, $image3s] as $images)
-                    <div class="additional-container ad-carousel">
-                        <button class="prev-btn">&#10094;</button> <!-- Previous Button -->
-                        <div class="ad-images">
-                            @foreach ($images as $image)
-                                <a href="{{ $image->website_link }}" target="_blank">
-                                    <img src="{{ asset('storage/app/public/' . $image->image_path) }}" alt="Ad Image"
-                                        loading="lazy" />
-                                </a>
-                            @endforeach
-                        </div>
-                        <button class="next-btn">&#10095;</button> <!-- Next Button -->
-                    </div>
-                    <br>
-                @endforeach
-            </div>
-
-
-
-            <div class="content3">
-                <h4>Organizational Structure</h4>
-                <p>The Lions Club operates through local clubs, which are the backbone of the organization. Each club is
-                    autonomous, allowing members to address the unique needs of their communities while adhering to the
-                    broader mission of the Lions Club International. These local efforts are supported by regional,
-                    national, and international structures, creating a network that facilitates the sharing of resources,
-                    expertise, and ideas.</p>
-            </div>
+    <!-- Center Column -->
+    <div class="center">
+        <div class="content1">
+            <h2>Welcome to Lions Club</h2>
+            <h5>Lions Club: A Beacon of Service and Community Empowerment</h5>
+            <p>The Lions Club is one of the largest and most respected international service organizations in the world.
+                Founded in 1917 by Melvin Jones in Chicago, Illinois, the Lions Club was established with a mission to
+                empower volunteers to serve their communities, meet humanitarian needs, encourage peace, and promote
+                international understanding. Today, the organization has a presence in over 200 countries, with more
+                than 1.4 million members committed to creating meaningful change in their communities and beyond.
+            </p>
         </div>
+
+        {{-- mobile screen --}}
+        <div class="additional-containers" id="mobilescreen">
+            @foreach ([$images1, $images2] as $images)
+                <div class="additional-container ad-carousel">
+                    <button class="prev-btn">&#10094;</button> <!-- Previous Button -->
+                    <div class="ad-images">
+                        @foreach ($images as $image)
+                            <a href="{{ route('track.banner.click', ['type' => 'left', 'url' => $image->website_link, 'image' => $image->image_path]) }}" target="_blank">
+                                <img src="{{ asset('storage/app/public/' . $image->image_path) }}" alt="Ad Image" loading="lazy" />
+                            </a>
+                        @endforeach
+                    </div>
+                    <button class="next-btn">&#10095;</button> <!-- Next Button -->
+                </div>
+                <br>
+            @endforeach
+        </div>
+
+        <div class="content2">
+            <h4>Vision and Mission</h4>
+            <p>The Lions Club’s vision is encapsulated in its motto, "We Serve." This guiding principle drives the
+                organization’s activities, which focus on helping those in need, whether through direct action,
+                advocacy, or resource mobilization. The Lions Club aims to tackle some of the world’s most pressing
+                challenges, such as hunger, poverty, environmental sustainability, and health crises. Through
+                collaborative efforts, the Lions Club fosters a sense of solidarity and shared responsibility, uniting
+                people from diverse backgrounds to work toward common goals.
+            </p>
+        </div>
+
+        <div class="content4">
+            <h4>Key Areas of Focus</h4>
+            <p>The Lions Club’s initiatives are wide-ranging, reflecting its commitment to comprehensive community
+                betterment. Some of its major areas of focus include:</p>
+            <ul>
+                <li><strong>Vision and Eye Health:</strong><p>The Lions Club has long been associated with initiatives to
+                    combat blindness and support eye health. The SightFirst program, for example, funds cataract surgeries,
+                    provides glasses, and raises awareness about eye care globally.</p>
+                </li>
+                <li><strong>Youth Empowerment:</strong> <p>Through programs like the Leo Club, the Lions Club nurtures
+                    young leaders by involving them in community service and leadership development. These efforts inspire
+                    the next generation to carry forward the spirit of service.</p>
+                </li>
+                <li><strong>Disaster Relief:</strong> <p>The Lions Club is often at the forefront of providing emergency
+                    relief in the wake of natural disasters, offering food, shelter, and medical aid to affected
+                    communities.</p>
+                </li>
+                <li><strong>Environmental Sustainability:</strong> <p>Recognizing the importance of protecting the planet,
+                    the Lions Club engages in tree-planting campaigns, recycling initiatives, and other efforts aimed at
+                    preserving natural resources.</p>
+                </li>
+                <li><strong>Health and Hunger:</strong> <p>From combating diabetes and cancer to addressing food
+                    insecurity, the Lions Club is dedicated to improving public health and ensuring that no one goes
+                    hungry.</p>
+                </li>
+            </ul>
+        </div>
+
+        {{-- mobile screen --}}
+        <div class="right" id="mobilescreen">
+            @foreach ([$image1s, $image2s, $image3s] as $images)
+                <div class="additional-container ad-carousel">
+                    <button class="prev-btn">&#10094;</button> <!-- Previous Button -->
+                    <div class="ad-images">
+                        @foreach ($images as $image)
+                            <a href="{{ $image->website_link }}" target="_blank">
+                                <img src="{{ asset('storage/app/public/' . $image->image_path) }}" alt="Ad Image" loading="lazy" />
+                            </a>
+                        @endforeach
+                    </div>
+                    <button class="next-btn">&#10095;</button> <!-- Next Button -->
+                </div>
+                <br>
+            @endforeach
+        </div>
+
+        <div class="content3">
+            <h4>Organizational Structure</h4>
+            <p>The Lions Club operates through local clubs, which are the backbone of the organization. Each club is
+                autonomous, allowing members to address the unique needs of their communities while adhering to the
+                broader mission of the Lions Club International. These local efforts are supported by regional,
+                national, and international structures, creating a network that facilitates the sharing of resources,
+                expertise, and ideas.
+            </p>
+        </div>
+    </div>
+
+</div> <!-- End Rounded Edge Container -->
 
         <!-- Right Column: Ad Containers -->
         <div class="right " id="mobile">

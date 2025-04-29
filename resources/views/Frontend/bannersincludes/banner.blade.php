@@ -20,10 +20,12 @@
 
     /* Subtle zoom for .top-ad-banner1 image */
     .top-ad-banner1 .zoom-image:hover {
-        transform: scale(1.2);
-        /* Slight zoom */
-        z-index: 10;
         position: relative;
+    flex-shrink: 0; /* Prevent shrinking */
+    margin-right: 15px;
+    overflow: hidden;
+    display: inline-block; /* Keeps it fixed in place */
+
     }
 </style>
 {{-- Css blade Start --}}
@@ -40,7 +42,6 @@
             $query->where('position', 'District Governor')->where('year', 'CurrentYear');
         })
         ->first();
-
 
     $pinImages = DB::table('pin_images')->select('image_path')->get(); // Fetch all pin images
 
@@ -86,20 +87,36 @@
         </div>
 
         <!-- Flex container to align the image and details side by side -->
-        <div class="d-flex align-items-center mt-1" style="min-height: 80px;">
+        <div class="d-flex align-items-center " style="min-height: 80px;">
             <!-- Member Image on the Left -->
-            <div class="top-ad-banner1"
-                style="flex-shrink: 0; margin-right: 15px; overflow: visible; position: relative;">
-                <img src="{{ $member->profile_photo ? asset('storage/app/public/' . $member->profile_photo) : asset('assets/images/default.png') }}"
-                    alt="{{ $member->salutation.' '.$member->first_name . ' ' . $member->last_name }} " class="ban zoom-image"
-                    style="height: 102px; margin-left: -100px; margin-top: 10px;" />
-            </div>
+            
 
-            <!-- Member Name and Role on the Right -->
-            <div class="details-container" style="line-height: 1.2;">
-                <h2 class="fs-5 mb-1">{{ $member->first_name . ' ' . $member->last_name }} </h2>
-                <p class="fs-6 mb-0"><b>{{ $member->team->position }}</b></p>
-            </div>
+<div class="row">
+    <div class="col-3">
+        <div class="top-ad-banner1"
+        style="flex-shrink: 0; margin-right: 15px; overflow: visible; position: relative;">
+        <img src="{{ $member->profile_photo ? asset('storage/app/public/' . $member->profile_photo) : asset('assets/images/default.png') }}"
+            alt="{{ $member->salutation.' '.$member->first_name . ' ' . $member->last_name }} " class="ban "
+            style="height: 102px; margin-top: 10px;" />
+    </div>
+
+    </div>
+    <div class="col-1"></div>
+    <div class="col-8">
+         <!-- Member Name and Role on the Right -->
+         <div class="details-container" style="line-height: 1.2;">
+            <h2 class="fs-5 ">
+                {{ $member->salutation ? $member->salutation . ' ' : '' }}
+                {{ $member->first_name . ' ' . $member->last_name }}
+           
+            </h2>
+
+            <p class="fs-6 mb-0"><b>{{ $member->team->position }}</b></p>
+        </div>
+    </div>
+</div>
+            
+           
         </div>
 
     </div>

@@ -157,8 +157,7 @@
         font-size: 12px;
         word-wrap: break-word;
         overflow-wrap: break-word;
-        margin-left: -57px;
-        margin-top: -41px;
+       
     }
 
     .details-container h2 {

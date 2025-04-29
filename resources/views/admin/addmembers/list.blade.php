@@ -148,10 +148,19 @@
         </div>
         @endif
         @if (session('success'))
-        <div class="alert alert-success mt-2">
-            {{ session('success') }}
-        </div>
-        @endif
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: '{{ session('
+                                success ') }}',
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'OK'
+                });
+            });
+        </script>
+    @endif
         <h3 class="mb-3 custom-heading">Member List</h3>
         <div class="card shadow-lg">
             <div class="card-header text-white d-flex justify-content-between align-items-center bg-primary">
@@ -183,7 +192,7 @@
     </a>
 </div>
 
-               
+
             </div>
             @include('admin.partial.alerts')
             <div class="row">
@@ -232,7 +241,7 @@
             </a>
         </li>
         <li>
-            <a href="#" 
+            <a href="#"
                class="dropdown-item text-info"
                data-bs-toggle="modal"
                data-bs-target="#transferModal"

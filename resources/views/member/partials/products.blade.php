@@ -1,3 +1,6 @@
+<!-- SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <style>
     .custom-btn {
         background: linear-gradient(115deg, #0f0b8c, #77dcf5);
@@ -35,7 +38,9 @@
                     <button type="submit" class="btn btn-sm custom-btn">Update</button>
                 </div>
                 <div class="col-md-2">
-                    <a href="{{ route('delete.product', $product->id) }}" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure to delete this product?')">Delete</a>
+                    <a href="{{ route('delete.product', $product->id) }}" class="btn btn-sm btn-danger" id="delete-product-{{ $product->id }}">
+                        Delete
+                    </a>
                 </div>
             </div>
         </form>
@@ -97,4 +102,30 @@
     function removeProduct(element) {
         element.closest('.product-entry').remove();
     }
+
+    // Add SweetAlert confirmation for delete button
+    document.querySelectorAll('[id^="delete-product-"]').forEach(function (deleteButton) {
+        deleteButton.addEventListener('click', function (e) {
+            e.preventDefault();  // Prevent default link behavior
+
+            const deleteUrl = deleteButton.getAttribute('href');  // Get the URL for the delete action
+
+            // Show SweetAlert confirmation
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'No, cancel!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Redirect to delete URL if confirmed
+                    window.location.href = deleteUrl;
+                }
+            });
+        });
+    });
 </script>

@@ -165,50 +165,53 @@
                                     @endphp
 
                                     @if ($featured)
+
+
+                                    @php
+                                    $allChapterIds = [];
+                                @endphp
+
+                                @foreach ($members as $fes)
+                                    @if (isset($fes->chapter_id))
+                                        <!-- Ensure $fes is an object and chapter_id exists -->
+                                        @php
+                                            $ids = is_array($fes->chapter_id)
+                                                ? $fes->chapter_id
+                                                : json_decode($fes->chapter_id, true);
+                                            if (is_array($ids)) {
+                                                $allChapterIds = array_merge($allChapterIds, $ids);
+                                            }
+                                        @endphp
+                                    @endif
+                                @endforeach
+
+                                {{-- Optional: Remove duplicate IDs --}}
+                                @php
+                                    $allChapterIds = array_unique($allChapterIds);
+                                    $clubscount = count($allChapterIds);
+                                 $totalmember=\App\Models\Member::whereIn('account_name', $allChapterIds)->count() ;
+                                 $regioncount=$totalmember ?? 0;
+
+                                    $clubs = !empty($allChapterIds)
+                                        ? \App\Models\Chapter::whereIn('id', $allChapterIds)->get()
+                                        : collect();
+
+                                @endphp
+
+
                                         <h5 class="mb-3 text-center">{{ $featured->region }}</h5>
-                                        <div class="d-flex align-items-center mb-2">
-                                            <img src="{{ $featured->member->profile_photo ? asset('storage/app/public/' . $featured->member->profile_photo) : asset('assets/images/default.png') }}"
-                                                alt="{{ $featured->member->first_name }}"
-                                                style="width: 60px; height: 60px; border-radius: 10px; object-fit: cover;"
-                                                class="me-3">
-                                            <div>
-                                                <strong>{{ $featured->member->first_name }}
-                                                    {{ $featured->member->last_name }}</strong><br>
-                                                <small>{{ $featured->position }}</small><br>
-                                                <small>ID: {{ $featured->member->member_id }}</small>
-                                            </div>
+
+                                        <div class="d-flex align-items-center  mb-2">
+<p>
+                                            <span class="fs-5">Total Clubs  : &nbsp;<b>{{$clubscount}} </b></span> <br>
+                                            <span class="fs-5">Total Member  :&nbsp;<b>{{$regioncount}}</b></span>
+</p>
                                         </div>
 
 
                                         <p class="small mb-0">
                                             <strong>Clubs</strong><br>
 
-                                            @php
-                                                $allChapterIds = [];
-                                            @endphp
-
-                                            @foreach ($members as $fes)
-                                                @if (isset($fes->chapter_id))
-                                                    <!-- Ensure $fes is an object and chapter_id exists -->
-                                                    @php
-                                                        $ids = is_array($fes->chapter_id)
-                                                            ? $fes->chapter_id
-                                                            : json_decode($fes->chapter_id, true);
-                                                        if (is_array($ids)) {
-                                                            $allChapterIds = array_merge($allChapterIds, $ids);
-                                                        }
-                                                    @endphp
-                                                @endif
-                                            @endforeach
-
-                                            {{-- Optional: Remove duplicate IDs --}}
-                                            @php
-                                                $allChapterIds = array_unique($allChapterIds);
-                                                $clubs = !empty($allChapterIds)
-                                                    ? \App\Models\Chapter::whereIn('id', $allChapterIds)->get()
-                                                    : collect();
-
-                                            @endphp
                                             @if ($clubs->isNotEmpty())
                                                 <ul>
                                                     @foreach ($clubs as $club)

@@ -208,6 +208,16 @@ background-size: 20px;
     display: inline-block; /* Adjusts width to fit content */
     width: 100%; /* Ensures it spans across the container */
 }
+.custom-heading1 {
+    text-align: center;
+    white-space: nowrap;
+    padding: 6px;
+    color: white; /* Ensures text is readable */
+    background: linear-gradient(115deg, #0f0b8c, #77dcf5);
+    border-radius: 5px; /* Optional rounded edges */
+    display: inline-block; /* Adjusts width to fit content */
+    width: 100%; /* Ensures it spans across the container */
+}
 #birthdaysTable tbody tr:nth-child(odd) {
         background-color: #F0F8FF;
 }
@@ -215,7 +225,13 @@ background-size: 20px;
 #birthdaysTable tbody tr:nth-child(even) {
     background-color: #B9D9EB;
 }
+#comingTable tbody tr:nth-child(odd) {
+        background-color: #F0F8FF;
+}
 
+#comingTable tbody tr:nth-child(even) {
+    background-color: #B9D9EB;
+}
 #anniversariesTable tbody tr:nth-child(odd) {
         background-color: #F0F8FF;
 }
@@ -244,18 +260,52 @@ background-size: 20px;
     </div>
 
 
+
+
 <!-- Tab Content -->
 <div class="tab-content mt-3">
 <!-- Birthdays Tab -->
 <div class="tab-pane fade show active" id="birthdays">
 
+    @if(count($futureWeekBirthdays) > 0)
     <div class="table-responsive" style="background-color:white;">
-        <h4 style="text-align:center;">Members Birthday</h4>
+        <h4 class="mb-3 custom-heading1" style="text-align:center;">Upcoming Birthdays This Week</h4>
+        <table class="table table-striped table-bordered dt-responsive nowrap" id="comingTable" style="width: 100%; overflow-x: auto;">
+            <thead style="background-color:#003366;">
+                <tr>
+                        <th>S.No</th>
+                        <th>Member Name</th>
+                        <th>Club Name</th>
+                        <th>Date of Birth</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($futureWeekBirthdays as $member)
+                        <tr>
+                            <td>{{ $loop->iteration }}</td>
+                            <td>{{ Str::title($member->first_name) }} {{ Str::title($member->last_name) }}</td>
+                            <td>{{ $member->chapter_name ? Str::title($member->chapter_name) : 'N/A' }}</td>
+
+
+                            <td>{{ \Carbon\Carbon::parse($member->dob)->format('d M Y') }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    @else
+        <p>No birthdays in the upcoming week.</p>
+    @endif
+
+
+    <div class="table-responsive" style="background-color:white;">
+        <h4 class="mb-3 custom-heading1" style="text-align:center;">Member Birthdays This Month</h4>
         <table class="table table-striped table-bordered dt-responsive nowrap" id="birthdaysTable" style="width: 100%; overflow-x: auto;">
             <thead style="background-color:#003366;">
                 <tr>
                     <th>S.No</th>
                     <th>Member Name</th>
+                    <th>Club Name</th>
                     <th>Birthday Date</th>
                 </tr>
             </thead>
@@ -265,16 +315,15 @@ background-size: 20px;
                         <tr>
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ Str::title($member->first_name) }} {{ Str::title($member->last_name) }}</td>
+                            <td>{{ $member->chapter_name ? Str::title($member->chapter_name) : 'N/A' }}</td>
                             <td>{{ \Carbon\Carbon::parse($member->dob)->format('d-m-Y') }}</td>
                         </tr>
                     @endforeach
                 @endif
             </tbody>
         </table>
+        
     </div>
-
-
-
 
 </div>
 
@@ -282,12 +331,13 @@ background-size: 20px;
 <!-- Anniversaries Tab -->
 <div class="tab-pane fade" id="anniversaries">
     <div class="table-responsive" style="background-color:white;">
-        <h4 style="text-align:center;">Members Anniversary</h4>
-        <table id="anniversariesTable" class="table table-striped table-bordered dt-responsive nowrap" style="width: 100%; overflow-x: auto;">
+        <h4 class="mb-3 custom-heading1" style="text-align:center;">Members Anniversary</h4>
+        <table class="table table-striped table-bordered dt-responsive nowrap" id="anniversariesTable" style="width: 100%; overflow-x: auto;">
             <thead style="background-color:#003366;">
                 <tr>
                     <th>S.No</th>
                     <th>Member Name</th>
+                    <th>Club Name</th>
                     <th>Anniversary Date</th>
                 </tr>
             </thead>
@@ -297,12 +347,14 @@ background-size: 20px;
                         <tr>
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ Str::title($member->first_name) }} {{ Str::title($member->last_name) }}</td>
+                            <td>{{ Str::title($member->chapter_name ?? 'N/A') }}</td>
                             <td>{{ \Carbon\Carbon::parse($member->anniversary_date)->format('d-m-Y') }}</td>
                         </tr>
                     @endforeach
                 @endif
             </tbody>
         </table>
+        
     </div>
 </div>
 
@@ -332,7 +384,18 @@ $(document).ready(function () {
     });
 });
 </script>
-
+<script>
+    $(document).ready(function () {
+    $('#comingTable').DataTable({
+        "pageLength": 10,                // Set initial page length
+        "ordering": false,              // Disable sorting
+        "searching": true,              // Enable search
+        "lengthChange": true,           // Show "Show X entries" dropdown
+        "info": true,                   // Show "Showing X of X entries"
+        "lengthMenu": [10, 25, 50, 100]  // Dropdown options
+    });
+});
+</script>
 
 @endsection
 

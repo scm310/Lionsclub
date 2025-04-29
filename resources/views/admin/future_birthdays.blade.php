@@ -185,7 +185,7 @@ background-size: 20px;
 <div class="container mt-4 ">
     <div class="white-container">
 
-        <h3 class="mb-3 custom-heading">Coming week birthdays</h3>
+        <h3 class="mb-3 custom-heading">Upcoming Birthdays This Week</h3>
 
         <div class="mb-4 d-flex justify-content-end">
             <a href="{{ route('admin.birthday') }}" class="btn-birthday">
@@ -210,7 +210,7 @@ background-size: 20px;
                         <tr>
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ Str::title($member->first_name) }} {{ Str::title($member->last_name) }}</td>
-                            <td>{{ $member->chapter_name ?? 'N/A' }}</td>
+                            <td>{{ $member->chapter_name ? Str::title($member->chapter_name) : 'N/A' }}</td>
 
 
                             <td>{{ \Carbon\Carbon::parse($member->dob)->format('d M Y') }}</td>

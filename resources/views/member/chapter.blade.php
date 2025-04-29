@@ -43,10 +43,6 @@
             .custom-card {
                 width: 95%;
             }
-            .mz{
-                font-size: 12px;
-            }
-
         }
 
         .bg-primary {
@@ -112,55 +108,52 @@
 
                             </div>
                             <div class="row leader-section justify-content-center">
-                                @foreach ($members->where('account_name', $chapter->id)->whereIn('position', ['President', 'Secretary', 'Treasurer']) as $leader)
-                                    @php
-                                        $fullName = $leader->first_name . ' ' . $leader->last_name;
-                                        $displayName =strlen($fullName) > 20 ? substr($fullName, 0, 20) . '...' : $fullName;
-                                        $displayPosition =
-                                            strlen($leader->position) > 20
-                                                ? substr($leader->position, 0, 20) . '...'
-                                                : $leader->position;
-                                    @endphp
-                                    <div class="col-xl-2 col-lg-4 col-md-4 mb-4 g-1 d-flex justify-content-center"
-                                        id="data1">
-                                        <div class="custom-card profile-card1 data1" data-bs-toggle="modal"
-                                            data-bs-target="#profileModal"
-                                            data-name1="{{ $leader->first_name }} {{ $leader->last_name }}"
-                                            data-member-id1="{{ $leader->member_id }}"
-                                            data-memberposition="{{ $leader->position }}"
-                                            data-chapter="{{ $chapter->chapter_name }}">
+    @foreach ($members->where('account_name', $chapter->id)
+                      ->whereIn('position', ['President', 'Secretary', 'Treasurer'])
+                      ->sortBy(function ($leader) {
+                          return array_search($leader->position, ['President', 'Secretary', 'Treasurer']);
+                      }) as $leader)
+        @php
+            $fullName = $leader->first_name . ' ' . $leader->last_name;
+            $displayName = strlen($fullName) > 20 ? substr($fullName, 0, 20) . '...' : $fullName;
+            $displayPosition = strlen($leader->position) > 20 ? substr($leader->position, 0, 20) . '...' : $leader->position;
+        @endphp
 
+        <div class="col-xl-2 col-lg-4 col-md-4 mb-4 g-1 d-flex justify-content-center" id="data1">
+            <div class="custom-card profile-card1 data1" data-bs-toggle="modal" data-bs-target="#profileModal"
+                data-name1="{{ $leader->first_name }} {{ $leader->last_name }}"
+                data-member-id1="{{ $leader->member_id }}"
+                data-memberposition="{{ $leader->position }}"
+                data-chapter="{{ $chapter->chapter_name }}">
 
-                                            <div class="d-flex justify-content-center">
-                                                <img src="{{ $leader->profile_photo ? asset('storage/app/public/' . $leader->profile_photo) : asset('assets/images/default.png') }}"
-                                                    alt="{{ $leader->first_name . ' ' . $leader->last_name }}"
-                                                    class="border border-white shadow"
-                                                    style="width:80px; height:80px; object-fit:cover; border-radius:10px;">
-                                            </div>
+                <div class="d-flex justify-content-center">
+                    <img src="{{ $leader->profile_photo ? asset('storage/app/public/' . $leader->profile_photo) : asset('assets/images/default.png') }}"
+                        alt="{{ $leader->first_name . ' ' . $leader->last_name }}"
+                        class="border border-white shadow"
+                        style="width:80px; height:80px; object-fit:cover; border-radius:10px;">
+                </div>
 
+                <div class="text-white text-center">
+                    <span style="font-size: 12px; font-weight: bold;" title="{{ $fullName }}">
+                        {{ ucwords(strtolower(preg_replace('/[^a-zA-Z\s]/', '', $displayName))) }}
+                    </span><br>
+                    <span class="small" title="{{ $leader->position }}">
+                        {{ $displayPosition }}
+                    </span><br>
+                    <span style="font-size: 11px; font-weight: bold;">
+                        {{ $leader->member_id }}
+                    </span>
+                </div>
 
+            </div>
+        </div>
+    @endforeach
+</div>
 
-                                            <div class="text-white text-center">
-                                                <span style="font-size: 12px; font-weight: bold;"
-                                                    title="{{ $fullName }}">{{ ucwords(strtolower(preg_replace('/[^a-zA-Z\s]/', '', $displayName))) }}</span>
-                                                <br>
-                                                <span class="small"
-                                                    title="{{ $leader->position }}">{{ $displayPosition }}</span>
-                                                <br>
-                                                <span
-                                                    style="font-size: 11px; font-weight: bold;">{{ $leader->member_id }}</span>
-                                            </div>
-
-
-
-                                        </div>
-                                    </div>
-                                @endforeach
-                            </div>
                         </div>
 
                         <div class="members-container">
-                            <h5 class="mt-1 members-title text-center mx-auto w-50 mz  rounded" style="background: linear-gradient(115deg, #0f0b8c, #77dcf5); color: white;">
+                            <h5 class="mt-1 members-title text-center mx-auto w-50  rounded" style="background: linear-gradient(115deg, #0f0b8c, #77dcf5); color: white;">
                                 {{ ucwords(strtolower(preg_replace('/[^a-zA-Z\s]/', '', $chapter->chapter_name))) }} - <span class="">{{ $members->where('account_name', $chapter->id)->count() }}</span> Members
                             </h5>
                             <div class="row member-section justify-content-center">
@@ -210,31 +203,24 @@
 
         </div>
     </div>
-<!-- Modal -->
-<div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content modalmodify">
-            <div class="modal-header text-white" style="background-color: #003366; margin-top: -30px;">
-                <h5 class="modal-title w-100 text-center" id="profileModalLabel">Profile Access</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-
-            <div class="modal-body text-center">
-                <p id="modalText">
-                    You need to log in to view <strong id="officerName"></strong>'s profile.
-                </p>
-            </div>
-
-            <div class="modal-footer d-flex justify-content-center">
-                <a href="{{ route('member.login') }}" class="btn btn-primary px-4"
-                    style="border: 1px solid #ffcc00; background: linear-gradient(181deg, rgb(2, 0, 97) 15%, rgb(97, 149, 219) 158.5%);">
-                    Login
-                </a>
-                <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">Cancel</button>
+    <div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content modalmodify">
+                <div class="modal-header text-white" style="background-color: #003366; margin-top: -30px;">
+                    <h5 class="modal-title" id="profileModalLabel">Profile Access</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <p id="modalText">You need to log in to view <strong id="officerName"></strong>'s profile.</p>
+                </div>
+                <div class="modal-footer d-flex justify-content-center">
+                    <a href="{{ route('member.login') }}" class="btn btn-primary px-4"
+                        style="background-color: #003366;">Login</a>
+                    <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">Cancel</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {

@@ -342,12 +342,20 @@
         <h3 class="mb-3 custom-heading">Events</h3>
 
         @if(session('success'))
-    <div class="alert alert-success alert-dismissible fade show mt-3" role="alert" style="font-size:14px;">
-        {{ session('success') }}
-
-    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: '{{ session('success') }}',
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'OK'
+            });
+        });
+    </script>
 @endif
-        @include('admin.partial.alerts')
+
+       
 
 
         <ul class="nav nav-tabs d-flex flex-wrap" id="bannerTabs">
@@ -361,31 +369,140 @@
 
         <div class="tab-content mt-3">
             <div class="tab-pane fade show active" id="tab1">
-                <div class="d-flex justify-content-center align-items-center">
+                <div class="d-flex  align-items-center">
                     <div class="container">
                         <div class="row justify-content-center">
                             <div class="col-12 col-md-8">
-                                <div class="card shadow-lg p-4 card1" style="width: 68%; margin-left:109px;">
-                                    <!-- Form -->
-                                    <form action="{{ route('events_store') }}" method="POST" enctype="multipart/form-data">
-                                        @csrf
-                                        <div class="mb-3">
-                                            <label for="eventName" class="form-label" style="font-size:16px;">Event Name</label>
-                                            <input type="text" class="form-control" style="font-size:14px;" name="event_name" id="eventName" placeholder="Enter event name" required>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="eventDate" class="form-label" style="font-size:16px;">Event Date</label>
-                                            <input type="date" class="form-control" style="font-size:14px;" name="event_date" id="eventDate" required>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="eventInvitation" class="form-label" style="font-size:16px;">Event Invitation Image</label>
-                                            <input type="file" class="form-control" style="font-size:14px;" name="event_invitation" id="eventInvitation" accept="image/*">
-                                        </div>
-                                        <div class="d-flex justify-content-center mt-3">
-                                            <button type="submit" class="btn custom-btn w-40 upload">Submit</button>
-                                        </div>
-                                                                        </form>
-                                </div>
+                            <div class="container-fluid"> <!-- Changed container to container-fluid for full width -->
+                            <div class="card shadow-lg p-4" style="    width: 1000px;
+    background-color: #87cefa;
+    margin-left: -164px;
+">
+    <!-- Form -->
+    <form action="{{ route('events_store') }}" method="POST" enctype="multipart/form-data">
+        @csrf
+        <div class="row">
+            <!-- Row 1: Event Name, Activity Level, Multiple District, District, Club -->
+            <div class="col-md-3 mb-3">
+                <label class="form-label">Event Name</label>
+                <input type="text" class="form-control" name="event_name" placeholder="Enter event name" required>
+            </div>
+
+            <div class="col-md-3 mb-3">
+                <label class="form-label">Activity Level</label>
+                <input type="text" class="form-control" name="activity_level" placeholder="Enter activity level" required>
+            </div>
+
+            <div class="col-md-3 mb-3">
+                <label class="form-label">Multiple District</label>
+                <select name="multiple_district_id" class="form-control" required>
+                    <option value="">Select Multiple District</option>
+                    @foreach($multipleDistricts as $district)
+                        <option value="{{ $district->id }}">{{ $district->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="col-md-3 mb-3">
+                <label class="form-label">District</label>
+                <select name="district_id" class="form-control" required>
+                    <option value="">Select District</option>
+                    @foreach($districts as $dist)
+                        <option value="{{ $dist->id }}">{{ $dist->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="col-md-3 mb-3">
+                <label class="form-label">Club</label>
+                <select name="club_id" class="form-control" required>
+                    <option value="">Select Club</option>
+                    @foreach($clubs as $club)
+                        <option value="{{ $club->id }}">{{ $club->chapter_name }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <!-- Row 2: Creator, Activity Duration, Start Date, End Date, Activity Type -->
+            <div class="col-md-3 mb-3">
+                <label class="form-label">Creator</label>
+                <input type="text" class="form-control" name="creator" placeholder="Enter creator name" required>
+            </div>
+
+            <div class="col-md-3 mb-3">
+                <label class="form-label">Activity Duration</label><br>
+                <div class="form-check form-check-inline">
+                    <input type="radio" name="activity_duration" value="Single Day" class="form-check-input" required> 
+                    <label class="form-check-label">Single Day</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input type="radio" name="activity_duration" value="Multiple Day" class="form-check-input">
+                    <label class="form-check-label">Multiple Day</label>
+                </div>
+            </div>
+
+            <div class="col-md-3 mb-3">
+                <label class="form-label">Start Date</label>
+                <input type="date" class="form-control" name="start_date" required>
+            </div>
+
+            <div class="col-md-3 mb-3">
+                <label class="form-label">End Date</label>
+                <input type="date" class="form-control" name="end_date" required>
+            </div>
+
+            <div class="col-md-3 mb-3">
+                <label class="form-label">Activity Type</label>
+                <select name="activity_type" class="form-control" required>
+                    <option value="">Select Type</option>
+                    <option value="Service Activity">Service Activity</option>
+                    <option value="Fundraiser">Fundraiser</option>
+                    <option value="Meeting">Meeting</option>
+                    <option value="Donation">Donation</option>
+                </select>
+            </div>
+
+            <!-- Row 3: Cause, Total Volunteers, Description, Upload Event Image -->
+            <div class="col-md-3 mb-3">
+                <label class="form-label">Cause</label>
+                <select name="cause" class="form-control" required>
+                    <option value="">Select Cause</option>
+                    <option value="Honor">Honor</option>
+                    <option value="Environment">Environment</option>
+                    <option value="Childhood Cancer">Childhood Cancer</option>
+                    <option value="Diabetics">Diabetics</option>
+                    <option value="Vision">Vision</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+
+            <div class="col-md-3 mb-3">
+                <label class="form-label">Total Volunteers</label>
+                <input type="number" class="form-control" name="total_volunteers" placeholder="Enter total volunteers" required>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Description</label>
+                <textarea name="description" class="form-control" placeholder="Enter description" rows="3" required></textarea>
+            </div>
+
+            <div class="col-md-3 mb-3">
+                <label class="form-label">Upload Event Image</label>
+                <input type="file" class="form-control" name="event_invitation" accept="image/*">
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-center mt-4">
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+    </form>
+</div>
+
+
+</div>
+
+
+
 
                                 <!-- Table for Displaying Stored Events -->
                                 <div class="card shadow-lg p-4 mt-4" style="width: 153%; margin-left: -170px;">
@@ -408,7 +525,7 @@
                                                     <td>{{ $loop->iteration }}</td>
 
                                                     <td>{{ Str::title($event->event_name) }}</td>
-                                                    <td>{{ \Carbon\Carbon::parse($event->event_date)->format('d-m-Y') }}</td>
+                                                    <td>{{ \Carbon\Carbon::parse($event->start_date)->format('d-m-Y') }}</td>
                                                     <td>
                                                         @php
                                                             $imagePath = 'event_invitations/' . $event->event_invitation;
@@ -592,6 +709,7 @@
             </div>
         </div>
 
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 
         <script>

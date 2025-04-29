@@ -63,20 +63,20 @@ class MemberController extends Controller
     {
         // Get the currently authenticated member using the 'member' guard
         $member = Auth::guard('member')->user();
-    
+
         // Get the account_name of the member from add_members table
         $accountName = Member::where('id', $member->id)->value('account_name');
-    
+
         // Fetch announcements where chapter_id is null (for all) or matches member's account_name
         $announcements = Announcement::where(function ($query) use ($accountName) {
             $query->whereNull('chapter_id')
                   ->orWhere('chapter_id', $accountName);
         })->get();
-    
+
         return view('member.announcementlist', compact('announcements'));
     }
 
-    
+
 
     public function dashboard()
     {
@@ -97,14 +97,9 @@ class MemberController extends Controller
         // Return the view with announcements
         return view('member.dashboard', compact('announcements'));
     }
-    
-    
-    
 
-    
 
-  
-  
+
   public function create()
     {
         $parentMultipleDistricts = ParentsMultipleDistrict::all(); // Fetch all multiple districts
@@ -114,22 +109,22 @@ class MemberController extends Controller
 
         return view('admin.addmembers.create', compact('parentMultipleDistricts', 'districts', 'chapters', 'membershipTypes'));
     }
- 
-    
-    
-    
+
+
+
+
     public function checkMemberId(Request $request)
     {
         $exists = Member::where('member_id', $request->member_id)->exists();
         return response()->json(['exists' => $exists]);
     }
-    
+
 
     public function getDistricts(Request $request)
     {
         // Ensure 'parent_multiple_district_id' is being passed correctly
         $districts = District::where('parent_district_id', $request->parent_multiple_district_id)->get();
-    
+
         return response()->json($districts);
     }
 
@@ -138,6 +133,7 @@ class MemberController extends Controller
     public function store(Request $request)
     {
         $request->validate([
+            'salutation'=>'required',
             'first_name' => 'required',
             'last_name' => 'required',
             'member_id' => 'required|unique:add_members',
@@ -150,14 +146,14 @@ class MemberController extends Controller
             'email_address' => 'nullable|email|max:255',
             'membership_type' => 'required|in:Leo Club,Lions Club',
         ]);
-    
+
         $dob = $request->dob ? date('Y-m-d', strtotime($request->dob)) : null;
         $anniversary_date = $request->anniversary_date ? date('Y-m-d', strtotime($request->anniversary_date)) : null;
-    
-        $imagePath = $request->hasFile('profile_photo') 
-            ? $request->file('profile_photo')->store('members', 'public') 
+
+        $imagePath = $request->hasFile('profile_photo')
+            ? $request->file('profile_photo')->store('members', 'public')
             : null;
-    
+
         Member::create([
             'parent_multiple_district' => $request->parent_multiple_district,
             'parent_district' => $request->parent_district,
@@ -191,8 +187,8 @@ class MemberController extends Controller
             'profile_photo' => $imagePath,
             'password' => Hash::make('1234'), // Storing default password securely
         ]);
-    
-        return redirect()->route('members.add')->with('success', 'Member added successfully!');
+
+        return redirect()->route('members.list')->with('success', 'Member added successfully!');
     }
 
 
@@ -204,18 +200,18 @@ class MemberController extends Controller
         $chapters = Chapter::all();
         $membershipTypes = MembershipType::all();
         $districts = District::all(); // Fetch all districts
-    
+
         return view('admin.addmembers.edit', compact('member', 'parentMultipleDistricts', 'chapters', 'membershipTypes', 'districts'));
     }
-    
-    
+
+
     public function update(Request $request, $id)
     {
 
 
-  
+
         $member = Member::findOrFail($id);
-    
+
         // Validation
         $request->validate([
             'first_name' => 'required',
@@ -240,32 +236,32 @@ class MemberController extends Controller
             'fax' => 'nullable|string|max:20',
             'membership_full_type' => 'nullable|string|max:255',
             'membership_type' => 'nullable|string|max:255',
-            
+
             'parent_multiple_district' => 'required',
             'parent_district' => 'required',
             'account_name' => 'required',
         ]);
-    
-   
-    
+
+
+
         // Handle file upload
         if ($request->hasFile('profile_photo')) {
             $imagePath = $request->file('profile_photo')->store('profile_photos', 'public');
             $member->profile_photo = $imagePath;
         }
-    
+
         // Update the member fields
         $member->fill($request->except(['profile_photo']));
-    
+
         // Save the changes
         $member->save();
-    
+
         return redirect()->route('members.list')->with('success', 'Member updated successfully!');
     }
-    
-    
-    
-    
+
+
+
+
 // Delete Member
 public function destroy($id)
 {
@@ -275,7 +271,7 @@ public function destroy($id)
     return redirect()->route('members.list')->with('success', 'Member deleted successfully!');
 }
 
-    
+
 
 
     public function view($id)
@@ -327,7 +323,7 @@ public function import(Request $request)
 
 public function transfer(Request $request)
 {
-  
+
     $request->validate([
         'member_id' => 'required|exists:add_members,id',
         'new_club_id' => 'required|string|max:255',
@@ -350,7 +346,7 @@ public function transfer(Request $request)
 
 
 
-    
+
 }
 
 

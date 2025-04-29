@@ -70,10 +70,8 @@ class Member extends Authenticatable
         return $this->belongsTo(District::class, 'parent_district', 'id');
     }
 
-    public function account()
-    {
-        return $this->belongsTo(Chapter::class, 'account_name', 'id');
-    }
+
+
 
     public function team()
     {
@@ -85,13 +83,27 @@ class Member extends Authenticatable
         return $this->hasMany(RegionMember::class, 'member_id');
     }
 
-    public function clients()
+    public function account()
     {
-        return $this->hasMany(Client::class, 'member_id');
+        return $this->belongsTo(Chapter::class, 'account_name', 'id');
     }
 
-    public function testimonials()
+    public function client()
     {
-        return $this->hasMany(Testimonial::class, 'member_id');
+        return $this->hasMany(Client::class, 'member_id'); // Adjust based on your actual relationship
+    }
+
+    public function testimonial()
+    {
+        return $this->hasMany(Testimonial::class, 'member_id'); // Adjust based on your actual relationship
+    }
+
+    public function project()
+    {
+        return $this->hasMany(Project::class, 'member_id'); // Adjust based on your actual relationship
+    }
+    public function service()
+    {
+        return $this->hasMany(Service::class, 'member_id'); // Adjust based on your actual relationship
     }
 }

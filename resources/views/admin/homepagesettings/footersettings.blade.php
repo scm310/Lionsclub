@@ -48,17 +48,47 @@
     }
 
     .white-container {
-        background-color: #fff;
-        max-width: 800px;
-        margin: auto;
+        background-color: white;
         border-radius: 10px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        height: 115%;
     }
 
     .custom-heading {
-        color: rgb(255, 255, 255);
-        font-weight: 600;
+        text-align: center;
+        white-space: nowrap;
+        padding: 10px;
+        color: white;
+        /* Ensures text is readable */
+        background: linear-gradient(115deg, #0f0b8c, #77dcf5);
+        border-radius: 5px;
+        /* Optional rounded edges */
+        display: inline-block;
+        /* Adjusts width to fit content */
+        width: 100%;
+        /* Ensures it spans across the container */
     }
+
+    .table-responsive {
+background-color: #f8f9fa; /* Light background */
+color:black;
+padding: 20px; /* Adds space inside the container */
+box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow effect */
+overflow: hidden; /* Ensures rounded corners work */
+width:100%;
+border-radius: 10px;
+
+margin-top:-20px;
+
+}
+.table-responsive th{
+    text-align:center !important;
+    color:white !important;
+}
+.table-responsive td{
+    text-align:center !important;
+}
 
     label.form-label {
         font-weight: 500;
@@ -120,8 +150,9 @@
     }
 </style>
 
-<div class="container mt-4 white-container">
-    <div class="white-container p-4 rounded shadow" style="background-color: #87cefa;">
+<div class="container mt-4 ">
+    <div class="white-container">
+
         <h3 class="custom-heading text-white mb-4">Footer Settings</h3>
 
         {{-- Include SweetAlert2 --}}
@@ -151,6 +182,7 @@
         </script>
         @endif
 
+        <div class="card" style="max-width: 700px; margin: 0 auto; background-color:#87cefa; padding:16px;">
 
         <form action="{{ route('footer.store') }}" method="POST" >
             @csrf
@@ -210,10 +242,7 @@
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-danger btn-sm">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-                                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z" />
-                                        <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z" />
-                                    </svg>
+                                    <i class="fas fa-trash-alt"></i>
                                 </button>
                             </form>
                         </td>
@@ -223,9 +252,8 @@
                 </tbody>
             </table>
         </div>
-    </div>
 </div>
-
+</div>
 <script>
     document.querySelectorAll('.delete-form').forEach(form => {
         form.addEventListener('submit', function(e) {

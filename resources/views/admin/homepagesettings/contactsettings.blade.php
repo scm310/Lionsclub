@@ -118,6 +118,51 @@ margin-top:-20px;
     margin-right: 10px;
 }
 
+.fade-message {
+    width: 316px;
+    margin-left: 362px;
+    opacity: 1;
+    transition: opacity 1s ease-in-out;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    .fade-message {
+        width: 90%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    .alert {
+        width: 104%; /* or a smaller fixed width like 250px */
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+.question-column {
+        max-width:  350px;
+        height: 26px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        padding: 0px;
+        text-align: left;
+        cursor: pointer;
+        transition: height 0.3s ease-in-out;
+    }
+
+    /* Expanded state - applies when clicked */
+    .question-column.expanded{
+        height: auto;
+        white-space: normal;
+        word-wrap: break-word;
+        width:350px;
+    }
 
 </style>
 
@@ -126,13 +171,10 @@ margin-top:-20px;
         <h3 class="mb-3 custom-heading">Contact Settings</h3>
 
         @if(session('success'))
-        <div class="alert alert-success alert-dismissible fade show w-50 mx-auto text-center" role="alert">
+        <div class="alert alert-success fade-message">
             {{ session('success') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     @endif
-
-
     <div class="card" style="max-width: 500px; margin: 0 auto; background-color:#87cefa;">
     <div class="card-body">
     <form method="POST" action="{{ route('contact.store') }}">
@@ -164,13 +206,17 @@ margin-top:-20px;
                 <tr>
                     <td>{{ $loop->iteration }}</td>
 
-                    <td>{{ $contact->address ?? 'No address available' }}</td>
-                    <td>{{ $contact->created_at->format('d-m-Y H:i:s') }}</td>
+                    <td style="width: 400px;">
+                        <div class="question-column" onclick="toggleAddress(this, {{ $contact->id }})">
+                            {{ $contact->address ?? 'No address available' }}
+                        </div>
+                    </td>
+
+                                        <td>{{ $contact->created_at->format('d-m-Y H:i:s') }}</td>
 
 
                     <td>
                         <!-- Edit Button -->
-                        {{-- <a href="{{ route('contact.edit', $contact->id) }}" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a> --}}
 
                         <!-- Delete Button -->
                         <form action="{{ route('contact.delete', $contact->id) }}" method="POST" style="display:inline;" class="delete-form">
@@ -200,19 +246,55 @@ margin-top:-20px;
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
-            $(document).ready(function() {
-                $('#imageTable1').DataTable({
-                    "responsive": true,
-                    "autoWidth": false,
-                    "paging": true,
-                    "lengthChange": true,
-                    "searching": true,
-                    "ordering": false,
-                    "info": true,
-                    "pageLength": 10
-                });
+    $(document).ready(function() {
+        var table = $('#imageTable1').DataTable({
+            "responsive": true,
+            "autoWidth": false,
+            "paging": true,
+            "lengthChange": true,
+            "searching": true,
+            "ordering": false,
+            "info": true,
+            "pageLength": 10,
+            // Optional: For better mobile support
+            "columnDefs": [
+                {
+                    "targets": -1, // assuming the delete button is in the last column
+                    "orderable": false, // Disable ordering for delete button column
+                    "searchable": false // Disable search for delete button column
+                }
+            ]
+        });
+
+        // Handling delete button click
+        $('#imageTable1').on('click', '.delete-btn', function() {
+            var row = $(this).closest('tr'); // Get the closest row
+            var rowIndex = table.row(row).index(); // Get the index of the row
+
+            // Show SweetAlert confirmation
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "This action cannot be undone!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'Cancel',
+                customClass: {
+                    confirmButton: 'custom-confirm-btn',
+                    cancelButton: 'custom-cancel-btn'
+                },
+                buttonsStyling: false
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // If confirmed, remove the row from DataTable
+                    table.row(row).remove().draw();
+                }
             });
-        </script>
+        });
+    });
+    </script>
+
+
 
 <script>
 $(document).ready(function () {
@@ -242,4 +324,31 @@ $(document).ready(function () {
 
 
 </script>
+<script>
+    setTimeout(function() {
+        const alert = document.querySelector('.fade-message');
+        if (alert) {
+            alert.style.opacity = '0';
+        }
+    }, 3000);
+</script>
+
+<script>
+   let previousExpanded = null; // Track the previously expanded row
+
+function toggleAddress(element, contactId) {
+    // If there is a previously expanded row and it's not the current one, collapse it
+    if (previousExpanded && previousExpanded !== element) {
+        previousExpanded.classList.remove('expanded');
+    }
+
+    // Toggle the current row's expanded state
+    element.classList.toggle('expanded');
+
+    // Update the previousExpanded variable to the current element
+    previousExpanded = element.classList.contains('expanded') ? element : null;
+}
+
+</script>
+
 @endsection

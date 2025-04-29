@@ -8,7 +8,7 @@
                 padding: 2rem;
         border-radius: 10px;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        max-width: 600px;
+        max-width: 900px;
         margin: 40px auto;
     }
 
@@ -89,46 +89,158 @@
 
             <a href="{{ route('event_index') }}" class="text-decoration-none back-arrow mb-3 d-inline-block">← Back</a>
 
-    @if (session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
-    @endif
+            @if (session('success'))
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: '{{ session('success') }}',
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'OK'
+            });
+        });
+    </script>
+@endif
+
     <div class="container1">
     <form action="{{ route('event.update', $event->id) }}" method="POST" enctype="multipart/form-data">
-        @csrf
+    @csrf
+    @method('PUT') <!-- important for PUT update -->
 
-        <div class="mb-3">
-            <label for="event_name" class="form-label">Event Name</label>
+    <div class="row">
+        <!-- Row 1 -->
+        <div class="col-md-3 mb-3">
+            <label class="form-label">Event Name</label>
             <input type="text" class="form-control" name="event_name" value="{{ $event->event_name }}" required>
         </div>
 
-        @php
-        $minDate = \Carbon\Carbon::tomorrow()->format('Y-m-d');
-    @endphp
+        <div class="col-md-3 mb-3">
+            <label class="form-label">Activity Level</label>
+            <input type="text" class="form-control" name="activity_level" value="{{ $event->activity_level }}" required>
+        </div>
 
-    <div class="mb-3">
-        <label for="event_date" class="form-label">Event Date</label>
-        <input type="date" class="form-control" name="event_date" value="{{ $event->event_date }}" min="{{ $minDate }}" required>
-    </div>
-        <div class="mb-3">
-            <label for="event_invitation" class="form-label">Change Invitation (optional)</label>
+        <div class="col-md-3 mb-3">
+            <label class="form-label">Multiple District</label>
+            <select name="multiple_district_id" class="form-control" required>
+                <option value="">Select Multiple District</option>
+                @foreach($multipleDistricts as $district)
+                    <option value="{{ $district->id }}" {{ $event->multiple_district_id == $district->id ? 'selected' : '' }}>
+                        {{ $district->name }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <label class="form-label">District</label>
+            <select name="district_id" class="form-control" required>
+                <option value="">Select District</option>
+                @foreach($districts as $dist)
+                    <option value="{{ $dist->id }}" {{ $event->district_id == $dist->id ? 'selected' : '' }}>
+                        {{ $dist->name }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <label class="form-label">Club</label>
+            <select name="club_id" class="form-control" required>
+                <option value="">Select Club</option>
+                @foreach($clubs as $club)
+                    <option value="{{ $club->id }}" {{ $event->club_id == $club->id ? 'selected' : '' }}>
+                        {{ $club->chapter_name }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+
+        <!-- Row 2 -->
+        <div class="col-md-3 mb-3">
+            <label class="form-label">Creator</label>
+            <input type="text" class="form-control" name="creator" value="{{ $event->creator }}" required>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <label class="form-label">Activity Duration</label><br>
+            <div class="form-check form-check-inline">
+                <input type="radio" name="activity_duration" value="Single Day" class="form-check-input"
+                    {{ $event->activity_duration == 'Single Day' ? 'checked' : '' }} required>
+                <label class="form-check-label">Single Day</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input type="radio" name="activity_duration" value="Multiple Day" class="form-check-input"
+                    {{ $event->activity_duration == 'Multiple Day' ? 'checked' : '' }}>
+                <label class="form-check-label">Multiple Day</label>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <label class="form-label">Start Date</label>
+            <input type="date" class="form-control" name="start_date" value="{{ $event->start_date }}" required>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <label class="form-label">End Date</label>
+            <input type="date" class="form-control" name="end_date" value="{{ $event->end_date }}" required>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <label class="form-label">Activity Type</label>
+            <select name="activity_type" class="form-control" required>
+                <option value="">Select Type</option>
+                <option value="Service Activity" {{ $event->activity_type == 'Service Activity' ? 'selected' : '' }}>Service Activity</option>
+                <option value="Fundraiser" {{ $event->activity_type == 'Fundraiser' ? 'selected' : '' }}>Fundraiser</option>
+                <option value="Meeting" {{ $event->activity_type == 'Meeting' ? 'selected' : '' }}>Meeting</option>
+                <option value="Donation" {{ $event->activity_type == 'Donation' ? 'selected' : '' }}>Donation</option>
+            </select>
+        </div>
+
+        <!-- Row 3 -->
+        <div class="col-md-3 mb-3">
+            <label class="form-label">Cause</label>
+            <select name="cause" class="form-control" required>
+                <option value="">Select Cause</option>
+                <option value="Honor" {{ $event->cause == 'Honor' ? 'selected' : '' }}>Honor</option>
+                <option value="Environment" {{ $event->cause == 'Environment' ? 'selected' : '' }}>Environment</option>
+                <option value="Childhood Cancer" {{ $event->cause == 'Childhood Cancer' ? 'selected' : '' }}>Childhood Cancer</option>
+                <option value="Diabetics" {{ $event->cause == 'Diabetics' ? 'selected' : '' }}>Diabetics</option>
+                <option value="Vision" {{ $event->cause == 'Vision' ? 'selected' : '' }}>Vision</option>
+                <option value="Other" {{ $event->cause == 'Other' ? 'selected' : '' }}>Other</option>
+            </select>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <label class="form-label">Total Volunteers</label>
+            <input type="number" class="form-control" name="total_volunteers" value="{{ $event->total_volunteers }}" required>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Description</label>
+            <textarea name="description" class="form-control" rows="3" required>{{ $event->description }}</textarea>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <label class="form-label">Change Invitation (optional)</label>
             <input type="file" class="form-control" name="event_invitation">
-
             @php
                 $invitationImage = $event->event_invitation
                     ? asset('storage/app/public/event_invitations/' . $event->event_invitation)
-                    : asset('storage/app/public/event_invitations/default-invitation.png'); // default image path
+                    : asset('storage/event_invitations/default-invitation.png');
             @endphp
-
-            <p style="color: black; margin-top: 20px;">
+            <p style="color: black; margin-top: 10px;">
                 Current: <img src="{{ $invitationImage }}" width="100">
             </p>
         </div>
+    </div>
 
+    <div class="d-flex justify-content-center mt-4">
+        <button type="submit" class="btn btn-primary">Update Event</button>
+    </div>
+</form>
 
-        <div class="d-flex justify-content-center mt-3">
-            <button type="submit" class="btn custom-btn w-40 upload">Update Event</button>
-        </div>
-    </form>
 </div>
 </div>
 </div>

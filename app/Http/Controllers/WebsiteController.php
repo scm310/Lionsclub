@@ -220,8 +220,11 @@ class WebsiteController extends Controller
 
     public function chapter()
     {
-        // Fetch all chapters
-        $chapters = DB::table('chapters')->select('id', 'chapter_name')->get();
+       // Fetch all chapters
+       $chapters = DB::table('chapters')
+       ->select('id', 'chapter_name')
+       ->orderBy('chapter_name', 'asc')
+       ->get();
 
         // Fetch members with their positions and chapter details
         $members = DB::table('club_positions')
@@ -245,28 +248,44 @@ class WebsiteController extends Controller
     public function webevents(Request $request)
     {
         $currentDate = Carbon::today();
-
-        $completedEvents = Event::where('event_date', '<', $currentDate)
-            ->orderBy('event_date', 'asc')
-            ->with('pastEvents')
+    
+        // Fetch completed events along with their related data
+        $completedEvents = Event::where('start_date', '<', $currentDate)  // Changed from event_date to start_date
+            ->orderBy('start_date', 'asc')  // Changed from event_date to start_date
+            ->with(['pastEvents', 'district', 'club', 'parentDistrict']) // Eager load related data
             ->get()
             ->map(function ($event) {
                 $pastEvent = $event->pastEvents->first();
                 $event->venue = $pastEvent->venue ?? 'N/A';
                 $event->details = $pastEvent->details ?? 'N/A';
                 $event->images = $pastEvent->images ?? [];
+    
+                // Fetch the names from the related tables
+                $event->district_name = $event->district ? $event->district->name : 'N/A';
+                $event->club_name = $event->club ? $event->club->name : 'N/A';
+                $event->parent_district_name = $event->parentDistrict ? $event->parentDistrict->name : 'N/A';
+    
                 return $event;
             });
-
-        $upcomingEvents = Event::where('event_date', '>=', $currentDate)
-            ->orderBy('event_date', 'asc')
-            ->get();
-
-
+    
+        // Fetch upcoming events with their related data
+        $upcomingEvents = Event::where('start_date', '>=', $currentDate)  // Changed from event_date to start_date
+            ->orderBy('start_date', 'asc')
+            ->with(['district', 'club', 'parentDistrict']) // Eager load related data
+            ->get()
+            ->map(function ($event) {
+                $event->district_name = $event->district ? $event->district->name : 'N/A';
+                $event->club_name = $event->club ? $event->club->name : 'N/A';
+                $event->parent_district_name = $event->parentDistrict ? $event->parentDistrict->name : 'N/A';
+                return $event;
+            });
+    
         $activeTab = $request->query('tab', 'tab2');
-
+    
         return view('member.webevents', compact('completedEvents', 'upcomingEvents', 'activeTab'));
     }
+    
+    
 
     public function gallery()
     {

@@ -81,7 +81,7 @@
 
                 <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('regionmember') ? 'active' : '' }}"
-                       href="{{ route('regionmember') }}">Regions Member</a>
+                       href="{{ route('regionmember') }}">Region Members</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('chapter') ? 'active' : '' }}"

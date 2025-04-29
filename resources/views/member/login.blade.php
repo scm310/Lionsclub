@@ -219,9 +219,10 @@
     }
 
     .mainlogo img {
-        margin-left: 20px;
-        width: 74px !important;
-        height: 50px !important;
+        margin-left: -18px;
+    width: 60px !important;
+    height: 60px !important;
+    margin-top: -20px;
     }
 
     .zoom-image1{
@@ -236,16 +237,7 @@
         transform: translateX(265px);
     }
 
-    .zoom-image:hover {
-        transform: scale(3.2) translateY(31%) translateX(30px);
-        transform-origin: center;
-    }
-
-    .zoom-image1:hover {
-        transform: scale(3.2) translateY(80%) translateX(-100px);
-        transform-origin: center;
-    }
-
+  
     .mobilescreen,
     #mobilescreen {
         display: none;
@@ -355,10 +347,18 @@
 
 @endphp
 
+@php
+        $member = \App\Models\Member::with('team')
+        ->whereHas('team', function ($query) {
+            $query->where('position', 'District Governor')->where('year', 'CurrentYear');
+        })
+        ->first();
+@endphp
+
 <div class="header mobile p-3 col-lg-12 d-flex align-items-center justify-content-between flex-wrap" style="gap: 10px;">
     <!-- Left Logo -->
     <img src="{{ asset('assets/images/logo.png') }}" alt="Logo" class="zoom-image" loading="lazy"
-        style="height:100px; width:100px;" />
+        style="height: 66px; width: 78px; margin-top: -16px;  margin-left: 56px;" />
 
     <!-- Heading -->
     <h1 class="m-0 text-center flex-grow-1 text-light tittle" style="font-size:35px; white-space: nowrap;">
@@ -379,17 +379,18 @@
         <div class="row justify-content-center">
             <!-- Member Card Section -->
             <div class="col-12 col-md-6 col-lg-5 mb-3 d-flex justify-content-center">
-                @if ($member)
+           
                 <div class="card text-center shadow-sm"
                     style="border: 3px solid #ffc107; border-radius: 15px; padding: 20px; width: 100%; max-width: 300px;">
-                    <img src="{{ asset('storage/app/public/' . $member->image) }}"
-                        alt="{{ $member->name }}"
+                    <img src="{{ $member->profile_photo ? asset('storage/app/public/' . $member->profile_photo) : asset('assets/images/default.png') }}"
+                        alt="{{ $member->salutation.' '.$member->first_name . ' ' . $member->last_name }} " 
                         class="mx-auto d-block mb-3"
                         style="height: 150px; width: 150px; object-fit: fill; border-radius: 10px;" />
-                    <h5 class="text-primary fw-bold mb-1" style="font-size: 1.2rem;">{{ $member->name }}</h5>
-                    <p class="fw-bold text-dark mb-0" style="font-size: 1rem;">{{ $member->role }}</p>
+                    <h5 class="text-primary  mb-1" style="font-size: 1.2rem;">  {{ $member->salutation ? $member->salutation . ' ' : '' }}
+                        {{ $member->first_name . ' ' . $member->last_name }}</h5>
+                    <p class=" text-dark mb-0" style="font-size: 1rem;">{{ $member->team->position }}</p>
                 </div>
-                @endif
+             
             </div>
 
             <!-- Login Form Section -->

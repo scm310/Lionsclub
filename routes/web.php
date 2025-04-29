@@ -270,7 +270,7 @@ Route::prefix('admin')->group(function () {
     Route::get('/events', [EventController::class, 'index'])->name('event_index');
     Route::post('/addevents', [EventController::class, 'store'])->name('events_store');
     Route::get('/edit/{id}', [EventController::class, 'edit'])->name('event.edit');  // Edit page
-    Route::post('/update/{id}', [EventController::class, 'update'])->name('event.update'); // Form submit
+    Route::put('/update/{id}', [EventController::class, 'update'])->name('event.update');
 
 });
 
@@ -446,6 +446,15 @@ Route::prefix('member')->middleware('auth:member')->group(function () {
     Route::put('/project-update/{id}', [MemberLoginController::class, 'updateProject'])->name('project.update');
     Route::get('/project-delete/{id}', [MemberLoginController::class, 'deleteProject'])->name('project.delete');
 });
+//service member
+Route::get('/services', [MemberLoginController::class, 'services'])->name('member.services');
+// Store new services
+Route::post('/services', [MemberLoginController::class, 'store'])->name('service.store');
+// Update an existing service
+Route::put('/services/{id}', [MemberLoginController::class, 'serviceupdate'])->name('service.update');
+
+// Delete a service
+Route::get('/services/{id}/delete', [MemberLoginController::class, 'delete'])->name('service.delete');
 
 Route::post('/client/store', [MemberLoginController::class, 'storeClient'])->name('client.store');
 Route::put('/client/update/{id}', [MemberLoginController::class, 'updateClient'])->name('client.update');
@@ -457,13 +466,9 @@ Route::middleware(['auth:member'])->group(function () {
     Route::delete('testimonials/delete/{id}', [MemberLoginController::class, 'deleteTestimonial'])->name('testimonials.delete');
 });
 
-
-
 // Member Lounge Routes
 Route::get('/member/lounge', [MemberLoungeController::class, 'index'])->name('member.lounge');
 Route::get('/member/details/{id}', [MemberLoungeController::class, 'show'])->name('member.details');
-
-
 
 
 

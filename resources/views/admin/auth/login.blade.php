@@ -14,6 +14,7 @@
 
             margin: 0;
             padding: 0;
+            overflow:hidden;
 
         }
 
@@ -144,12 +145,18 @@
   
 }
 
-
-
 </style>
 
 
 </head>
+
+@php
+        $member = \App\Models\Member::with('team')
+        ->whereHas('team', function ($query) {
+            $query->where('position', 'District Governor')->where('year', 'CurrentYear');
+        })
+        ->first();
+@endphp
 
 <div class="container-fluid" style="background: url('{{ asset('assets/images/Member Login.png') }}') no-repeat center center; background-size: cover; min-height: 100vh;">
 
@@ -173,19 +180,23 @@
         <!-- Member Cards Column -->
         <div class="col-12 col-md-6 mb-4 mb-md-0 mb-5">
             <div class="row justify-content-center">
-                @foreach ($members as $member)
+
                 <div class="col-12 col-sm-6 col-md-12 d-flex justify-content-center mb-3">
                     <div class="card text-center shadow-sm mt-1"
                         style="border: 3px solid #ffc107; border-radius: 15px; padding: 20px; width: 100%; max-width: 300px; background: #fff;">
-                        <img src="{{ asset('storage/app/public/' . $member->image) }}"
-                            alt="{{ $member->name }}"
-                            class="mx-auto d-block mb-3"
-                            style="height: 150px; width: 150px; object-fit: fill; border-radius: 10px;" />
-                        <h5 class="text-primary fw-bold mb-1" style="font-size: 1.2rem;">{{ $member->name }}</h5>
-                        <p class="fw-bold text-dark mb-0" style="font-size: 1rem;">{{ $member->role }}</p>
+                        <img src="{{ $member->profile_photo ? asset('storage/app/public/' . $member->profile_photo) : asset('assets/images/default.png') }}"
+                        alt="{{ $member->salutation.' '.$member->first_name . ' ' . $member->last_name }} "    class="mx-auto d-block mb-3"
+                        style="height: 150px; width: 150px; object-fit: fill; border-radius: 10px;"/>
+                        <h5 class="text-primary  mb-1" style="font-size: 1.2rem;">
+                            {{ $member->salutation ? $member->salutation . ' ' : '' }}
+                            {{ $member->first_name . ' ' . $member->last_name }}
+                       
+                        </h5>
+        
+                        <p class=" text-dark mb-0" style="font-size: 1rem;">{{ $member->team->position }}</p>
                     </div>
                 </div>
-                @endforeach
+
             </div>
         </div>
 
