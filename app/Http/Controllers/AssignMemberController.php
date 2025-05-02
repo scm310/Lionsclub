@@ -13,6 +13,7 @@ use App\Models\RegionMember;
 use Illuminate\Http\Request;
 
 use App\Models\Member;
+use App\Models\Region;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
@@ -25,8 +26,8 @@ class AssignMemberController extends Controller
     {
         $members = Member::selectRaw("id, CONCAT(first_name, ' ', last_name) as full_name")->get();
         $chapters = Chapter::all(); // Fetch all chapters
-
-        return view('admin.memberdirectory.assignmember', compact('members', 'chapters'));
+        $regions = Region::all();
+        return view('admin.memberdirectory.assignmember', compact('members', 'chapters', 'regions'));
     }
 
 
@@ -49,7 +50,7 @@ class AssignMemberController extends Controller
     {
         $query = $request->input('query');    // Search term entered by the user
         $clubId = $request->input('club_id'); // Club ID (if available)
-        
+
         // Query the Member model to search by full name (first_name + last_name) and also include member_id
         $members = Member::select('id', 'first_name', 'last_name', 'member_id')  // Include member_id here
             ->when($clubId, function ($q) use ($clubId) {
@@ -57,7 +58,7 @@ class AssignMemberController extends Controller
             })
             ->where(function ($q) use ($query) {
                 $q->whereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ["%{$query}%"])  // Search by full name
-                  ->orWhere('member_id', 'LIKE', "%{$query}%");  // Also search by member_id
+                    ->orWhere('member_id', 'LIKE', "%{$query}%");  // Also search by member_id
             })
             ->get()
             ->map(function ($member) {
@@ -67,10 +68,10 @@ class AssignMemberController extends Controller
                     'member_id' => $member->member_id,  // Ensure member_id is included
                 ];
             });
-    
+
         return response()->json($members); // Return the results as JSON
     }
-    
+
 
 
     public function storeInternationalOfficer(Request $request)
@@ -174,28 +175,35 @@ class AssignMemberController extends Controller
 
 
 
+
+
     public function storeRegionMember(Request $request)
     {
         $request->validate([
             'region_member_id' => 'required|exists:add_members,id',
             'position' => 'required|in:Region Chairperson,Zone Chairperson',
-            'region' => 'required|in:Region 1,Region 2,Region 3,Region 4',
+            'region' => 'required|exists:regions,id',
             'zone' => 'nullable|required_if:position,Zone Chairperson|in:Zone 1,Zone 2,Zone 3',
-            'chapter_id' => 'nullable|array', // Always required as array
-            'chapter_id.*' => 'exists:chapters,id', // Every chapter must exist
+            'chapter_id' => 'nullable|array',
+            'chapter_id.*' => 'exists:chapters,id',
         ]);
+
+        // Fetch the region name from regions table using ID
+        $regionName = \App\Models\Region::where('id', $request->region)->value('name');
 
         RegionMember::create([
             'member_id' => $request->region_member_id,
             'position' => $request->position,
             'year' => $request->year,
-            'region' => $request->region,
+            'region' => $regionName, // ✅ store the region name
             'zone' => $request->position === 'Zone Chairperson' ? $request->zone : null,
-            'chapter_id' => json_encode($request->chapter_id), // Store array as JSON string
+            'chapter_id' => $request->chapter_id ? json_encode($request->chapter_id) : null,
         ]);
 
         return redirect()->back()->with('success', 'Region Member assigned successfully.');
     }
+
+
 
 
 

@@ -7,11 +7,12 @@
             <div class="col-md-3">
                 <input type="text" name="service_name" class="form-control" value="{{ $service->service_name }}">
             </div>
-            <div class="col-md-2">
-                @if($service->image)
-                    <img src="{{ asset('storage/' . $service->image) }}" width="60" height="60">
-                @endif
+            <div class="col-md-3">
+              
                 <input type="file" name="image" class="form-control mt-1">
+                @if($service->image)
+                    <img src="{{ asset('storage/app/public/' . $service->image) }}" width="60" height="60">
+                @endif
             </div>
             <div class="col-md-1">
                 <button type="submit" class="btn btn-sm text-white" style="background: linear-gradient(115deg, #0f0b8c, #77dcf5); border: none;">Update</button>
@@ -32,11 +33,11 @@
             <div class="col-md-3">
                 <input type="text" name="service_name[]" class="form-control" placeholder="Service Name" required>
             </div>
-            <div class="col-md-2">
+            <div class="col-md-3">
                 <input type="file" name="image[]" class="form-control" accept="image/*">
             </div>
             <div class="col-md-1 d-flex align-items-end">
-                <button type="button" class="btn btn-danger removeService">X</button>
+                <button type="button" class="btn btn-danger removeService">Delete</button>
             </div>
         </div>
     </div>
@@ -56,11 +57,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 <div class="col-md-3">
                     <input type="text" name="service_name[]" class="form-control" placeholder="Service Name" required>
                 </div>
-                <div class="col-md-2">
+                <div class="col-md-4">
                     <input type="file" name="image[]" class="form-control" accept="image/*">
                 </div>
                 <div class="col-md-1 d-flex align-items-end">
-                    <button type="button" class="btn btn-danger removeService">X</button>
+                    <button type="button" class="btn btn-danger removeService">Delete</button>
                 </div>
             </div>`;
         document.getElementById('serviceFields').insertAdjacentHTML('beforeend', fieldHTML);

@@ -17,7 +17,7 @@
         <a href="{{ route('donation.form') }}"  class=" button1 m-2">Donation Enquiry</a>
     </div>
 
-    <div class="card p-4 text-center custom-card"
+    <div class="card1 p-4 text-center custom-card"
          style="background: rgba(255, 255, 255, 0.2); border-radius: 50px;  backdrop-filter: blur(10px);">
         <h4 class="text-white">Our Address</h4>
         <p class="text-white">
@@ -44,6 +44,9 @@
     text-decoration: none;
 }
 
+.card1{
+    width:320px !important;
+}
 /* Responsive Design */
 @media (max-width: 768px) {
     .button {
@@ -52,6 +55,13 @@
         margin-left: -93%;
         transform: translateX(335px);
     }
+
+    
+.card1{
+    width:320px !important;
+    
+}
+
 }
 </style>
 

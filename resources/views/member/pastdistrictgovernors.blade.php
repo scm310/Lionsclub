@@ -49,7 +49,7 @@
 
         <div class="shadow mb-3 bg-body-tertiary rounded"
             style="background: linear-gradient(115deg, #1a1683, #77dcf5); color:white;">
-            <h4 class="text-center">Past District Governor</h4>
+            <h4 class="text-center">Past District Governors</h4>
         </div>
 
         <div class="row mb-5 leader-section justify-content-center">
@@ -83,7 +83,7 @@
                             <img src="{{ $officer->profile_photo ? asset('storage/app/public/' . $officer->profile_photo) : asset('assets/images/default.png') }}"
                                 alt="{{ $officer->first_name }}"
                                 class="border border-white shadow"
-                                style="width:80px; height:80px; object-fit:cover; border-radius:10px;">
+                                style="width:80px; height:80px; object-fit:fill; border-radius:10px;">
                         </div>
 
                         <div class="text-white">

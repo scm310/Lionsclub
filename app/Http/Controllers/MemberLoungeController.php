@@ -16,7 +16,9 @@ class MemberLoungeController extends Controller
             'client',
             'testimonial',
             'project',
-            'service'
+            'service',
+            'product',
+            'company'
         ])
         ->orderBy('first_name', 'asc');
 

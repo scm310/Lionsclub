@@ -391,11 +391,12 @@ public function donationForm()
 
 
 
- public function showCareerEnquiryForm() {
-
-    $enquiries = CareerEnquiry::all();  // You can also use ->latest() to order by the latest entry
-    return view('member.careerenquiry',compact('enquiries'));
-}
+ public function showCareerEnquiryForm()
+    {
+        $enquiries = CareerEnquiry::orderBy('created_at', 'desc')->get();  // This will order by the latest date
+        return view('member.careerenquiry', compact('enquiries'));
+    }
+    
 public function submitCareerEnquiry(Request $request) {
     $request->validate([
         'first_name' => 'required|string|max:255',

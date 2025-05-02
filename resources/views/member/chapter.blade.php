@@ -43,6 +43,9 @@
             .custom-card {
                 width: 95%;
             }
+            .ms{
+                font-size: 12px;
+            }
         }
 
         .bg-primary {
@@ -130,7 +133,7 @@
                     <img src="{{ $leader->profile_photo ? asset('storage/app/public/' . $leader->profile_photo) : asset('assets/images/default.png') }}"
                         alt="{{ $leader->first_name . ' ' . $leader->last_name }}"
                         class="border border-white shadow"
-                        style="width:80px; height:80px; object-fit:cover; border-radius:10px;">
+                        style="width:80px; height:80px; object-fit:fill; border-radius:10px;">
                 </div>
 
                 <div class="text-white text-center">
@@ -153,7 +156,7 @@
                         </div>
 
                         <div class="members-container">
-                            <h5 class="mt-1 members-title text-center mx-auto w-50  rounded" style="background: linear-gradient(115deg, #0f0b8c, #77dcf5); color: white;">
+                            <h5 class="mt-1 members-title text-center mx-auto w-50 ms rounded" style="background: linear-gradient(115deg, #0f0b8c, #77dcf5); color: white;">
                                 {{ ucwords(strtolower(preg_replace('/[^a-zA-Z\s]/', '', $chapter->chapter_name))) }} - <span class="">{{ $members->where('account_name', $chapter->id)->count() }}</span> Members
                             </h5>
                             <div class="row member-section justify-content-center">
@@ -176,7 +179,7 @@
                                                 <img src="{{ $member->profile_photo ? asset('storage/app/public/' . $member->profile_photo) : asset('assets/images/default.png') }}"
                                                     alt="{{ $member->first_name . ' ' . $member->last_name }}"
                                                     class="border border-white shadow"
-                                                    style="width:80px; height:80px; object-fit:cover; border-radius:10px;">
+                                                    style="width:80px; height:80px; object-fit:fill; border-radius:10px;">
                                             </div>
 
 
@@ -203,19 +206,26 @@
 
         </div>
     </div>
+
     <div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content modalmodify">
                 <div class="modal-header text-white" style="background-color: #003366; margin-top: -30px;">
-                    <h5 class="modal-title" id="profileModalLabel">Profile Access</h5>
+                    <h5 class="modal-title w-100 text-center" id="profileModalLabel">Profile Access</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
+
                 <div class="modal-body text-center">
-                    <p id="modalText">You need to log in to view <strong id="officerName"></strong>'s profile.</p>
+                    <p id="modalText">
+                        You need to log in to view <strong id="officerName"></strong>'s profile.
+                    </p>
                 </div>
+
                 <div class="modal-footer d-flex justify-content-center">
                     <a href="{{ route('member.login') }}" class="btn btn-primary px-4"
-                        style="background-color: #003366;">Login</a>
+                        style="border: 1px solid #ffcc00; background: linear-gradient(181deg, rgb(2, 0, 97) 15%, rgb(97, 149, 219) 158.5%);">
+                        Login
+                    </a>
                     <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">Cancel</button>
                 </div>
             </div>

@@ -106,4 +106,14 @@ class Member extends Authenticatable
     {
         return $this->hasMany(Service::class, 'member_id'); // Adjust based on your actual relationship
     }
+
+    public function product()
+    {
+        return $this->hasMany(Product::class, 'member_id'); // Adjust based on your actual relationship
+    }
+
+    public function company()
+    {
+        return $this->hasMany(Company::class, 'member_id'); // Adjust based on your actual relationship
+    }
 }

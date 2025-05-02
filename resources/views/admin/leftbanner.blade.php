@@ -165,36 +165,38 @@
     }
 
 
-  /* Push search and length dropdown down a little */
-.dataTables_length,
-.dataTables_filter {
-    margin-top: 0.5rem; /* Adjust as needed */
-}
+    /* Push search and length dropdown down a little */
+    .dataTables_length,
+    .dataTables_filter {
+        margin-top: 0.5rem;
+        /* Adjust as needed */
+    }
 
-/* Odd and even row color for ad1Table and ad2Table */
-#ad1Table tbody tr:nth-child(odd),
-#ad2Table tbody tr:nth-child(odd) {
-    background-color: #F0F8FF; /* Alice Blue */
-}
+    /* Odd and even row color for ad1Table and ad2Table */
+    #ad1Table tbody tr:nth-child(odd),
+    #ad2Table tbody tr:nth-child(odd) {
+        background-color: #F0F8FF;
+        /* Alice Blue */
+    }
 
-#ad1Table tbody tr:nth-child(even),
-#ad2Table tbody tr:nth-child(even) {
-    background-color: #B9D9EB; /* Soft pastel blue */
-}
+    #ad1Table tbody tr:nth-child(even),
+    #ad2Table tbody tr:nth-child(even) {
+        background-color: #B9D9EB;
+        /* Soft pastel blue */
+    }
 
-/* Table cell padding and border */
-#ad1Table td,
-#ad2Table td {
-    padding: 10px;
-    border-color: #ddd;
-}
+    /* Table cell padding and border */
+    #ad1Table td,
+    #ad2Table td {
+        padding: 10px;
+        border-color: #ddd;
+    }
 
-/* Active pagination button style */
-.page-item.active .page-link {
-    background: linear-gradient(159deg, rgba(30,144,255,1) 0%, rgba(153,186,221,1) 100%);
-    border: none;
-}
-
+    /* Active pagination button style */
+    .page-item.active .page-link {
+        background: linear-gradient(159deg, rgba(30, 144, 255, 1) 0%, rgba(153, 186, 221, 1) 100%);
+        border: none;
+    }
 </style>
 
 <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -204,7 +206,7 @@
 
 <div class="col-12 col-md-6 mb-4">
     <div class="card">
-    <div class="card-body"  style="background-color: #87cefa;">
+        <div class="card-body" style="background-color: #87cefa;">
             <h5 class="card-title text-center">Upload Left AD 1</h5>
             <form action="{{ route('upload.ad') }}" method="POST" enctype="multipart/form-data">
                 @csrf
@@ -222,11 +224,11 @@
                 </div>
 
                 <div class="text-center">
-    <button type="submit" class="btn w-40 mt-3 text-white"
-        style="background: linear-gradient(115deg, #0f0b8c, #77dcf5); border-radius: 5%;">
-       Upload
-    </button>
-</div>
+                    <button type="submit" class="btn w-40 mt-3 text-white"
+                        style="background: linear-gradient(115deg, #0f0b8c, #77dcf5); border-radius: 5%;">
+                        Upload
+                    </button>
+                </div>
             </form>
         </div>
     </div>
@@ -234,7 +236,7 @@
 
 <div class="col-12 col-md-6 mb-4"> <!-- Same for the second card -->
     <div class="card">
-        <div class="card-body"  style="background-color: #87cefa;">
+        <div class="card-body" style="background-color: #87cefa;">
             <h5 class="card-title text-center">Upload Left AD 2</h5>
             <form action="{{ route('upload.ad') }}" method="POST" enctype="multipart/form-data">
                 @csrf
@@ -252,11 +254,11 @@
                 </div>
 
                 <div class="text-center">
-    <button type="submit" class="btn w-40 mt-3 text-white"
-        style="background: linear-gradient(115deg, #0f0b8c, #77dcf5); border-radius: 5%;">
-       Upload
-    </button>
-</div>
+                    <button type="submit" class="btn w-40 mt-3 text-white"
+                        style="background: linear-gradient(115deg, #0f0b8c, #77dcf5); border-radius: 5%;">
+                        Upload
+                    </button>
+                </div>
             </form>
         </div>
     </div>
@@ -267,7 +269,7 @@
         <li class="nav-item" role="presentation">
             <button class="nav-link active" id="ad1-tab" data-bs-toggle="tab" data-bs-target="#ad1" type="button"
                 role="tab">
-               Left AD 1
+                Left AD 1
             </button>
         </li>
         <li class="nav-item" role="presentation">
@@ -280,30 +282,30 @@
     </ul>
 </div>
 <div class="tab-content mt-3" id="adTabsContent">
-<div class="tab-pane fade show active" id="ad1" role="tabpanel">
-<div class="card">
-    <!-- Header for Advertisement 1 -->
-    <div class="card-header text-white text-center py-2" style="background: linear-gradient(115deg, #0f0b8c, #77dcf5);">
-        <h5 class="mb-0 text-white">  Left AD 1 List</h5>
-    </div>
-<br><br>
-    <!-- Table inside card body, wrapped in responsive container -->
-    <div class="card-body p-0">
-        <div class="table-responsive">
-            <table class="table table-striped table-bordered dt-responsive nowrap mb-0" id="ad1Table"
-                   style="width: 100%;">
-                <thead>
-                    <tr>
-                        <th class="text-center">S.No</th>
-                        <th class="text-center">Image</th>
-                        <th class="text-center">Website Link</th>
-                        <th class="text-center">Date & Time</th>
-                        <th class="text-center">Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if (isset($adimage) && count($adimage) > 0)
-                        @foreach ($adimage as $index => $image)
+    <div class="tab-pane fade show active" id="ad1" role="tabpanel">
+        <div class="card">
+            <!-- Header for Advertisement 1 -->
+            <div class="card-header text-white text-center py-2" style="background: linear-gradient(115deg, #0f0b8c, #77dcf5);">
+                <h5 class="mb-0 text-white"> Left AD 1 List</h5>
+            </div>
+            <br><br>
+            <!-- Table inside card body, wrapped in responsive container -->
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered dt-responsive nowrap mb-0" id="ad1Table"
+                        style="width: 100%;">
+                        <thead>
+                            <tr>
+                                <th class="text-center">S.No</th>
+                                <th class="text-center">Image</th>
+                                <th class="text-center">Website Link</th>
+                                <th class="text-center">Date & Time</th>
+                                <th class="text-center">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (isset($adimage) && count($adimage) > 0)
+                            @foreach ($adimage as $index => $image)
                             <tr>
                                 <td>{{ $index + 1 }}</td>
                                 <td>
@@ -324,86 +326,119 @@
                                 <td>
                                     <form
                                         action="{{ route('delete.ad.image', ['id' => is_array($image) ? $image['id'] : $image->id, 'ad_type' => 'ad1']) }}"
-                                        method="POST" style="display: inline-block;">
+                                        method="POST"
+                                        class="delete-form"
+                                        style="display: inline-block;">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm">
+                                        <button type="button" class="btn btn-danger btn-sm delete-btn">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </form>
+
+
                                 </td>
                             </tr>
-                        @endforeach
-                    @endif
-                </tbody>
-            </table>
+                            @endforeach
+                            @endif
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.delete-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const form = this.closest('form');
+
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: "You won't be able to undo this!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#3085d6',
+                        confirmButtonText: 'Yes, delete it!'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            form.submit();
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+
+    <div class="tab-pane fade" id="ad2" role="tabpanel">
+        <div class="card">
+            <!-- Header for Advertisement 2 -->
+            <div class="card-header text-white text-center py-2" style="background: linear-gradient(115deg, #0f0b8c, #77dcf5);">
+                <h5 class="mb-0 text-white"> Left AD 2 List</h5>
+            </div>
+            <br></br>
+            <!-- Table wrapped in card body -->
+            <div class="card-body p-0">
+                <!-- Responsive wrapper to prevent table overflow on mobile -->
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered dt-responsive nowrap mb-0" id="ad2Table"
+                        style="width: 100%;">
+                        <thead>
+                            <tr>
+                                <th class="text-center">S.No</th>
+                                <th class="text-center">Image</th>
+                                <th class="text-center">Website Link</th>
+                                <th class="text-center">Date & Time</th>
+                                <th class="text-center">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (isset($adimage2) && count($adimage2) > 0)
+                            @foreach ($adimage2 as $index => $image)
+                            <tr id="row-{{ $image->id }}">
+                                <td>{{ $index + 1 }}</td>
+                                <td>
+                                    <div class="banner-img-container">
+                                        <img class="banner-img"
+                                            src="{{ asset('storage/app/public/' . $image->image_path) }}" alt="Ad Image"
+                                            width="100">
+                                    </div>
+                                </td>
+                                <td class="fold-url" data-url="{{ $image->website_link }}">
+                                    <a href="{{ $image->website_link }}" target="_blank">{{ $image->website_link }}</a>
+                                </td>
+
+                                <td class="text-center">
+                                    {{ $image->created_at ? \Carbon\Carbon::parse($image->created_at)->format('d-m-Y h:i A') : 'N/A' }}
+                                </td>
+                                <td>
+                                    <form action="{{ route('delete.ad.image', ['id' => $image->id, 'ad_type' => 'ad2']) }}"
+                                        method="POST"
+                                        class="delete-form"
+                                        style="display: inline-block;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="button" class="btn btn-danger btn-sm delete-btn">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+
+                                </td>
+                            </tr>
+                            @endforeach
+                            @endif
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
         </div>
     </div>
-</div>
-
-</div>
-
-
-<div class="tab-pane fade" id="ad2" role="tabpanel">
-    <div class="card">
-        <!-- Header for Advertisement 2 -->
-        <div class="card-header text-white text-center py-2" style="background: linear-gradient(115deg, #0f0b8c, #77dcf5);">
-            <h5 class="mb-0 text-white">  Left AD 2 List</h5>
-        </div>
-<br></br>
-     <!-- Table wrapped in card body -->
-<div class="card-body p-0">
-    <!-- Responsive wrapper to prevent table overflow on mobile -->
-    <div class="table-responsive">
-        <table class="table table-striped table-bordered dt-responsive nowrap mb-0" id="ad2Table"
-               style="width: 100%;">
-            <thead>
-                <tr>
-                    <th class="text-center">S.No</th>
-                    <th class="text-center">Image</th>
-                    <th class="text-center">Website Link</th>
-                    <th class="text-center">Date & Time</th>
-                    <th class="text-center">Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                @if (isset($adimage2) && count($adimage2) > 0)
-                    @foreach ($adimage2 as $index => $image)
-                        <tr id="row-{{ $image->id }}">
-                            <td>{{ $index + 1 }}</td>
-                            <td>
-                                <div class="banner-img-container">
-                                    <img class="banner-img"
-                                         src="{{ asset('storage/app/public/' . $image->image_path) }}" alt="Ad Image"
-                                         width="100">
-                                </div>
-                            </td>
-                            <td>
-                                <a href="{{ $image->website_link }}" target="_blank">{{ $image->website_link }}</a>
-                            </td>
-                            <td class="text-center">
-                                {{ $image->created_at ? \Carbon\Carbon::parse($image->created_at)->format('d-m-Y h:i A') : 'N/A' }}
-                            </td>
-                            <td>
-                                <form action="{{ route('delete.ad.image', ['id' => $image->id, 'ad_type' => 'ad2']) }}"
-                                      method="POST" style="display: inline-block;">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </form>
-                            </td>
-                        </tr>
-                    @endforeach
-                @endif
-            </tbody>
-        </table>
-    </div>
-</div>
-
-    </div>
-</div>
 
 </div>
 
@@ -436,13 +471,52 @@
     });
 </script>
 
-@if (session('sweetalert'))
-    <script>
-        Swal.fire({
-
-            confirmButtonText: 'OK'
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.fold-url').forEach(function(td) {
+            const url = td.getAttribute('data-url');
+            if (url) {
+                const folded = url.match(/.{1,10}/g).join('<wbr>'); // break every 20 characters
+                td.querySelector('a').innerHTML = folded;
+            }
         });
-    </script>
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.delete-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const form = this.closest('form');
+
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "This action cannot be undone!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+            });
+        });
+    });
+</script>
+
+
+@if (session('sweetalert'))
+<script>
+    Swal.fire({
+
+        confirmButtonText: 'OK'
+    });
+</script>
 @endif
 
 <script>

@@ -64,16 +64,18 @@
 
     .custom-btn1:hover {
         background: gray !important;
-        
+
     }
 
     .btn:hover {
-    color: white !important;
-    background-color: var(--bs-btn-hover-bg);
-    border-color: var(--bs-btn-hover-border-color);
-}
+        color: white !important;
+        background-color: var(--bs-btn-hover-bg);
+        border-color: var(--bs-btn-hover-border-color);
+    }
 
-    
+    .form-control{
+        font-size: 13px;
+    }
 </style>
 <div class="white-container">
     <div class="d-flex justify-content-between align-items-center mb-3">
@@ -154,10 +156,14 @@
                     <input type="text" name="experience" class="form-control" value="{{ old('experience', $career->experience) }}">
                 </div>
 
-                <div class="col-md-4 mb-3">
+
+
+                <div class="col-md-3 mb-3">
                     <label>Salary:</label>
-                    <input type="text" name="salary" class="form-control" value="{{ old('salary', $career->salary) }}" maxlength="13" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                    <input type="text" name="salary" id="salaryInput" class="form-control" value="{{ old('salary', $career->salary) }}">
+                    <p><strong>Formatted:</strong> <span class="salary-output"></span></p>
                 </div>
+                
             </div>
 
             <div class="mb-3">
@@ -283,6 +289,53 @@
         if (textarea) {
             updateKeySkillsCharCount(textarea);
         }
+    });
+</script>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const salaryInput = document.getElementById("salaryInput");
+        const output = document.querySelector(".salary-output");
+
+        function formatSalaryRange(input) {
+            input = input.replace(/\s/g, ''); // Remove all spaces
+
+            // Check for a valid salary range like "2000000-3000000"
+            const match = input.match(/^(\d+)\-(\d+)$/);
+            if (match) {
+                let [_, minStr, maxStr] = match;
+                let min = parseInt(minStr);
+                let max = parseInt(maxStr);
+
+                if (min >= 10000000) {
+                    return `${min / 10000000} - ${max / 10000000} Crore PA`;
+                } else if (min >= 100000) {
+                    return `${min / 100000} - ${max / 100000} Lacs PA`;
+                } else {
+                    return `${min} - ${max} PA`;
+                }
+            } else if (/^\d+$/.test(input)) {
+                let num = parseInt(input);
+                if (num >= 10000000) {
+                    return `${num / 10000000} Crore PA`;
+                } else if (num >= 100000) {
+                    return `${num / 100000} Lacs PA`;
+                } else {
+                    return `${num} PA`;
+                }
+            } else {
+                return input; // For strings like "Negotiable"
+            }
+        }
+
+        salaryInput.addEventListener("input", function() {
+            const rawValue = salaryInput.value;
+            output.textContent = formatSalaryRange(rawValue);
+        });
+
+        // Initial formatting on page load
+        output.textContent = formatSalaryRange(salaryInput.value);
     });
 </script>
 @endsection

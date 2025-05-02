@@ -237,7 +237,7 @@
         transform: translateX(265px);
     }
 
-  
+
     .mobilescreen,
     #mobilescreen {
         display: none;
@@ -302,15 +302,7 @@
         margin-top:-10px;
     }
 
-        .zoom-image:hover {
-            transform: scale(2.2) translateY(7%) translateX(30px);
-            transform-origin: center;
-        }
-
-        .zoom-image1:hover {
-            transform: scale(2.2) translateY(7%) translateX(-20px);
-            transform-origin: center;
-        }
+      
 
         .ftco-section {
     padding:0rem 0;
@@ -378,20 +370,29 @@
     <div class="container">
         <div class="row justify-content-center">
             <!-- Member Card Section -->
-            <div class="col-12 col-md-6 col-lg-5 mb-3 d-flex justify-content-center">
-           
-                <div class="card text-center shadow-sm"
-                    style="border: 3px solid #ffc107; border-radius: 15px; padding: 20px; width: 100%; max-width: 300px;">
-                    <img src="{{ $member->profile_photo ? asset('storage/app/public/' . $member->profile_photo) : asset('assets/images/default.png') }}"
-                        alt="{{ $member->salutation.' '.$member->first_name . ' ' . $member->last_name }} " 
-                        class="mx-auto d-block mb-3"
-                        style="height: 150px; width: 150px; object-fit: fill; border-radius: 10px;" />
-                    <h5 class="text-primary  mb-1" style="font-size: 1.2rem;">  {{ $member->salutation ? $member->salutation . ' ' : '' }}
-                        {{ $member->first_name . ' ' . $member->last_name }}</h5>
-                    <p class=" text-dark mb-0" style="font-size: 1rem;">{{ $member->team->position }}</p>
-                </div>
-             
-            </div>
+          <!-- Member Card Section -->
+<div class="col-12 col-md-6 col-lg-5 mb-3 d-flex justify-content-center">
+    @if($member)
+    <div class="card text-center shadow-sm"
+        style="border: 3px solid #ffc107; border-radius: 15px; padding: 20px; width: 100%; max-width: 300px;">
+        <img src="{{ $member->profile_photo ? asset('storage/app/public/' . $member->profile_photo) : asset('assets/images/default.png') }}"
+            alt="{{ $member->salutation.' '.$member->first_name . ' ' . $member->last_name }} "
+            class="mx-auto d-block mb-3"
+            style="height: 150px; width: 150px; object-fit: fill; border-radius: 10px;" />
+        <h5 class="text-primary mb-1" style="font-size: 1.2rem;">
+            {{ \Illuminate\Support\Str::title($member->salutation ? $member->salutation . ' ' : '') }}
+            {{ \Illuminate\Support\Str::title($member->first_name . ' ' . $member->last_name) }}
+        </h5>
+
+        <p class="text-dark mb-0" style="font-size: 1rem;">{{ $member->team->position }}</p>
+    </div>
+    @else
+    <div class="">
+       
+    </div>
+    @endif
+</div>
+
 
             <!-- Login Form Section -->
             <div class="col-12 col-md-6 col-lg-5 mb-3">
@@ -454,10 +455,12 @@
 
 
     .header img {
-        max-width:75px;
-        margin-right: 13px;
+        max-width: 52px;
+        margin-right: -7px;
         transition: transform 0.3s ease-in-out;
+        margin-top: -4px !important;
     }
+
 
     .mainlogo img {
         width: 40px !important;

@@ -28,12 +28,17 @@
                 <div class="col-md-4">
                     <input type="text" name="product_name" class="form-control" value="{{ $product->product_name }}" required>
                 </div>
-                <div class="col-md-4">
-                    <input type="file" name="product_image" class="form-control">
-                    @if ($product->product_image)
-                        <small class="text-muted">Current: {{ $product->product_image }}</small>
+                <div class="col-md-4 d-flex align-items-center">
+    <div style="width: 70%;">
+        <input type="file" name="product_image" class="form-control">
+        @if ($product->product_image)
+                        <small class="text-muted d-none">Current: {{ $product->product_image }}</small>
+                        <img src="{{ asset('storage/app/public/' . $product->product_image) }}" width="100" class="img-thumbnail mb-2" alt="Project Image">
                     @endif
-                </div>
+    </div>
+   
+</div>
+
                 <div class="col-md-2">
                     <button type="submit" class="btn btn-sm custom-btn">Update</button>
                 </div>
@@ -69,7 +74,7 @@
 
         <div class="text-center mt-4">
             <button type="button" class="btn custom-btn me-2" onclick="addMoreProduct()">+ Add More</button>
-            <button type="submit" class="btn custom-btn">Save and Next</button>
+            <button type="submit" class="btn custom-btn">Submit</button>
         </div>
     </form>
 

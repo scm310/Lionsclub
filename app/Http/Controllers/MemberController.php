@@ -17,12 +17,10 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 
 
-
-
 class MemberController extends Controller
 {
 
-    public function index()
+      public function index()
     {
         // Get session values
         $adminId = session('admin_id');
@@ -59,25 +57,6 @@ class MemberController extends Controller
 
 
 
-    public function showAnnouncements()
-    {
-        // Get the currently authenticated member using the 'member' guard
-        $member = Auth::guard('member')->user();
-
-        // Get the account_name of the member from add_members table
-        $accountName = Member::where('id', $member->id)->value('account_name');
-
-        // Fetch announcements where chapter_id is null (for all) or matches member's account_name
-        $announcements = Announcement::where(function ($query) use ($accountName) {
-            $query->whereNull('chapter_id')
-                  ->orWhere('chapter_id', $accountName);
-        })->get();
-
-        return view('member.announcementlist', compact('announcements'));
-    }
-
-
-
     public function dashboard()
     {
         // Fetch the logged-in member's chapter ID
@@ -88,7 +67,7 @@ class MemberController extends Controller
         $announcements = Announcement::where(function ($query) use ($account_name) {
             // If chapter_id is null, fetch for all members
             $query->whereNull('chapter_id')
-                  ->orWhere('chapter_id', $account_name);
+                ->orWhere('chapter_id', $account_name);
         })->get();
 
         // Use dd() to inspect the announcements data
@@ -100,7 +79,51 @@ class MemberController extends Controller
 
 
 
-  public function create()
+    public function showAnnouncements()
+    {
+        // Get the currently authenticated member using the 'member' guard
+        $member = Auth::guard('member')->user();
+
+        // Get the account_name of the member from add_members table
+        $accountName = Member::where('id', $member->id)->value('account_name');
+
+        // Fetch announcements where chapter_id is null (for all) or matches member's account_name
+        $announcements = Announcement::where(function ($query) use ($accountName) {
+            $query->whereNull('chapter_id')
+                ->orWhere('chapter_id', $accountName);
+        })->get();
+
+        return view('member.announcementlist', compact('announcements'));
+    }
+
+    public function transfer(Request $request)
+    {
+
+        $request->validate([
+            'member_id' => 'required|exists:add_members,id',
+            'new_club_id' => 'required|string|max:255',
+        ]);
+
+        // Find the member
+        $member = \DB::table('add_members')->where('id', $request->member_id)->first();
+
+        if (!$member) {
+            return redirect()->back()->with('error', 'Member not found.');
+        }
+
+        // Update the account_name
+        \DB::table('add_members')
+            ->where('id', $request->member_id)
+            ->update(['account_name' => $request->new_club_id]);
+
+        return redirect()->back()->with('success', 'Member transferred to new club successfully!');
+    }
+
+
+
+
+
+    public function create()
     {
         $parentMultipleDistricts = ParentsMultipleDistrict::all(); // Fetch all multiple districts
         $districts = District::all(); // Fetch all districts
@@ -133,7 +156,6 @@ class MemberController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'salutation'=>'required',
             'first_name' => 'required',
             'last_name' => 'required',
             'member_id' => 'required|unique:add_members',
@@ -188,7 +210,7 @@ class MemberController extends Controller
             'password' => Hash::make('1234'), // Storing default password securely
         ]);
 
-        return redirect()->route('members.list')->with('success', 'Member added successfully!');
+        return redirect()->route('members.add')->with('success', 'Member added successfully!');
     }
 
 
@@ -262,92 +284,62 @@ class MemberController extends Controller
 
 
 
-// Delete Member
-public function destroy($id)
-{
-    $member = Member::findOrFail($id);
-    $member->delete();
+    // Delete Member
+    public function destroy($id)
+    {
+        $member = Member::findOrFail($id);
+        $member->delete();
 
-    return redirect()->route('members.list')->with('success', 'Member deleted successfully!');
-}
+        return redirect()->route('members.list')->with('success', 'Member deleted successfully!');
+    }
 
 
 
 
     public function view($id)
-{
-    $member = Member::findOrFail($id);
+    {
+        $member = Member::findOrFail($id);
 
-    return response()->json(view('addmembers.partials.details', compact('member'))->render());
-}
-
-public function getMemberDetails($id)
-{
-    $member = Member::with(['membershipType', 'parentMultipleDistrict', 'parentDistrict', 'account'])->find($id);
-
-
-    if (!$member) {
-        return response()->json(['error' => 'Member not found'], 404);
+        return response()->json(view('addmembers.partials.details', compact('member'))->render());
     }
 
-    return response()->json(['member' => $member]);
-}
+    public function getMemberDetails($id)
+    {
+        $member = Member::with(['membershipType', 'parentMultipleDistrict', 'parentDistrict', 'account'])->find($id);
 
 
+        if (!$member) {
+            return response()->json(['error' => 'Member not found'], 404);
+        }
 
-
-
-public function showImportForm()
-{
-    return view('members.import');
-}
-
-public function import(Request $request)
-{
-    Log::info('🔁 Import request received.');
-
-    $request->validate([
-        'import_file' => 'required|file|mimes:csv,txt,xlsx'
-    ]);
-
-    try {
-        // REMOVE toCollection line — it corrupts the file
-        Excel::import(new MembersImport, $request->file('import_file'));
-
-        return redirect()->back()->with('success', 'Members imported successfully.');
-    } catch (\Throwable $e) {
-        Log::error('❌ Excel import failed: ' . $e->getMessage());
-        return redirect()->back()->with('error', 'Import failed. Check logs.');
-    }
-}
-
-public function transfer(Request $request)
-{
-
-    $request->validate([
-        'member_id' => 'required|exists:add_members,id',
-        'new_club_id' => 'required|string|max:255',
-    ]);
-
-    // Find the member
-    $member = \DB::table('add_members')->where('id', $request->member_id)->first();
-
-    if (!$member) {
-        return redirect()->back()->with('error', 'Member not found.');
+        return response()->json(['member' => $member]);
     }
 
-    // Update the account_name
-    \DB::table('add_members')
-        ->where('id', $request->member_id)
-        ->update(['account_name' => $request->new_club_id]);
 
-    return redirect()->back()->with('success', 'Member transferred to new club successfully!');
+
+
+
+    public function showImportForm()
+    {
+        return view('members.import');
+    }
+
+    public function import(Request $request)
+    {
+        Log::info('🔁 Import request received.');
+
+        $request->validate([
+            'import_file' => 'required|file|mimes:csv,txt,xlsx'
+        ]);
+
+        try {
+            // REMOVE toCollection line — it corrupts the file
+            Excel::import(new MembersImport, $request->file('import_file'));
+
+            return redirect()->back()->with('success', 'Members imported successfully.');
+        } catch (\Throwable $e) {
+            Log::error('❌ Excel import failed: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Import failed. Check logs.');
+        }
+    }
 }
-
-
-
-
-}
-
-
-

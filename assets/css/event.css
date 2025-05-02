@@ -85,6 +85,7 @@
         color: var(--white);
     }
 
+
     .card_title {
         position: absolute;
         top: 0;
@@ -107,50 +108,24 @@
         animation: 0s 0s fly-in 0 reverse both;
     }
 
-    @media (min-width: 535px) {
-        .card_title {
-            animation: 0.5s 0.25s fly-out 1 both;
-        }
-    }
-
     .card:focus .card_title,
     .card:hover .card_title {
-        animation: 0.5s ease-in 0s fly-in 1 both;
+        animation: 3s ease-in 0s fly-in 1 both;
     }
+
 
     .card_text {
         font-family: Segoe UI, Frutiger, Frutiger Linotype, Dejavu Sans, Helvetica,
             Helvetica Neue, Arial, sans-serif;
         line-height: 1.5;
         text-size-adjust: 0.2px;
-        padding: -1px 1rem !important;
+        padding: 0 1rem;
     }
 
     .card_text p:first-of-type:first-letter {
         font-size: 1.8em;
         font-family: Georgia, Times, serif;
-        margin-right: 0.05em;
-    }
-
-    @media (min-width: 480px) {
-        .card_text {
-            overflow: auto;
-            max-height: 20rem;
-            scrollbar-width: thin;
-            scrollbar-color: var(--aqua) var(--violet);
-        }
-
-        .card_text::-webkit-scrollbar {
-            width: 12px;
-        }
-
-        .card_text::-webkit-scrollbar-track {
-            background: var(--violet);
-        }
-
-        .card_text::-webkit-scrollbar-thumb {
-            background-color: var(--aqua);
-        }
+        margin-right: 0.01em;
     }
 
     .card_text strong {
@@ -326,9 +301,9 @@
     }
 
     .card {
-        width: 82%;
+        width: 100%;
         margin: auto;
-        padding: 0px !important;
+
     }
 
     .card-img-top {
@@ -406,7 +381,6 @@
         /* Hidden initially */
         transition: all 0.3s ease-in-out;
         z-index: 1000;
-
         /* Ensure it appears above other elements */
     }
 
@@ -579,34 +553,6 @@
         line-height: 1.2;
     }
 
-    /* Responsive Design */
-    @media (max-width: 768px) {
-        #eventDetailsContainer {
-            width: 90%;
-            margin-top: 150px;
-        }
-
-        .sticky-tabs {
-            width: -webkit-fill-available;
-            transform: translateX(0px);
-            margin-bottom: 5px;
-            /* Remove horizontal shift */
-        }
-
-        /* Make the tab navigation sticky */
-        #customTabs {
-            width: fit-content;
-            position: sticky;
-            top: 0;
-            color: white;
-            z-index: 100;
-            /* Ensure a solid background */
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            /* Optional: Subtle shadow */
-        }
-
-    }
-
     @media (min-width: 992px) {
         .col-lg-5th {
             flex: 0 0 20%;
@@ -638,3 +584,65 @@
             text-align: center;
         }
     }
+
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        #eventDetailsContainer {
+            width: 90%;
+            margin-top: 150px;
+        }
+
+        .sticky-tabs {
+            width: -webkit-fill-available;
+            transform: translateX(0px);
+            margin-bottom: 5px;
+            /* Remove horizontal shift */
+        }
+
+        /* Make the tab navigation sticky */
+        #customTabs {
+            width: fit-content;
+            position: sticky;
+            top: 0;
+            color: white;
+            z-index: 100;
+            /* Ensure a solid background */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            /* Optional: Subtle shadow */
+        }
+
+    }
+
+
+
+
+    @media (min-width: 535px) {
+        .card_title {
+            animation: 0.9s 0.25s fly-out 1 both;
+        }
+    }
+
+
+
+    @media (min-width: 480px) {
+        .card_text {
+            overflow: auto;
+            max-height: 20rem;
+            scrollbar-width: thin;
+            scrollbar-color: var(--aqua) var(--violet);
+        }
+
+        .card_text::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        .card_text::-webkit-scrollbar-track {
+            background: var(--violet);
+        }
+
+        .card_text::-webkit-scrollbar-thumb {
+            background-color: var(--aqua);
+        }
+    }
+

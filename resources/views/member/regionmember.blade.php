@@ -136,7 +136,7 @@
                                                 <div class="d-flex justify-content-center">
                                                     <img src="{{ $member->profile_photo ? asset('storage/app/public/' . $member->profile_photo) : asset('assets/images/default.png') }}"
                                                         alt="{{ $fullName }}" class="border border-white shadow"
-                                                        style="width:80px; height:80px; object-fit:cover; border-radius:10px;">
+                                                        style="width:80px; height:80px; object-fit:fill; border-radius:10px;">
                                                 </div>
                                                 <div class="text-white">
                                                     <span style="font-size: 12px; font-weight: bold;"
@@ -204,7 +204,7 @@
                                         <div class="d-flex align-items-center  mb-2">
 <p>
                                             <span class="fs-5">Total Clubs  : &nbsp;<b>{{$clubscount}} </b></span> <br>
-                                            <span class="fs-5">Total Member  :&nbsp;<b>{{$regioncount}}</b></span>
+                                            <span class="fs-5">Total Members  :&nbsp;<b>{{$regioncount}}</b></span>
 </p>
                                         </div>
 

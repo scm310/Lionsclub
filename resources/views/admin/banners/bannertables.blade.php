@@ -170,8 +170,8 @@
                             <td class="text-center">
                                 <img src="{{ url('/') }}/storage/app/public/{{ $banner->image_path }}" alt="Banner" style="max-width: 100px;">
                             </td>
-                            <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                                <a href="{{ $banner->url }}" target="_blank" title="{{ $banner->url }}" class="d-inline-block text-truncate w-100">
+                            <td style="max-width: 200px; word-break: break-word; white-space: normal;">
+                                <a href="{{ $banner->url }}" target="_blank" title="{{ $banner->url }}" >
                                     {{ $banner->url }}
                                 </a>
                             </td>
@@ -216,8 +216,8 @@
                             <td class="text-center">
                                 <img src="{{ url('/') }}/storage/app/public/{{ $banner->image_path }}" alt="Banner" style="max-width: 100px;">
                             </td>
-                            <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                                <a href="{{ $banner->url }}" target="_blank" title="{{ $banner->url }}" class="d-inline-block text-truncate w-100">
+                            <td style="max-width: 200px; word-break: break-word; white-space: normal;">
+                                <a href="{{ $banner->url }}" target="_blank" title="{{ $banner->url }}">
                                     {{ $banner->url }}
                                 </a>
                             </td>
@@ -260,8 +260,8 @@
                         <td class="text-center">
                             <img src="{{ url('/') }}/storage/app/public/{{ $banner->image_path }}" alt="Banner" style="max-width: 100px;">
                         </td>
-                        <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                            <a href="{{ $banner->url }}" target="_blank" title="{{ $banner->url }}" class="d-inline-block text-truncate w-100">
+                        <td style="max-width: 200px; word-break: break-word; white-space: normal;">
+                            <a href="{{ $banner->url }}" target="_blank" title="{{ $banner->url }}" >
                                 {{ $banner->url }}
                             </a>
                         </td>

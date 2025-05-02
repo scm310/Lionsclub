@@ -84,7 +84,7 @@
     .ad-banner-image {
         width: 100%;
         height: 100%;
-        object-fit: cover;
+        object-fit:fill;
         border-radius: 10px;
     }
 
@@ -101,7 +101,7 @@
     .top-ad-banner img {
         max-width: 100%;
         max-height: 250%;
-        object-fit: cover;
+        object-fit:fill;
         display: block;
 
     }

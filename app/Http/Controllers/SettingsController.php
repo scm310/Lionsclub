@@ -7,6 +7,7 @@ use App\Models\ParentsMultipleDistrict;
 use App\Models\District;
 use App\Models\Chapter;
 use App\Models\MembershipType;
+use App\Models\Region;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\QueryException;
 
@@ -22,6 +23,9 @@ class SettingsController extends Controller
         // Pass the districts to the view
         return view('admin.Setting.add', compact('ParentsMultipleDistrict')); // Passing 'districts' variable
     }
+
+
+
 
     // Store a new district
     public function store(Request $request)
@@ -103,9 +107,9 @@ class SettingsController extends Controller
         $districts = DB::table('district')->get(); // Table 2
         $chapters = DB::table('chapters')->get(); // Table 3
         $membershipTypes = DB::table('membership_type')->get(); // Table 4
-
+        $regions = Region::all();
         // Pass the data to the view
-        return view('admin.Setting.view', compact('parentsMultipleDistricts', 'districts', 'chapters', 'membershipTypes'));
+        return view('admin.Setting.view', compact('parentsMultipleDistricts', 'districts', 'chapters', 'membershipTypes', 'regions'));
     }
 
 
@@ -177,60 +181,97 @@ class SettingsController extends Controller
 
 
     public function update(Request $request, $id)
-{
-    $request->validate([
-        'name' => 'required|string|max:255',
-    ]);
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+        ]);
 
-    $district = District::findOrFail($id);
-    $district->name = $request->name;
-    $district->save();
+        $district = District::findOrFail($id);
+        $district->name = $request->name;
+        $district->save();
 
-    return redirect()->back()->with('success', 'District updated successfully!');
-}
-
-
-public function updateChapter(Request $request, $id)
-{
-    $request->validate([
-        'chapter_name' => 'required|string|max:255',
-    ]);
-
-    $chapter = Chapter::findOrFail($id);
-    $chapter->chapter_name = $request->chapter_name;
-    $chapter->save();
-
-    return redirect()->back()->with('success', 'Chapter updated successfully!');
-}
+        return redirect()->back()->with('success', 'District updated successfully!');
+    }
 
 
-public function updateDistrict(Request $request, $id)
-{
-    $request->validate([
-        'name' => 'required|string|max:255',
-    ]);
+    public function updateChapter(Request $request, $id)
+    {
+        $request->validate([
+            'chapter_name' => 'required|string|max:255',
+        ]);
 
-    $district = District::findOrFail($id);
-    $district->name = $request->name;
-    $district->save();
+        $chapter = Chapter::findOrFail($id);
+        $chapter->chapter_name = $request->chapter_name;
+        $chapter->save();
 
-    return redirect()->back()->with('success', 'District updated successfully!');
-}
-
-
-public function editParentDistrict(Request $request, $id)
-{
-    $request->validate([
-        'name' => 'required|string|max:255',
-    ]);
-
-    $district = ParentsMultipleDistrict::findOrFail($id);
-    $district->name = $request->name;
-    $district->save();
-
-    return redirect()->back()->with('success', 'District updated successfully.');
-}
+        return redirect()->back()->with('success', 'Chapter updated successfully!');
+    }
 
 
+    public function updateDistrict(Request $request, $id)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+        ]);
 
+        $district = District::findOrFail($id);
+        $district->name = $request->name;
+        $district->save();
+
+        return redirect()->back()->with('success', 'District updated successfully!');
+    }
+
+
+    public function editParentDistrict(Request $request, $id)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+        ]);
+
+        $district = ParentsMultipleDistrict::findOrFail($id);
+        $district->name = $request->name;
+        $district->save();
+
+        return redirect()->back()->with('success', 'District updated successfully.');
+    }
+
+
+    public function storeRegion(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|array',
+            'name.*' => 'required|string|max:100|distinct|unique:regions,name',
+        ]);
+
+        try {
+            foreach ($request->name as $regionName) {
+                Region::create(['name' => $regionName]);
+            }
+            return redirect()->back()->with('success', 'Regions added successfully.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Error adding regions: ' . $e->getMessage());
+        }
+    }
+
+
+    public function updateregion(Request $request, $id)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+        ]);
+
+        $region = Region::findOrFail($id);
+        $region->name = $request->name;
+        $region->save();
+
+        return redirect()->back()->with('success', 'Region updated successfully.');
+    }
+
+    public function destroy($id)
+    {
+        $region = Region::findOrFail($id);
+        $region->delete();
+
+        return redirect()->back()->with('success', 'Region deleted successfully.');
+    }
 }

@@ -65,9 +65,9 @@
 
 @php
     $images = [
-        ['title' => 'Upload Right AD 1', 'route' => 'upload.image1'],
-        ['title' => 'Upload Right AD 2', 'route' => 'upload.image2'],
-        ['title' => 'Upload Right AD 3', 'route' => 'upload.image3'],
+        ['title' => 'Upload Right Ad 1', 'route' => 'upload.image1'],
+        ['title' => 'Upload Right Ad 2', 'route' => 'upload.image2'],
+        ['title' => 'Upload Right Ad 3', 'route' => 'upload.image3'],
     ];
 @endphp
 
@@ -80,8 +80,9 @@
                     <form action="{{ route($image['route']) }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <input type="hidden" name="rightbanner" value="{{ $image['title'] }}">
-                        <label for="image">AD size should be (400x300)*</label>
+                       
                         <input type="file" name="image" required class="form-control">
+                        <small style="font-size: 12px;">Note: Ad size should be (400x300)px</small>
                         <label class="mt-2">Enter Website Link*</label>
                         <input type="text" name="website_link" required class="form-control mt-1" placeholder="Enter Website Link">
                         <div class="text-center">
@@ -104,17 +105,17 @@
     <ul class="nav nav-tabs mt-4 flex-nowrap d-flex" id="imageTabs" role="tablist" style="white-space: nowrap;">
         <li class="nav-item" role="presentation">
             <button class="nav-link active" id="image1-tab" data-bs-toggle="tab" data-bs-target="#image1" type="button" role="tab">
-          Right AD 1
+          Right Ad 1
             </button>
         </li>
         <li class="nav-item" role="presentation">
             <button class="nav-link" id="image2-tab" data-bs-toggle="tab" data-bs-target="#image2" type="button" role="tab">
-            Right AD 2
+            Right Ad 2
             </button>
         </li>
         <li class="nav-item" role="presentation">
             <button class="nav-link" id="image3-tab" data-bs-toggle="tab" data-bs-target="#image3" type="button" role="tab">
-          Right AD 3
+          Right Ad 3
             </button>
         </li>
     </ul>
@@ -127,7 +128,7 @@
     <div class="card">
            <!-- Card Header with Gradient Background -->
            <div class="card-header text-white text-center" style="background: linear-gradient(115deg, #0f0b8c, #77dcf5);">
-            <h5 class="mb-0 text-white">Right AD 1 List</h5>
+            <h5 class="mb-0 text-white">Right Ad 1 List</h5>
         </div>
         <br><br>
         <div class="card-body">
@@ -152,11 +153,12 @@
                                 </div>
                             </td>
 
-                            <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                                <a href="{{ $img->website_link  }}" target="_blank" title="{{ $img->website_link }}" class="d-inline-block text-truncate w-100">
-                                    {{ $img->website_link }}
-                                </a>
-                            </td>
+                            <td style="max-width: 200px; word-break: break-word; white-space: normal;">
+    <a href="{{ $img->website_link }}" target="_blank" title="{{ $img->website_link }}">
+        {{ $img->website_link }}
+    </a>
+</td>
+
 
                             <td class="text-center">
                                 {{  $img->created_at ? \Carbon\Carbon::parse( $img->created_at)->format('d-m-Y h:i A') : 'N/A' }}
@@ -186,7 +188,7 @@
     <div class="card">
          <!-- Card Header with Gradient Background -->
          <div class="card-header text-white text-center" style="background: linear-gradient(115deg, #0f0b8c, #77dcf5);">
-            <h5 class="mb-0 text-white">Right AD 2  List</h5>
+            <h5 class="mb-0 text-white">Right Ad 2  List</h5>
         </div>
         <br><br>
         <div class="card-body">
@@ -210,8 +212,8 @@
                                     <img class="banner-img" src="{{ asset('storage/app/public/' . $img->image_path) }}" alt="Image">
                                 </div>
                             </td>
-                            <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                                <a href="{{ $img->website_link  }}" target="_blank" title="{{ $img->website_link }}" class="d-inline-block text-truncate w-100">
+                            <td style="max-width: 200px; word-break: break-word; white-space: normal;">
+                            <a href="{{ $img->website_link  }}" target="_blank" title="{{ $img->website_link }}">
                                     {{ $img->website_link }}
                                 </a>
                             </td>
@@ -243,7 +245,7 @@
     <div class="card">
            <!-- Card Header with Gradient Background -->
            <div class="card-header text-white text-center" style="background: linear-gradient(115deg, #0f0b8c, #77dcf5);">
-            <h5 class="mb-0 text-white">Right AD 3  List</h5>
+            <h5 class="mb-0 text-white">Right Ad 3  List</h5>
         </div>
         <br><br>
         <div class="card-body">
@@ -267,8 +269,8 @@
                                     <img class="banner-img" src="{{ asset('storage/app/public/' . $img->image_path) }}" alt="Image">
                                 </div>
                             </td>
-                            <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                                <a href="{{ $img->website_link  }}" target="_blank" title="{{ $img->website_link }}" class="d-inline-block text-truncate w-100">
+                            <td style="max-width: 200px; word-break: break-word; white-space: normal;">
+                                <a href="{{ $img->website_link  }}" target="_blank" title="{{ $img->website_link }}">
                                     {{ $img->website_link }}
                                 </a>
                             </td>
@@ -370,3 +372,15 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
     </script>
+
+
+@if (session('success'))
+    <script>
+        Swal.fire({
+            icon: 'success',
+            title: 'Success!',
+            text: '{{ session('success') }}',
+            confirmButtonText: 'OK'
+        });
+    </script>
+@endif

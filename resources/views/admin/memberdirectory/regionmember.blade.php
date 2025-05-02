@@ -27,13 +27,13 @@
 
 
 @if ($errors->any())
-    <div class="alert alert-danger">
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
+<div class="alert alert-danger">
+    <ul>
+        @foreach ($errors->all() as $error)
+        <li>{{ $error }}</li>
+        @endforeach
+    </ul>
+</div>
 @endif
 
 <form id="regionMemberForm" style="display: none;" class="mt-4" method="POST" action="{{ route('assign.region.member') }}">
@@ -63,15 +63,16 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <label for="region">Region:</label>
-                    <select name="region" id="region" class="form-control" required>
+                    <select name="region" class="form-control" required>
                         <option value="">Select Region</option>
-                        <option value="Region 1">Region 1</option>
-                        <option value="Region 2">Region 2</option>
-                        <option value="Region 3">Region 3</option>
-                        <option value="Region 4">Region 4</option>
+                        @foreach($regions as $region)
+                        <option value="{{ $region->id }}">{{ $region->name }}</option>
+                        @endforeach
                     </select>
+
                 </div>
             </div>
+
 
 
 

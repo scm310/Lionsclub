@@ -60,48 +60,71 @@
                     </div>
 
                     <div class="col-md-3 mb-3">
-                        <label>No. Of Openings:</label>
+                        <label>No. Of Openings *</label>
                         <input type="tel" name="openings" class="form-control" required value="{{ old('openings') }}" maxlength="6" step="1" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                     </div>
 
 
                     <div class="col-md-3 mb-3">
-                        <label>Job Title:</label>
+                        <label>Job Title *</label>
                         <input type="text" name="job_title" class="form-control" required value="{{ old('job_title') }}"
                             oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, '')">
                     </div>
 
                     <div class="col-md-3 mb-3">
-                        <label for="company_name">Company Name:</label>
+                        <label for="company_name">Company Name *</label>
                         <input type="text" name="company_name" class="form-control" required>
                     </div>
 
                 </div>
                 <div class="row">
-                    <div class="col-md-4 mb-3">
-                        <label>Company Logo:</label>
+                    <div class="col-md-3 mb-3">
+                        <label>Company Logo *</label>
                         <input type="file" name="image" class="form-control" accept="image/*" required>
                     </div>
-                    <div class="col-md-4 mb-3">
-                        <label>Experience:</label>
+                    <div class="col-md-3 mb-3">
+                        <label>Experience *</label>
                         <input type="text" name="experience" class="form-control" value="{{ old('experience') }}" required>
                     </div>
-                    <div class="col-md-4 mb-3">
-                        <label>Salary:</label>
-                        <input type="text" name="salary" class="form-control" value="{{ old('salary') }}" maxlength="13" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required>
+
+                    <div class="col-md-3 mb-3">
+                        <label>Employment Type *</label>
+
+                        <div>
+                            <input type="radio" name="employment_type" value="permanent"> Permanent
+                            &nbsp; &nbsp; &nbsp;
+                            <input type="radio" name="employment_type" value="contract"> Contract
+                        </div>
                     </div>
+                    <div class="col-md-3 mb-3">
+                        <label>Salary:</label>
+                        <input type="text" name="salary" id="salaryInput" class="form-control" value="{{ old('salary') }}" required>
+                        <p><strong>Formatted:</strong> <span class="salary-output"></span></p>
+                    </div>
+                    
+
+
 
                 </div>
-                <div class="mb-3">
-                    <label>Job Description:</label>
-                    <textarea name="job_description" class="form-control" rows="3" maxlength="250"
-                        oninput="updateCharCount(this)" required>{{ old('job_description') }}</textarea>
-                    <small id="charCount">0 / 250 characters</small>
+                <div class="row">
+
+                    <div class="col-md-12 mb-3">
+                        <label>About the Company *</label>
+                        <textarea
+                            name="about_company"
+                            class="form-control"
+                            rows="2"
+                            maxlength="250"
+                            oninput="this.value = this.value.replace(/[^a-zA-Z\s,.-]/g, '');updateAboutCompanyCharCount(this)"
+                            id="aboutCompanyTextarea" required>{{ old('about_company') }}</textarea>
+                        <small class="text-muted" id="aboutCompanyCharCount">0 / 250 characters</small>
+                    </div>
+
                 </div>
 
                 <div class="row">
-                    <div class="col-md-4 mb-3">
-                        <label>Job Location:</label>
+                    <div class="col-md-3 mb-3">
+                        <label>Job Location *</label>
                         <input type="text" name="job_location" class="form-control"
                             value="{{ old('job_location') }}"
                             oninput="this.value = this.value.replace(/[^a-zA-Z\s,.-]/g, '')" required>
@@ -109,22 +132,14 @@
 
 
 
-                    <div class="col-md-4 mb-3">
-                        <label>Employment Type:</label>
 
-                        <div>
-                            <input type="radio" name="employment_type" value="permanent"> Permanent
-                            <input type="radio" name="employment_type" value="contract"> Contract
-                        </div>
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <label>Education:</label>
+                    <div class="col-md-3 mb-3">
+                        <label>Education *</label>
                         <input type="text" name="education" class="form-control" value="{{ old('education') }}" oninput="this.value = this.value.replace(/[^a-zA-Z\s,.-]/g, '')" required>
                     </div>
-                </div>
-                <div class="row">
+
                     <div class="col-md-6 mb-3">
-                        <label>Key Skills:</label>
+                        <label>Key Skills *</label>
                         <textarea
                             type="text"
                             name="key_skills"
@@ -136,35 +151,31 @@
                         <small class="text-muted" id="keySkillsCharCount">0 / 250 characters</small>
                     </div>
 
-
-                    <div class="col-md-6 mb-3">
-                        <label>About the Company:</label>
-                        <textarea
-                            name="about_company"
-                            class="form-control"
-                            rows="2"
-                            maxlength="250"
-                            oninput="this.value = this.value.replace(/[^a-zA-Z\s,.-]/g, '');updateAboutCompanyCharCount(this)"
-                            id="aboutCompanyTextarea" required>{{ old('about_company') }}</textarea>
-                        <small class="text-muted" id="aboutCompanyCharCount">0 / 250 characters</small>
-                    </div>
-
-
-
                 </div>
+                <div class="mb-3">
+                    <label>Job Description *</label>
+                    <textarea name="job_description" class="form-control" rows="3" maxlength="250"
+                        oninput="updateCharCount(this)" required>{{ old('job_description') }}</textarea>
+                    <small id="charCount">0 / 250 characters</small>
+                </div>
+
+
+
+
+
                 <div class="row">
                     <div class="col-md-4 mb-3">
-                        <label>Contact Person Name:</label>
+                        <label>Contact Person Name *</label>
                         <input type="text" name="contact_person" class="form-control" oninput="this.value = this.value.replace(/[^a-zA-Z\s,.-]/g, '')" required>
                     </div>
                     <div class="col-md-4 mb-3">
-                        <label>Contact Phone:</label>
+                        <label>Contact Phone *</label>
                         <input type="text" name="contact_details" class="form-control" maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required>
                     </div>
 
 
                     <div class="col-md-4 mb-3">
-                        <label>Contact Email:</label>
+                        <label>Contact Email *</label>
                         <input type="email" name="contact_email" class="form-control" value="{{ old('contact_email') }}" required>
                     </div>
                 </div>
@@ -213,7 +224,10 @@
                             <td>{{ $enquiry->company_name }}</td>
                             <td>{{ $enquiry->job_location }}</td>
                             <td>{{ $enquiry->experience }}</td>
-                            <td class="salary-amount">₹{{ number_format($enquiry->salary, 0, '.', ',') }}</td>
+                            <td class="salary-amount">
+                                ₹{{ is_numeric($enquiry->salary) ? number_format($enquiry->salary, 0, '.', ',') : $enquiry->salary }}
+                            </td>
+
 
                             <td class="text-center">
                                 <div class="dropdown">
@@ -284,8 +298,8 @@
                                             </div>
 
                                             <div class="col-md-4">
-                                            <h5>Salary:</h5>
-                                            <p id="salary"></p>
+                                                <h5>Salary:</h5>
+                                                <p id="salary"></p>
                                             </div>
                                         </div>
 
@@ -384,48 +398,51 @@
         </div>
 
         <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const jobModal = document.getElementById('jobModal');
-        jobModal.addEventListener('show.bs.modal', function(event) {
-            const button = event.relatedTarget;
-            const enquiry = JSON.parse(button.getAttribute('data-enquiry'));
+            document.addEventListener('DOMContentLoaded', () => {
+                const jobModal = document.getElementById('jobModal');
+                jobModal.addEventListener('show.bs.modal', function(event) {
+                    const button = event.relatedTarget;
+                    const enquiry = JSON.parse(button.getAttribute('data-enquiry'));
 
-            // Format salary with ₹ symbol and comma separation (Indian format)
-            let formattedSalary = enquiry.salary;
-            if (!isNaN(formattedSalary)) {
-                formattedSalary = new Intl.NumberFormat('en-IN', {
-                    style: 'currency',
-                    currency: 'INR',
-                    maximumFractionDigits: 0
-                }).format(formattedSalary);
-            }
+                    // Format salary with ₹ symbol and comma separation (Indian format)
+                    // Format salary with ₹ symbol and comma separation (Indian format)
+                    let formattedSalary = enquiry.salary;
+                    if (!isNaN(formattedSalary)) {
+                        formattedSalary = '₹' + new Intl.NumberFormat('en-IN', {
+                            maximumFractionDigits: 0
+                        }).format(formattedSalary);
+                    } else {
+                        // For non-numeric values like "2 - 3 Lacs", "Negotiable", etc.
+                        formattedSalary = '₹' + formattedSalary;
+                    }
 
-            // Populate modal content
-            document.getElementById('jobTitle').textContent = enquiry.job_title;
-            document.getElementById('openings').textContent = enquiry.openings;
-            document.getElementById('companyName').textContent = enquiry.company_name;
-            document.getElementById('experience').textContent = enquiry.experience;
-            document.getElementById('salary').textContent = formattedSalary;
-            document.getElementById('jobLocation').textContent = enquiry.job_location;
-            document.getElementById('contactPerson').textContent = enquiry.contact_person;
-            document.getElementById('education').textContent = enquiry.education;
-            document.getElementById('employmentType').textContent = enquiry.employment_type;
-            document.getElementById('keySkills').textContent = enquiry.key_skills;
-            document.getElementById('contactEmail').textContent = enquiry.contact_email;
-            document.getElementById('aboutCompany').textContent = enquiry.about_company;
-            document.getElementById('jobDescription').textContent = enquiry.job_description;
-            document.getElementById('contactDetails').textContent = enquiry.contact_details;
-            document.getElementById('jobPostedDate').textContent = new Date(enquiry.job_posted).toLocaleDateString();
 
-            const imageContainer = document.getElementById('jobImage');
-            if (enquiry.image) {
-                imageContainer.innerHTML = `<img src="/storage/app/public/career_images/${enquiry.image}" width="60">`;
-            } else {
-                imageContainer.innerHTML = 'No Image Available';
-            }
-        });
-    });
-</script>
+                    // Populate modal content
+                    document.getElementById('jobTitle').textContent = enquiry.job_title;
+                    document.getElementById('openings').textContent = enquiry.openings;
+                    document.getElementById('companyName').textContent = enquiry.company_name;
+                    document.getElementById('experience').textContent = enquiry.experience;
+                    document.getElementById('salary').textContent = formattedSalary;
+                    document.getElementById('jobLocation').textContent = enquiry.job_location;
+                    document.getElementById('contactPerson').textContent = enquiry.contact_person;
+                    document.getElementById('education').textContent = enquiry.education;
+                    document.getElementById('employmentType').textContent = enquiry.employment_type;
+                    document.getElementById('keySkills').textContent = enquiry.key_skills;
+                    document.getElementById('contactEmail').textContent = enquiry.contact_email;
+                    document.getElementById('aboutCompany').textContent = enquiry.about_company;
+                    document.getElementById('jobDescription').textContent = enquiry.job_description;
+                    document.getElementById('contactDetails').textContent = enquiry.contact_details;
+                    document.getElementById('jobPostedDate').textContent = new Date(enquiry.job_posted).toLocaleDateString();
+
+                    const imageContainer = document.getElementById('jobImage');
+                    if (enquiry.image) {
+                        imageContainer.innerHTML = `<img src="/storage/app/public/career_images/${enquiry.image}" width="60">`;
+                    } else {
+                        imageContainer.innerHTML = 'No Image Available';
+                    }
+                });
+            });
+        </script>
 
 
 
@@ -630,6 +647,10 @@
         background-color: var(--bs-btn-hover-bg);
         border-color: var(--bs-btn-hover-border-color);
     }
+
+    .form-control{
+        font-size: 13px;
+    }
 </style>
 <script>
     $(document).ready(function() {
@@ -647,14 +668,53 @@
 </script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        document.querySelectorAll('.salary-amount').forEach(function(el) {
-            let salary = parseInt(el.textContent.replace(/[^0-9]/g, ''));
-            if (!isNaN(salary)) {
-                el.textContent = '₹' + new Intl.NumberFormat('en-IN').format(salary);
+        const salaryInput = document.getElementById("salaryInput");
+        const output = document.querySelector(".salary-output");
+
+        function formatSalaryRange(input) {
+            input = input.replace(/\s/g, ''); // Remove all spaces
+
+            // Check for a valid salary range like "2000000-3000000"
+            const match = input.match(/^(\d+)\-(\d+)$/);
+            if (match) {
+                let [_, minStr, maxStr] = match;
+                let min = parseInt(minStr);
+                let max = parseInt(maxStr);
+
+                if (min >= 10000000) {
+                    return `${min / 10000000} - ${max / 10000000} Crore PA`;
+                } else if (min >= 100000) {
+                    return `${min / 100000} - ${max / 100000} Lacs PA`;
+                } else {
+                    return `${min} - ${max} PA`;
+                }
+            } else if (/^\d+$/.test(input)) {
+                let num = parseInt(input);
+                if (num >= 10000000) {
+                    return `${num / 10000000} Crore PA`;
+                } else if (num >= 100000) {
+                    return `${num / 100000} Lacs PA`;
+                } else {
+                    return `${num} PA`;
+                }
+            } else {
+                return input; // For strings like "Negotiable"
             }
+        }
+
+        salaryInput.addEventListener("input", function() {
+            const rawValue = salaryInput.value;
+            output.textContent = formatSalaryRange(rawValue);
         });
+
+        // Initial formatting on page load
+        output.textContent = formatSalaryRange(salaryInput.value);
     });
 </script>
+
+
+
+
 
 
 <!-- Bootstrap JS Bundle with Popper -->
@@ -703,19 +763,6 @@
     });
 </script>
 
-<script>
-    // Assuming enquiry.salary contains a number like 2000000
-    let salaryAmount = enquiry.salary;
 
-    // Format salary with ₹ and Indian comma style
-    let formattedSalary = new Intl.NumberFormat('en-IN', {
-        style: 'currency',
-        currency: 'INR',
-        maximumFractionDigits: 0
-    }).format(salaryAmount);
-
-    // Display formatted salary
-    document.getElementById('salary').textContent = formattedSalary;
-</script>
 
 @endsection

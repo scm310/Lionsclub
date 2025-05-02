@@ -33,7 +33,8 @@ use App\Http\Controllers\AdminMemberLoungeController;
 use App\Http\Controllers\Admin\ApproveController;
 use App\Http\Controllers\Admin\VisitorStatsController;
 use App\Http\Controllers\CareerEnquiryController;
-
+use App\Http\Controllers\InsightsController;
+use App\Http\Controllers\CompanyController;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
@@ -591,3 +592,17 @@ Route::put('/districts/update/{id}', [SettingsController::class, 'updateDistrict
 
 ///////ParentDistrict
 Route::put('/settings/districts/{id}', [SettingsController::class, 'editParentDistrict'])->name('editdistricts.update');
+
+
+Route::post('/admin/settings/region/store', [SettingsController::class, 'storeRegion'])->name('region.store');
+
+
+Route::put('/regions/{id}', [SettingsController::class, 'updateregion'])->name('region.update');
+
+Route::delete('/regions/{id}', [SettingsController::class, 'destroy'])->name('region.destroy');
+
+Route::get('/member/insights', [InsightsController::class, 'index'])->name('member.insights');
+
+Route::post('/company/store', [CompanyController::class, 'companyStore'])->name('companystore');
+Route::post('/company/update/{id}', [CompanyController::class, 'companyUpdate'])->name('companyupdate');
+Route::delete('/company/delete/{id}', [CompanyController::class, 'companyDelete'])->name('companydelete');

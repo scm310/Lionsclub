@@ -98,7 +98,7 @@
                                     <img src="{{ $officer->profile_photo ? asset('storage/app/public/' . $officer->profile_photo) : asset('assets/images/default.png') }}"
                                         alt="{{ $officer->first_name }}"
                                         class="border border-white shadow"
-                                        style="width:80px; height:80px; object-fit:cover; border-radius:10px;"
+                                        style="width:80px; height:80px; object-fit:fill; border-radius:10px;"
                                         loading="lazy">
                                 </div>
 
@@ -126,6 +126,7 @@
                             </h4>
                         </div>
                     @else
+
                         @foreach($dgTeamMembers_upcoming as $officer)
                             @php
                                 $fullName = $officer->first_name . ' ' . $officer->last_name;
@@ -145,7 +146,7 @@
                                         <img src="{{ $officer->profile_photo ? asset('storage/app/public/' . $officer->profile_photo) : asset('assets/images/default.png') }}"
                                             alt="{{ $officer->first_name }}"
                                             class="border border-white shadow"
-                                            style="width:80px; height:80px; object-fit:cover; border-radius:10px;" loading="lazy">
+                                            style="width:80px; height:80px; object-fit:fill; border-radius:10px;" loading="lazy">
                                     </div>
 
                                     <div class="text-white">

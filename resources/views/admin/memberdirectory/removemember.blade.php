@@ -113,11 +113,35 @@
 }
 
 #complaintTable tbody tr:nth-child(odd) {
-        background-color: #F0F8FF; 
+        background-color: #F0F8FF;
 }
 
 #complaintTable tbody tr:nth-child(even) {
-    background-color: #B9D9EB; 
+    background-color: #B9D9EB;
+}
+.custom-confirm-btn {
+    background: linear-gradient(159deg, rgba(30, 144, 255, 1) 0%, rgba(153, 186, 221, 1) 100%);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 18px;
+    margin-right: 10px;
+    font-weight: 600;
+    transition: background 0.3s ease;
+}
+
+.custom-cancel-btn {
+    background: linear-gradient(159deg, rgba(30, 144, 255, 1) 0%, rgba(153, 186, 221, 1) 100%);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 18px;
+    font-weight: 600;
+    transition: background 0.3s ease;
+}
+
+.custom-cancel-btn:hover {
+    background: gray;
 }
 </style>
 <div class="container mt-4">
@@ -129,7 +153,7 @@
 
         <div class="col-md-6">
             <select id="roleDropdown" name="role" class="form-control" onchange="this.form.submit()">
-              
+
                 <option value="internationalofficers" {{ $role == 'internationalofficers' ? 'selected' : '' }}>International Officers</option>
                 <option value="dg_team" {{ request('role') == 'dg_team' ? 'selected' : '' }}>DG Team</option>
                 <option value="district_governors" {{ request('role') == 'district_governors' ? 'selected' : '' }}>District Governor</option>
@@ -181,12 +205,13 @@
     @endif
 
     <td>
-    <form method="POST" action="{{ route('admin.member.role.delete', ['role' => $role ?? 'internationalofficers', 'id' => $member->id]) }}">
-    @csrf
+        <form method="POST" action="{{ route('admin.member.role.delete', ['role' => $role ?? 'internationalofficers', 'id' => $member->id]) }}" class="delete-role-form">
+            @csrf
             @method('DELETE')
-            <button class="btn btn-danger btn-sm">Remove Position</button>
+            <button type="button" class="btn btn-danger btn-sm delete-role-btn">Remove Position</button>
         </form>
     </td>
+
 </tr>
 @endforeach
 </tbody>
@@ -213,6 +238,55 @@
         });
     });
 </script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const deleteButtons = document.querySelectorAll('.delete-role-btn');
+
+        deleteButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                const form = this.closest('form');
+
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "This will remove the member's role!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes, remove it!',
+                    cancelButtonText: 'Cancel',
+                    customClass: {
+                        confirmButton: 'custom-confirm-btn',
+                        cancelButton: 'custom-cancel-btn'
+                    },
+                    buttonsStyling: false
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+            });
+        });
+    });
+</script>
+
+@if(session('success'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            Swal.fire({
+                icon: 'success',
+                title: 'Success',
+                text: '{{ session('success') }}',
+                confirmButtonText: 'OK',
+                customClass: {
+                    confirmButton: 'custom-confirm-btn'
+                },
+                buttonsStyling: false
+            });
+        });
+    </script>
+@endif
+
+
 
 
 @endsection

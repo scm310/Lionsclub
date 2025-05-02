@@ -38,41 +38,35 @@
 
 
         <!-- Nav Tabs -->
-        <ul class="nav nav-tabs flex-wrap justify-content-center border-0 px-2 mt-2" id="profileTabs" role="tablist">
-            <li class="nav-item m-1">
-                <a class="nav-link active text-white px-4 py-2 rounded text-center" id="tab-personal" data-toggle="tab" href="#personal" role="tab"
-                    style="background: linear-gradient(115deg, #0f0b8c, #77dcf5); border: none;">Member Details</a>
+        <ul class="nav nav-tabs flex-wrap flex-start border-0 mt-2" id="profileTabs" role="tablist">
+            <li class="nav-item m-0">
+                <a class="nav-link active text-white  text-center custom-tab" id="tab-personal" data-toggle="tab" href="#personal" role="tab"
+                    style="background: linear-gradient(115deg, #0f0b8c, #77dcf5); border: none; border-top-right-radius: 19px;">Member Details</a>
             </li>
 
-
-            <li class="nav-item m-1">
-                <a class="nav-link text-white px-4 py-2 rounded text-center" id="tab-clients" data-toggle="tab" href="#clients" role="tab"
-                    style="background: linear-gradient(115deg, #0f0b8c, #77dcf5); border: none;">Clients</a>
-            </li>
-            <!-- New Tabs -->
-            <li class="nav-item m-1">
-                <a class="nav-link text-white px-4 py-2 rounded text-center" id="tab-testimonials" data-toggle="tab" href="#testimonials" role="tab"
-                    style="background: linear-gradient(115deg, #0f0b8c, #77dcf5); border: none;">Testimonials</a>
-            </li>
-            <li class="nav-item m-1">
-                <a class="nav-link text-white px-4 py-2 rounded text-center" id="tab-project" data-toggle="tab" href="#project" role="tab"
-                    style="background: linear-gradient(115deg, #0f0b8c, #77dcf5); border: none;">Project</a>
+            <!-- ✅ New Company Details Tab -->
+            <li class="nav-item m-0">
+                <a class="nav-link text-white  text-center custom-tab" id="tab-company" data-toggle="tab" href="#company" role="tab"
+                    style="background: linear-gradient(115deg, #0f0b8c, #77dcf5); border: none; border-top-right-radius: 19px;">Company Details</a>
             </li>
 
-            <li class="nav-item m-1">
-                <a class="nav-link text-white px-4 py-2 rounded text-center" id="tab-product" data-toggle="tab" href="#product" role="tab"
-                    style="background: linear-gradient(115deg, #0f0b8c, #77dcf5); border: none;">Product</a>
+            <li class="nav-item m-0">
+                <a class="nav-link text-white  text-center custom-tab" id="tab-product" data-toggle="tab" href="#product" role="tab"
+                    style="background: linear-gradient(115deg, #0f0b8c, #77dcf5); border: none; border-top-right-radius: 19px;">Product</a>
             </li>
 
-            
-            <li class="nav-item m-1">
-                <a class="nav-link text-white px-4 py-2 rounded text-center" id="tab-Service" data-toggle="tab" href="#Service" role="tab"
-                    style="background: linear-gradient(115deg, #0f0b8c, #77dcf5); border: none;">Service</a>
+            <li class="nav-item m-0">
+                <a class="nav-link text-white  text-center custom-tab" id="tab-Service" data-toggle="tab" href="#Service" role="tab"
+                    style="background: linear-gradient(115deg, #0f0b8c, #77dcf5); border: none; border-top-right-radius: 19px;">Service</a>
+            </li>
+
+            <li class="nav-item m-0">
+                <a class="nav-link text-white  text-center custom-tab" id="tab-project" data-toggle="tab" href="#project" role="tab"
+                    style="background: linear-gradient(115deg, #0f0b8c, #77dcf5); border: none; border-top-right-radius: 19px;">Project</a>
             </li>
 
 
         </ul>
-
 
 
 
@@ -94,7 +88,7 @@
                                 <input type="text" class="form-control" value="{{ $parentDistrict }}" readonly>
                             </div>
                             <div class="col-md-4">
-                                <label>Account Name</label>
+                                <label>Club Name</label>
                                 <input type="text" class="form-control" value="{{ $accountName }}" readonly>
                             </div>
                         </div>
@@ -123,86 +117,52 @@
             <!-- Personal Details -->
             <div class="tab-pane fade  show active" id="personal" role="tabpanel">
                 <div class="container p-4" style=" background-color:#87cefa;border-radius: 8px;">
-                 
-                        @csrf
 
-                        <div class="row">
-                            <div class="col-md-3"><label>Member ID</label><input type="text" class="form-control" value="{{ $member->member_id }}" readonly></div>
-                            <div class="col-md-3"><label>Salutation</label><input type="text" name="salutation" class="form-control" value="{{ old('salutation', $member->salutation) }}"></div>
-                            <div class="col-md-3"><label>First Name *</label><input type="text" name="first_name" class="form-control" value="{{ old('first_name', $member->first_name) }}" required></div>
-                            <div class="col-md-3"><label>Last Name *</label><input type="text" name="last_name" class="form-control" value="{{ old('last_name', $member->last_name) }}" required></div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-3"><label>Suffix</label><input type="text" name="suffix" class="form-control" value="{{ old('suffix', $member->suffix) }}"></div>
-                            <div class="col-md-3"><label>Spouse Name</label><input type="text" name="spouse_name" class="form-control" value="{{ old('spouse_name', $member->spouse_name) }}"></div>
-                            <div class="col-md-3"><label>Date of Birth</label><input type="date" name="dob" class="form-control" value="{{ old('dob', $member->dob) }}"></div>
-                            <div class="col-md-3"><label>Anniversary Date</label><input type="date" name="anniversary_date" class="form-control" value="{{ old('anniversary_date', $member->anniversary_date) }}"></div>
-                        </div>
-
-                        <!-- ✅ Profile Photo Upload Section -->
-                        <div class="row mt-3">
-                            <!-- Upload Field -->
-                            <div class="col-12 col-md-4 mb-3 mb-md-0">
-                                <label for="profile_photo">Profile Photo</label>
-                                <input type="file" name="profile_photo" class="form-control">
-                                <small class="form-text text-muted">Note: Image Size 80x80 pixels</small>
-                            </div>
-
-                            <!-- Display Image -->
-                            <div class="col-12 col-md-4 d-flex align-items-center">
-                                @if($member->profile_photo)
-                                <img src="{{ asset('storage/app/public/' . $member->profile_photo) }}" width="80" class="rounded shadow border">
-                                @endif
-                            </div>
-                        </div>
-
-
-
-                        <!-- Centered Update Button -->
-                        <div class="text-center mt-4">
-                            <button type="submit" class="btn text-white px-4 py-2 " style="background: linear-gradient(115deg, #0f0b8c, #77dcf5); border-radius: 5px; color: #fff; width: 120px; border: none;">
-                                Update
-                            </button>
-                        </div>
-                  
-
-
-                  
                     @csrf
+
                     <div class="row">
-                        <div class="col-md-4">
-                            <label>Parent Multiple District</label>
-                            <input type="text" class="form-control" value="{{ $parentMultipleDistrict }}" readonly>
-                        </div>
-                        <div class="col-md-4">
-                            <label>Parent District</label>
-                            <input type="text" class="form-control" value="{{ $parentDistrict }}" readonly>
-                        </div>
-                        <div class="col-md-4">
-                            <label>Account Name</label>
-                            <input type="text" class="form-control" value="{{ $accountName }}" readonly>
-                        </div>
+                        <div class="col-md-3"><label>Member ID</label><input type="text" class="form-control" value="{{ $member->member_id }}" readonly></div>
+                        <div class="col-md-3"><label>Salutation</label><input type="text" name="salutation" class="form-control" value="{{ old('salutation', $member->salutation) }}"></div>
+                        <div class="col-md-3"><label>First Name *</label><input type="text" name="first_name" class="form-control" value="{{ old('first_name', $member->first_name) }}" required></div>
+                        <div class="col-md-3"><label>Last Name *</label><input type="text" name="last_name" class="form-control" value="{{ old('last_name', $member->last_name) }}" required></div>
                     </div>
 
                     <div class="row">
-                        <div class="col-md-4">
-                            <label>Membership Full Type</label>
-                            <input type="text" class="form-control" value="{{ $membershipFullType }}" readonly>
-                        </div>
-                        <div class="col-md-4">
-                            <label>Membership Type</label>
-                            <input type="text" name="membership_type" class="form-control" value="{{ old('membership_type', $member->membership_type) }}" readonly>
+                        <div class="col-md-3"><label>Suffix</label><input type="text" name="suffix" class="form-control" value="{{ old('suffix', $member->suffix) }}"></div>
+                        <div class="col-md-3"><label>Spouse Name</label><input type="text" name="spouse_name" class="form-control" value="{{ old('spouse_name', $member->spouse_name) }}"></div>
+                        <div class="col-md-3"><label>Date of Birth</label><input type="date" name="dob" class="form-control" value="{{ old('dob', $member->dob) }}"></div>
+                        <div class="col-md-3"><label>Anniversary Date</label><input type="date" name="anniversary_date" class="form-control" value="{{ old('anniversary_date', \Carbon\Carbon::parse($member->anniversary_date)->format('Y-m-d')) }}">
                         </div>
                     </div>
-                    <!-- Centered Update Button -->
-                    <div class="text-center mt-4">
-                        <!-- <button type="submit" class="btn text-white px-4 py-2" style="background-color: #003366; border-radius: 6px;">
-                        Update
-                    </button> -->
+
+                    <!-- ✅ Profile Photo Upload Section -->
+                    <div class="row mt-3">
+                        <!-- Upload Field -->
+                        <div class="col-12 col-md-4 mb-3 mb-md-0">
+                            <label for="profile_photo">Profile Photo</label>
+                            <input type="file" name="profile_photo" class="form-control">
+                            <small class="form-text text-muted">Note: Image Size 80x80 pixels</small>
+                        </div>
+
+                        <!-- Display Image -->
+                        <div class="col-12 col-md-4 d-flex align-items-center">
+                            @if($member->profile_photo)
+                            <img src="{{ asset('storage/app/public/' . $member->profile_photo) }}" width="80" class="rounded shadow border">
+                            @endif
+                        </div>
                     </div>
-                    
-                   
+
+
+
+
+
+
+
+                    @csrf
+
+
+
+
                     @csrf
 
                     <div class="row">
@@ -240,52 +200,23 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-md-3">
-                            <label>Preferred Email</label>
-                            <select name="preferred_email" class="form-control" id="preferred_email">
-                                <option value="">Select Email</option>
-                                <option value="personal" {{ old('preferred_email', $member->preferred_email) == 'personal' ? 'selected' : '' }}>Personal</option>
-                                <option value="official" {{ old('preferred_email', $member->preferred_email) == 'official' ? 'selected' : '' }}>Official</option>
 
-                            </select>
-                        </div>
                         <div class="col-md-3">
                             <label>Personal Address</label>
                             <input type="email" name="email_address" class="form-control" value="{{ old('email_address', $member->email_address) }}">
-                        </div>
-                        <div class="col-md-3">
-                            <label>Work Email</label>
-                            <input type="email" name="work_email" class="form-control" value="{{ old('work_email', $member->work_email) }}" id="work_email">
-                        </div>
-                        <div class="col-md-3">
-                            <label>Alternate Email</label>
-                            <input type="email" name="alternate_email" class="form-control" value="{{ old('alternate_email', $member->alternate_email) }}">
-                        </div>
-                    </div>
-
-                    <div class="row mt-3">
-                        <div class="col-md-3">
-                            <label>Preferred Phone</label>
-                            <select name="preferred_phone" class="form-control">
-                                <option value="">Select Phone</option>
-                                <option value="mobile" {{ old('preferred_phone', $member->preferred_phone) == 'mobile' ? 'selected' : '' }}>Mobile</option>
-                                <option value="home" {{ old('preferred_phone', $member->preferred_phone) == 'home' ? 'selected' : '' }}>Home</option>
-                                <option value="work" {{ old('preferred_phone', $member->preferred_phone) == 'work' ? 'selected' : '' }}>Work</option>
-                            </select>
                         </div>
                         <div class="col-md-3">
                             <label>Phone Number</label>
                             <input type="text" name="phone_number" class="form-control" value="{{ old('phone_number', $member->phone_number) }}">
                         </div>
                         <div class="col-md-3">
-                            <label>Work Number</label>
+                            <label>Alternative Number</label>
                             <input type="text" name="work_number" class="form-control" value="{{ old('work_number', $member->work_number) }}">
                         </div>
-                        <div class="col-md-3">
-                            <label>Home Number</label>
-                            <input type="text" name="home_number" class="form-control" value="{{ old('home_number', $member->home_number) }}">
-                        </div>
+
                     </div>
+
+
 
                     <!-- ✅ Centered Update Button with Custom Color -->
                     <!-- Centered Update Button -->
@@ -326,6 +257,14 @@
             <div class="tab-pane fade" id="clients" role="tabpanel">
                 <div class="container p-4" style="background-color:#87cefa; border-radius: 8px;">
                     @include('member.partials.clients')
+
+                </div>
+            </div>
+
+
+            <div class="tab-pane fade" id="company" role="tabpanel">
+                <div class="container p-4" style="background-color:#87cefa; border-radius: 8px;">
+                    @include('member.partials.company')
 
                 </div>
             </div>

@@ -1,24 +1,22 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Client extends Model
+class Company extends Model
 {
     use HasFactory;
 
+    // Explicitly set the table name to 'company'
+    protected $table = 'company';  // Table name is 'company' (singular)
+
+    // Define the fields that can be mass assigned
     protected $fillable = [
         'member_id',
-        'client_name',
         'company_name',
-        'comapny_fullform', // Typo, see note below
+        'industry',
+        'website',
         'designation',
     ];
-
-    public function member()
-    {
-        return $this->belongsTo(Member::class, 'member_id');
-    }
 }

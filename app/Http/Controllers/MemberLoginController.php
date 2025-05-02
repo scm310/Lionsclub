@@ -11,7 +11,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\AddMember; // Ensure you have this model
 use App\Models\Member;
-use App\Models\product;
+use App\Models\Product;
+use App\Models\Company;
+
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -64,38 +66,39 @@ class MemberLoginController extends Controller
     public function edit()
     {
         $member = Auth::guard('member')->user();
-    
+
         if (!$member) {
             Log::error('❌ Member not found in edit() - Not authenticated.');
             return redirect()->route('member.login')->with('error', 'Please log in again.');
         }
-    
+
         // Fetch additional information as you have in your original code
         $parentMultipleDistrict = DB::table('parents_multiple_district')
             ->where('id', $member->parent_multiple_district)
             ->value('name');
-    
+
         $parentDistrict = DB::table('district')
             ->where('id', $member->parent_district)
             ->value('name');
-    
+
         $accountName = DB::table('chapters')
             ->where('id', $member->account_name)
             ->value('chapter_name');
-    
+
         $membershipFullType = DB::table('membership_type')
             ->where('id', $member->membership_full_type)
             ->value('name');
-    
+
         // Fetch member's testimonials
         $testimonials = Testimonial::where('member_id', $member->id)->get();
-    
+
         // Fetch member's projects
         $projects = Project::where('member_id', $member->id)->get();
-    
+
         // Fetch member's clients
         $clients = Client::where('member_id', $member->id)->get();
-    
+        $company = DB::table('company')->where('member_id', $member->id)->first();
+
         // Fetch member's products
         $products = DB::table('products')
             ->where('member_id', $member->id)  // Assuming there's a 'member_id' column in the products table
@@ -104,7 +107,6 @@ class MemberLoginController extends Controller
 
             $services = DB::table('services')->where('member_id', $member->id)->get();
 
-    
         // Return the view with all the data
         return view('member.profileedit', compact(
             'member',
@@ -116,10 +118,11 @@ class MemberLoginController extends Controller
             'projects',
             'clients',
             'services',
-            'products' // Pass the products data to the view
+            'products',
+            'company' // Pass the products data to the view
         ));
     }
-    
+
 
 
     public function update(Request $request)
@@ -127,7 +130,7 @@ class MemberLoginController extends Controller
         // dd($request);
         // Log the entire request for debugging
         Log::info('📝 Update Request Data:', $request->all());
-    
+
         // Validate the request data
         $request->validate([
             'salutation' => 'nullable|string',
@@ -141,7 +144,7 @@ class MemberLoginController extends Controller
             'membership_type' => 'nullable|string',
             'password' => 'nullable|string|min:6',
             'profile_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-    
+
             // Address
             'mailing_address_line_1' => 'nullable|string',
             'mailing_address_line_2' => 'nullable|string',
@@ -150,7 +153,7 @@ class MemberLoginController extends Controller
             'mailing_state' => 'nullable|string',
             'mailing_country' => 'nullable|string',
             'mailing_zip' => 'nullable|string',
-    
+
             // Contact
             'preferred_email'       => 'nullable|string',
             'email_address'         => 'nullable|email',
@@ -162,88 +165,88 @@ class MemberLoginController extends Controller
             'home_number'           => 'nullable|string',
             'fax'                   => 'nullable|string',
         ]);
-    
+
         // Get the authenticated member
         $member = Auth::guard('member')->user();
-    
+
         // Log if member is authenticated
         Log::info('Authenticated Member:', [$member]);
-    
+
         // Check if member is found
         if (!$member) {
             Log::error("❌ Authenticated member not found.");
             return redirect()->back()->with('error', 'Member not found or not logged in.');
         }
-    
+
         // Prepare input data excluding certain fields
         $input = $request->except(['_token', 'profile_photo', 'created_at', 'updated_at']);
-    
+
         // Update password if provided
         if (!empty($input['password'])) {
             $input['password'] = bcrypt($input['password']);
         } else {
             unset($input['password']); // Don't overwrite if empty
         }
-    
+
         // Handle profile photo if uploaded
         if ($request->hasFile('profile_photo')) {
             Log::info('📸 Profile Photo Uploaded');
-            
+
             // Check if directory exists, if not create it
             if (!Storage::exists('public/profile_photos')) {
                 Storage::makeDirectory('public/profile_photos');
             }
-    
+
             // Delete old profile photo if it exists
             if ($member->profile_photo) {
                 Storage::delete('public/' . $member->profile_photo);
             }
-    
+
             // Store the new photo and update the input array
             $path = $request->file('profile_photo')->store('profile_photos', 'public');
             $input['profile_photo'] = $path;
         }
-    
+
         // Begin database transaction to ensure atomic updates
         DB::beginTransaction();
         try {
             // Update the member record
             $member->update($input);
-    
+
             // Commit the transaction
             DB::commit();
-    
+
             // Log success
             Log::info('✅ Member record updated successfully', $input);
-    
+
             // Return success response
             return redirect()->route('member.edit')->with('success', 'Your profile has been updated successfully.');
         } catch (\Exception $e) {
             // Rollback the transaction in case of error
             DB::rollBack();
-    
+
             // Log the error
             Log::error('❌ Error updating member:', [$e->getMessage()]);
-    
+
             // Return error response
             return redirect()->back()->with('error', 'Something went wrong. Please try again.');
         }
     }
-    
+
 
     public function storeTestimonials(Request $request)
     {
         $member = Auth::guard('member')->user();
-    
+
         foreach ($request->client_name as $index => $name) {
             $testimonialId = $request->testimonial_id[$index];
             $imagePath = null;
-    
+
             // Handle image upload if a new image is uploaded
             if ($request->hasFile("image.$index")) {
                 $imagePath = $request->file("image.$index")->store('testimonials', 'public');
             }
-    
+
             if ($testimonialId) {
                 // Update existing testimonial
                 $testimonial = Testimonial::find($testimonialId);
@@ -269,10 +272,10 @@ class MemberLoginController extends Controller
                 ]);
             }
         }
-    
+
         return redirect()->back()->with('success', 'Testimonials saved successfully!');
     }
-    
+
     public function destroy($id)
     {
         $testimonial = Testimonial::findOrFail($id);
@@ -344,10 +347,10 @@ class MemberLoginController extends Controller
         $testimonial = Testimonial::findOrFail($id);
         Storage::delete('public/' . $testimonial->image);
         $testimonial->delete();
-    
+
         return back()->with('success', 'Testimonial deleted successfully.');
     }
-    
+
 
     public function projectTab()
 {
@@ -361,26 +364,21 @@ public function storeProject(Request $request)
     $member = Auth::guard('member')->user();
 
     foreach ($request->project_name as $index => $name) {
-        $projectImage = $request->file('project_image')[$index];
+        if (isset($request->file('project_image')[$index])) {
+            $image = $request->file('project_image')[$index]->store('project_images', 'public');
 
-        // Generate a unique file name using time() and index to avoid conflicts
-        $imageName = time() . $index . '.' . $projectImage->getClientOriginalExtension();
-
-        // Store the file in the correct folder with the generated file name
-        $projectImage->storeAs('public/project_images', $imageName);
-
-        // Create a new project entry with the correct image path
-        Project::create([
-            'member_id'     => $member->id,
-            'project_name'  => $name,
-            'project_image' => 'project_images/' . $imageName, // Ensure the path is consistent
-            'location'      => $request->location[$index],
-            'client_name'   => $request->client_name[$index],
-            'company_name'  => $request->company_name[$index],
-        ]);
+            Project::create([
+                'member_id'     => $member->id,
+                'project_name'  => $name,
+                'project_image' => $image,
+                'location'      => $request->location[$index],
+                'client_name'   => $request->client_name[$index],
+                'company_name'  => $request->company_name[$index],
+            ]);
+        }
     }
 
-    return back()->with('success', 'Project added successfully.');
+    return back()->with('success', 'Project(s) added successfully.');
 }
 
 
@@ -474,7 +472,7 @@ public function storeProduct(Request $request)
         $imageName = null;
         if ($productImage) {
             $imageName = time() . '_' . $index . '.' . $productImage->getClientOriginalExtension();
-            $productImage->storeAs('public/product_images', $imageName);
+            $productImage->storeAs('product_images', $imageName, 'public');
         }
 
         // Always create new product
@@ -524,9 +522,10 @@ public function updateProduct(Request $request, $id)
         // Upload new image
         $image = $request->file('product_image');
         $imageName = time() . '.' . $image->getClientOriginalExtension();
-        $image->storeAs('public/product_images', $imageName);
+        $image->storeAs('product_images', $imageName, 'public');
 
         $product->product_image = 'product_images/' . $imageName;
+
     }
 
     $product->save();
@@ -575,7 +574,7 @@ public function updateservice(Request $request, $id)
         if ($service->image_path) {
             Storage::delete('public/' . $service->image_path);
         }
-        $service->image_path = $request->file('image')->store('services', 'public');
+        $service->image  = $request->file('image')->store('services', 'public');
     }
 
     $service->save();

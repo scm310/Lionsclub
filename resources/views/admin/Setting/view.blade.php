@@ -50,6 +50,11 @@
         display: none !important;
     }
 
+    table#regionTable thead .sorting:after,
+    table#regionTable thead .sorting:before {
+        display: none !important;
+    }
+
 
 
     .nav-tabs .nav-item {
@@ -208,7 +213,8 @@
         #districtsTable,
         #districtTable,
         #chaptersTable,
-        #membershipTable {
+        #membershipTable,
+        #regionTable {
             width: 100% !important;
         }
     }
@@ -241,7 +247,8 @@
     #districtsTable tbody tr:nth-child(odd),
     #districtTable tbody tr:nth-child(odd),
     #chaptersTable tbody tr:nth-child(odd),
-    #membershipTable tbody tr:nth-child(odd) {
+    #membershipTable tbody tr:nth-child(odd),
+    #regionTable tbody tr:nth-child(odd) {
         background-color: #F0F8FF;
         /* Alice Blue */
     }
@@ -249,7 +256,8 @@
     #districtsTable tbody tr:nth-child(even),
     #districtTable tbody tr:nth-child(even),
     #chaptersTable tbody tr:nth-child(even),
-    #membershipTable tbody tr:nth-child(even) {
+    #membershipTable tbody tr:nth-child(even),
+    #regionTable tbody tr:nth-child(even) {
         background-color: #B9D9EB;
         /* Soft pastel blue */
     }
@@ -258,7 +266,8 @@
     #districtsTable td,
     #districtTable td,
     #chaptersTable td,
-    #membershipTable td {
+    #membershipTable td,
+    #regionTable td {
         padding: 10px;
         border-color: #ddd;
     }
@@ -273,16 +282,16 @@
         margin-right: 7px;
     }
 
-    .modal-body{
-        background-color:#87cefa;
+    .modal-body {
+        background-color: #87cefa;
     }
 
-    .custom-btn{
+    .custom-btn {
         background: linear-gradient(115deg, #0f0b8c, #77dcf5) !important;
     }
 
-    
-    #cancel:hover{
+
+    #cancel:hover {
         background: gray !important;
     }
 </style>
@@ -332,6 +341,9 @@
             </li>
             <li class="nav-item">
                 <a class="nav-link" id="membership-tab" data-bs-toggle="tab" href="#membership">Membership Types</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="Regions-tab" data-bs-toggle="tab" href="#Regions">Regions</a>
             </li>
         </ul>
 
@@ -713,6 +725,97 @@
             </script>
 
 
+            <div class="tab-pane fade" id="Regions">
+                <div class="d-flex justify-content-center">
+                    <div class="table-responsive" style="overflow-x: auto; max-width: 1000px; width: 100%;">
+                        <h5 class="mb-3 custom-heading">Regions</h5>
+                        <table class="table table-striped table-bordered dt-responsive nowrap text-center" id="regionTable" style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">S.No</th>
+                                    <th class="text-center">Region Name</th>
+                                    <th class="text-center">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($regions as $region)
+                                <tr class="text-center">
+                                    <td>{{ $loop->iteration }}</td>
+                                    <td>{{ $region->name }}</td>
+                                    <td>
+                                        <!-- Edit Button -->
+                                        <button
+                                            class="btn btn-primary edit-btn"
+                                            data-id="{{ $region->id }}"
+                                            data-name="{{ $region->name }}"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#editRegionModal"
+                                            title="Edit">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+
+                                        <!-- Delete Form -->
+                                        <form action="{{ route('region.destroy', $region->id) }}" method="POST" class="d-inline delete-form">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger delete-btn" title="Delete">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
+
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Edit Region Modal -->
+            <div class="modal fade" id="editRegionModal" tabindex="-1" aria-labelledby="editRegionModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <form method="POST" id="editRegionForm">
+                        @csrf
+                        @method('PUT')
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title mb-3 custom-heading" id="editRegionModalLabel">Edit Region</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <input type="hidden" name="region_id" id="editRegionId">
+                                <div class="form-group">
+                                    <label for="editRegionName">Region Name</label>
+                                    <input type="text" class="form-control" id="editRegionName" name="name" required>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn custom-btn">Update Region</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    const editButtons = document.querySelectorAll('.edit-btn');
+                    editButtons.forEach(button => {
+                        button.addEventListener('click', function() {
+                            const regionId = this.getAttribute('data-id');
+                            const regionName = this.getAttribute('data-name');
+
+                            document.getElementById('editRegionId').value = regionId;
+                            document.getElementById('editRegionName').value = regionName;
+
+                            // Set dynamic form action
+                            const form = document.getElementById('editRegionForm');
+                            form.action = `/regions/${regionId}`; // Route to update
+                        });
+                    });
+                });
+            </script>
+
 
 
         </div>
@@ -741,6 +844,12 @@
             paging: true,
             searching: true
         });
+        $('#regionTable').DataTable({
+            responsive: true,
+            paging: true,
+            searching: true
+        });
+
 
         // For Bootstrap 5 tabs
         $('a[data-bs-toggle="tab"]').on('shown.bs.tab', function() {
@@ -781,7 +890,7 @@
 <script>
     $(document).ready(function() {
         // Initialize all tables only if not already initialized
-        const tables = ['#districtsTable', '#districtTable', '#chaptersTable', '#membershipTable'];
+        const tables = ['#districtsTable', '#districtTable', '#chaptersTable', '#membershipTable', '#regionTable'];
 
         tables.forEach(function(selector) {
             if (!$.fn.DataTable.isDataTable(selector)) {

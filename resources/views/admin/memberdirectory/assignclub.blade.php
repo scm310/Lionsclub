@@ -246,14 +246,6 @@
                 <div class="row mt-4">
 
                     <div class="col-md-8">
-                        <!-- <h5 class="text-center mb-3">Members List</h5>
-
-             
-                        <div class="d-flex justify-content-center mb-3">
-                            <input type="text" class="form-control w-50" id="searchInput" placeholder="Search Member ID or Name...">
-                        </div> -->
-
-
 
                         <!-- Select All Checkbox (Right-aligned) -->
                         <div class="d-flex justify-content-end mb-1" id="selectAllContainer" style="display: none; margin-right: 40px;">
@@ -317,67 +309,91 @@
 
             <!-- JavaScript Section -->
             <script>
-                document.addEventListener('DOMContentLoaded', function() {
-                    const positionSelect = document.getElementById('position');
-                    const checkboxes = document.querySelectorAll('input[name="member_ids[]"]');
-                    const selectAllCheckbox = document.getElementById('selectAllCheckbox');
-                    const selectAllContainer = document.getElementById('selectAllContainer');
+    document.addEventListener('DOMContentLoaded', function () {
+        const positionSelect = document.getElementById('position');
+        const selectAllCheckbox = document.getElementById('selectAllCheckbox');
+        const selectAllContainer = document.getElementById('selectAllContainer');
 
-                    function resetCheckboxListeners() {
-                        checkboxes.forEach(cb => cb.onclick = null);
-                    }
+        function getCheckboxes() {
+            return document.querySelectorAll('input[name="member_ids[]"]');
+        }
 
-                    function enableSingleSelection() {
-                        resetCheckboxListeners();
-                        checkboxes.forEach(cb => {
-                            cb.addEventListener('click', function() {
-                                if (this.checked) {
-                                    checkboxes.forEach(other => {
-                                        if (other !== this) other.checked = false;
-                                    });
-                                }
-                            });
+        function resetCheckboxListeners(checkboxes) {
+            checkboxes.forEach(cb => {
+                const newCb = cb.cloneNode(true);
+                cb.parentNode.replaceChild(newCb, cb);
+            });
+        }
+
+        function enableSingleSelection(checkboxes) {
+            resetCheckboxListeners(checkboxes);
+            checkboxes.forEach(cb => {
+                cb.addEventListener('click', function () {
+                    if (this.checked) {
+                        checkboxes.forEach(other => {
+                            if (other !== this) other.checked = false;
                         });
                     }
-
-                    function enableMultiSelection() {
-                        resetCheckboxListeners();
-                    }
-
-                    positionSelect.addEventListener('change', function() {
-                        const role = this.value;
-
-                        if (role === 'President' || role === 'Secretary' || role === 'Treasurer') {
-                            selectAllContainer.style.display = 'none';
-                            selectAllCheckbox.checked = false;
-                            checkboxes.forEach(cb => cb.checked = false);
-                            enableSingleSelection();
-                        } else if (role === 'Member') {
-                            selectAllContainer.style.display = 'block';
-                            enableMultiSelection();
-                        } else {
-                            // Hide if no valid role selected
-                            selectAllContainer.style.display = 'none';
-                            resetCheckboxListeners();
-                        }
-                    });
-
-                    selectAllCheckbox.addEventListener('change', function() {
-                        checkboxes.forEach(cb => cb.checked = this.checked);
-                    });
-
-                    // Optional: Search Functionality
-                    document.getElementById('searchInput').addEventListener('input', function() {
-                        const searchValue = this.value.toLowerCase();
-                        document.querySelectorAll('#membersTable tbody tr').forEach(row => {
-                            const id = row.cells[0].textContent.toLowerCase(); // Member ID should be in cell[0]
-                            const name = row.cells[1].textContent.toLowerCase(); // Full Name should be in cell[1]
-                            row.style.display = (id.includes(searchValue) || name.includes(searchValue)) ? '' : 'none';
-                        });
-                    });
-
                 });
-            </script>
+            });
+        }
+
+        function enableMultiSelection(checkboxes) {
+            resetCheckboxListeners(checkboxes);
+            // No special logic needed
+        }
+
+        positionSelect.addEventListener('change', function () {
+            const role = this.value;
+            const checkboxes = getCheckboxes();
+
+            if (role === 'President' || role === 'Secretary' || role === 'Treasurer') {
+                selectAllContainer.style.display = 'none';
+                selectAllCheckbox.checked = false;
+
+                // Ensure only one checkbox is selected
+                let firstCheckedFound = false;
+                checkboxes.forEach(cb => {
+                    if (cb.checked) {
+                        if (!firstCheckedFound) {
+                            firstCheckedFound = true;
+                        } else {
+                            cb.checked = false;
+                        }
+                    }
+                });
+
+                enableSingleSelection(checkboxes);
+
+            } else if (role === 'Member') {
+                selectAllContainer.style.display = 'block';
+                enableMultiSelection(checkboxes);
+            } else {
+                selectAllContainer.style.display = 'none';
+                resetCheckboxListeners(checkboxes);
+            }
+        });
+
+        selectAllCheckbox.addEventListener('change', function () {
+            const checkboxes = getCheckboxes();
+            checkboxes.forEach(cb => cb.checked = this.checked);
+        });
+
+        // Optional: Search Functionality (Make sure you have an element with id="searchInput" if using this)
+        const searchInput = document.getElementById('searchInput');
+        if (searchInput) {
+            searchInput.addEventListener('input', function () {
+                const searchValue = this.value.toLowerCase();
+                document.querySelectorAll('#birthdaysTable tbody tr').forEach(row => {
+                    const id = row.cells[1].textContent.toLowerCase(); // Member ID
+                    const name = row.cells[2].textContent.toLowerCase(); // Full Name
+                    row.style.display = (id.includes(searchValue) || name.includes(searchValue)) ? '' : 'none';
+                });
+            });
+        }
+    });
+</script>
+
             @endif
 
 

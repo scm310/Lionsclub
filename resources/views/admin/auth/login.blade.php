@@ -115,7 +115,7 @@
     padding-right: 0;
 }
 
-       
+
     </style>
 
 <style>
@@ -142,16 +142,15 @@
         height: 40px !important;
         width: 40px !important;
     }
-  
+
 }
 
 </style>
 
 
 </head>
-
 @php
-        $member = \App\Models\Member::with('team')
+    $member = \App\Models\Member::with('team')
         ->whereHas('team', function ($query) {
             $query->where('position', 'District Governor')->where('year', 'CurrentYear');
         })
@@ -160,47 +159,46 @@
 
 <div class="container-fluid" style="background: url('{{ asset('assets/images/Member Login.png') }}') no-repeat center center; background-size: cover; min-height: 100vh;">
 
-    <!-- Blue Strip with Text -->
+    <!-- Blue Strip -->
     <div class="blue-strip py-3 w-100" style="margin: 0;">
-    <div class="d-flex justify-content-center align-items-center gap-2">
-        <!-- Left Image -->
-        <img src="{{ asset('assets/images/logo.png') }}" alt="Logo" class="strip-logo">
-
-        <!-- Center Text -->
-        <h4 class="m-0 text-light text-nowrap"> Lions International District 3241 E</h4>
-
-        <!-- Right Image -->
-        @foreach($images as $image)
-    <img src="{{ asset('storage/app/public/' . $image->image_path) }}" alt="Pin Image" class="strip-logo">
-@endforeach
+        <div class="d-flex justify-content-center align-items-center gap-2">
+            <img src="{{ asset('assets/images/logo.png') }}" alt="Logo" class="strip-logo">
+            <h4 class="m-0 text-light text-nowrap">Lions International District 3241 E</h4>
+            @foreach($images as $image)
+                <img src="{{ asset('storage/app/public/' . $image->image_path) }}" alt="Pin Image" class="strip-logo">
+            @endforeach
+        </div>
     </div>
-</div>
 
     <div class="row min-vh-100 justify-content-center align-items-center">
         <!-- Member Cards Column -->
         <div class="col-12 col-md-6 mb-4 mb-md-0 mb-5">
             <div class="row justify-content-center">
+                @if ($member)
+                    <div class="col-12 col-sm-6 col-md-12 d-flex justify-content-center mb-3">
+                        <div class="card text-center shadow-sm mt-1"
+                             style="border: 3px solid #ffc107; border-radius: 15px; padding: 20px; width: 100%; max-width: 300px; background: #fff;">
+                            <img src="{{ $member->profile_photo ? asset('storage/app/public/' . $member->profile_photo) : asset('assets/images/default.png') }}"
+                                 alt="{{ $member->salutation . ' ' . $member->first_name . ' ' . $member->last_name }}"
+                                 class="mx-auto d-block mb-3"
+                                 style="height: 150px; width: 150px; object-fit: fill; border-radius: 10px;" />
 
-                <div class="col-12 col-sm-6 col-md-12 d-flex justify-content-center mb-3">
-                    <div class="card text-center shadow-sm mt-1"
-                        style="border: 3px solid #ffc107; border-radius: 15px; padding: 20px; width: 100%; max-width: 300px; background: #fff;">
-                        <img src="{{ $member->profile_photo ? asset('storage/app/public/' . $member->profile_photo) : asset('assets/images/default.png') }}"
-                        alt="{{ $member->salutation.' '.$member->first_name . ' ' . $member->last_name }} "    class="mx-auto d-block mb-3"
-                        style="height: 150px; width: 150px; object-fit: fill; border-radius: 10px;"/>
-                        <h5 class="text-primary  mb-1" style="font-size: 1.2rem;">
-                            {{ $member->salutation ? $member->salutation . ' ' : '' }}
-                            {{ $member->first_name . ' ' . $member->last_name }}
-                       
-                        </h5>
-        
-                        <p class=" text-dark mb-0" style="font-size: 1rem;">{{ $member->team->position }}</p>
+                            <h5 class="text-primary mb-1" style="font-size: 1.2rem;">
+                                {{ \Illuminate\Support\Str::title($member->salutation ? $member->salutation . ' ' : '') }}
+                                {{ \Illuminate\Support\Str::title($member->first_name . ' ' . $member->last_name) }}
+                            </h5>
+                            <p class="text-dark mb-0" style="font-size: 1rem;">{{ optional($member->team)->position }}</p>
+                        </div>
                     </div>
-                </div>
-
+                @else
+                    <div class="col-12 text-center">
+                 
+                    </div>
+                @endif
             </div>
         </div>
 
-        <!-- Login Card Column -->
+        <!-- Login Form -->
         <div class="col-12 col-md-6 d-flex justify-content-center mb-5">
             <div class="card login-card">
                 <h3 class="text-center mb-4 login-title">
@@ -209,15 +207,15 @@
                 </h3>
 
                 @if (session('success'))
-                <div class="alert alert-success" id="successMessage">{{ session('success') }}</div>
+                    <div class="alert alert-success" id="successMessage">{{ session('success') }}</div>
                 @endif
 
                 <form method="POST" action="{{ route('admin.login') }}">
                     @csrf
                     <div class="mb-3">
-    <label for="email_or_memberid" class="form-label">Email or Member ID</label>
-    <input type="text" name="email_or_memberid" id="email_or_memberid" class="form-control" required>
-</div>
+                        <label for="email_or_memberid" class="form-label">Email or Member ID</label>
+                        <input type="text" name="email_or_memberid" id="email_or_memberid" class="form-control" required>
+                    </div>
 
                     <div class="mb-3 password-container">
                         <label for="password" class="form-label">Password</label>

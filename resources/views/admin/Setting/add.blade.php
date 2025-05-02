@@ -103,10 +103,21 @@
         /* Ensures it spans across the container */
     }
 
-    .card{
-        background-color:#87cefa;
+    .card {
+        background-color: #87cefa;
     }
-   
+
+    .remove {
+        padding: 6px 6px;
+        font-size: 14px;
+        font-weight: 500;
+        color: #fff;
+        background-color: #dc3545;
+        border: none;
+        border-radius: 4px;
+        height: 31px;
+        transition: background-color 0.3s ease;
+    }
 </style>
 
 @section('content')
@@ -117,7 +128,7 @@
 
     <div class="white-container">
 
-    <h3 class="mb-3 custom-heading text-center">Settings</h3>
+        <h3 class="mb-3 custom-heading text-center">Settings</h3>
 
         <div class="container">
             <div class="justify-content-center">
@@ -134,7 +145,7 @@
                 <div class="row">
                     <!-- Card to add Parent Multiple District -->
                     <div class="col-md-9 mb-3">
-                    <div class="card" style="background-color: #87cefa;">
+                        <div class="card" style="background-color: #87cefa;">
 
                             <div class="card-header">
                                 <h5 style="text-align: center;">Add Parent Multiple District Name</h5>
@@ -147,7 +158,7 @@
                                         <input type="text" class="form-control" id="name" name="name" placeholder="Enter District Name" required>
                                     </div>
                                     <button type="submit" class="btn custom-btn mt-3" id="save" style="color: white; background: linear-gradient(115deg, #0f0b8c, #77dcf5); border-radius: 5%;">Save</button>
-                                    </form>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -155,7 +166,7 @@
 
                     <!-- Card to add Parent District with Parent -->
                     <div class="col-md-9 mb-3">
-                        <div class="card"  style="background-color: #87cefa;">
+                        <div class="card" style="background-color: #87cefa;">
                             <div class="card-header">
                                 <h5 style="text-align: center;">Add Parent District </h5>
                             </div>
@@ -193,9 +204,9 @@
 
                     <!-- Card to add Account Names -->
                     <div class="col-md-9 mb-3">
-                        <div class="card"  style="background-color: #87cefa;">
+                        <div class="card" style="background-color: #87cefa;">
                             <div class="card-header">
-                                <h5 style="text-align: center;">Add Account Names</h5>
+                                <h5 style="text-align: center;">Add Club Name</h5>
                             </div>
                             <div class="card-body">
                                 <!-- Display error messages -->
@@ -209,8 +220,8 @@
                                     @csrf
                                     <div id="accountNamesContainer">
                                         <div class="form-group">
-                                            <label for="name"> Account Names</label>
-                                            <input type="text" class="form-control mb-2" name="account_names[]" placeholder="Enter Account Name" required>
+                                            <label for="name">Club Name</label>
+                                            <input type="text" class="form-control mb-2" name="account_names[]" placeholder="Enter Club Name" required>
                                         </div>
                                     </div>
                                     <button type="button" class="btn custom-btn mt-3" id="addAccountNameBtn" style="color: white; background: linear-gradient(115deg, #0f0b8c, #77dcf5); border-radius: 5%;">Add More</button>
@@ -224,7 +235,7 @@
 
                     <!-- Card to add Membership Types -->
                     <div class="col-md-9 mb-3">
-                        <div class="card"  style="background-color: #87cefa;">
+                        <div class="card" style="background-color: #87cefa;">
                             <div class="card-header">
                                 <h5 style="text-align: center;">Add Membership Types</h5>
                             </div>
@@ -243,6 +254,35 @@
                             </div>
                         </div>
                     </div>
+
+
+                    <div class="col-md-9 mb-3">
+                        <div class="card" style="background-color: #87cefa;">
+                            <div class="card-header">
+                                <h5 style="text-align: center;">Add Region</h5>
+                            </div>
+                            <div class="card-body">
+                                <form action="{{ route('region.store') }}" method="POST" id="regionForm">
+                                    @csrf
+                                    <div id="regionFields">
+                                    <label for="name">Region Name</label>
+                                        <div class="form-group d-flex">
+                                      
+                                            <input type="text" name="name[]" class="form-control" placeholder="Enter Region Name" required>
+                                         
+                                        </div>
+                                    </div>
+                                    <button type="button" class="btn custom-btn mt-3 addMore"  style="color: white; background: linear-gradient(115deg, #0f0b8c, #77dcf5); border-radius: 5%;">Add More</button>
+                                    <button type="submit" class="btn custom-btn mt-3"
+                                        style="color: white; background: linear-gradient(115deg, #0f0b8c, #77dcf5); border-radius: 5%;">
+                                       Save
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+
                 </div>
             </div>
         </div>
@@ -303,6 +343,30 @@
         }
     });
 </script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const regionFields = document.getElementById('regionFields');
+
+        // Add new field when "Add More" is clicked
+        document.querySelector('.addMore').addEventListener('click', function() {
+            const newField = document.createElement('div');
+            newField.classList.add('form-group', 'd-flex', 'mt-2');
+            newField.innerHTML = `
+                <input type="text" name="name[]" class="form-control" placeholder="Enter Region Name" required> &nbsp; 
+                <button type="button" class="btn btn-danger ml-2 mt-1 remove btn-sm">Remove</button>
+            `;
+            regionFields.appendChild(newField);
+        });
+
+        // Remove field when "Remove" button is clicked
+        regionFields.addEventListener('click', function(e) {
+            if (e.target.classList.contains('remove')) {
+                e.target.parentElement.remove();
+            }
+        });
+    });
+</script>
+
 
 
 

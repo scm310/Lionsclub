@@ -11,12 +11,13 @@ class RegionMember extends Model
 
     protected $table = 'region_members';
 
+
     protected $fillable = [
         'member_id',
         'position',
         'year',
-        'zone',
         'region',
+        'zone',
         'chapter_id'
     ];
 
@@ -28,5 +29,12 @@ class RegionMember extends Model
     public function chapter()
     {
         return $this->belongsTo(Chapter::class, 'chapter_id');
+    }
+
+
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'member_id');
     }
 }

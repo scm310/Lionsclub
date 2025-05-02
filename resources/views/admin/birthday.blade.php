@@ -239,6 +239,25 @@ background-size: 20px;
 #anniversariesTable tbody tr:nth-child(even) {
     background-color: #B9D9EB;
 }
+
+@media (max-width: 767.98px) {
+    .table-responsive {
+        padding: 10px;
+        margin-top: 0;
+        border-radius: 8px;
+        box-shadow: none; /* Optional: remove shadow on mobile */
+        overflow-x: auto; /* Allows horizontal scrolling on small screens */
+    }
+
+    .table-responsive table {
+        font-size: 14px; /* Slightly smaller text for small screens */
+    }
+
+    .custom-heading1 {
+        font-size: 18px; /* Smaller heading for mobile */
+    }
+}
+
 </style>
     <div class="container mt-4 ">
         <div class="white-container">
@@ -322,7 +341,7 @@ background-size: 20px;
                 @endif
             </tbody>
         </table>
-        
+
     </div>
 
 </div>
@@ -354,7 +373,7 @@ background-size: 20px;
                 @endif
             </tbody>
         </table>
-        
+
     </div>
 </div>
 
@@ -364,38 +383,38 @@ background-size: 20px;
 
 
 <script>
-$(document).ready(function () {
-    $('#birthdaysTable').DataTable({
-        "pageLength": 10,                // Set initial page length
-        "ordering": false,              // Disable sorting
-        "searching": true,              // Enable search
-        "lengthChange": true,           // Show "Show X entries" dropdown
-        "info": true,                   // Show "Showing X of X entries"
-        "lengthMenu": [10, 25, 50, 100]  // Dropdown options
-    });
+    $(document).ready(function() {
+        $('#comingTable').DataTable({
+            responsive: true,
+            paging: true,
+            searching: true,
+            ordering: false // Disable sorting
+        });
 
-    $('#anniversariesTable').DataTable({
-        "pageLength": 10,
-        "ordering": false,
-        "searching": true,
-        "lengthChange": true,
-        "info": true,
-        "lengthMenu": [10, 25, 50, 100]
+        $('#birthdaysTable').DataTable({
+            responsive: true,
+            paging: true,
+            searching: true,
+            ordering: false // Disable sorting
+        });
+
+        $('#anniversariesTable').DataTable({
+            responsive: true,
+            paging: true,
+            searching: true,
+            ordering: false // Disable sorting
+        });
+
+        // For Bootstrap 5 tabs
+        $('a[data-bs-toggle="tab"]').on('shown.bs.tab', function() {
+            $.fn.dataTable.tables({
+                visible: true,
+                api: true
+            }).columns.adjust().responsive.recalc();
+        });
     });
-});
 </script>
-<script>
-    $(document).ready(function () {
-    $('#comingTable').DataTable({
-        "pageLength": 10,                // Set initial page length
-        "ordering": false,              // Disable sorting
-        "searching": true,              // Enable search
-        "lengthChange": true,           // Show "Show X entries" dropdown
-        "info": true,                   // Show "Showing X of X entries"
-        "lengthMenu": [10, 25, 50, 100]  // Dropdown options
-    });
-});
-</script>
+
 
 @endsection
 

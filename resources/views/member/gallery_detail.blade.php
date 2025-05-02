@@ -1,6 +1,12 @@
 @extends('layouts.navbar')
 
 @section('content')
+
+<style>
+    .shadow {
+    box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15) !important;
+}
+</style>
 <div class="container mt-4 mb-5">  {{-- Added bottom spacing --}}
     <!-- Breadcrumbs -->
     <nav aria-label="breadcrumb">
@@ -10,8 +16,9 @@
         </ol>
     </nav>
 <!-- Event Title, Date & Day in Same Row with Blue Background, Rounded Edges, and Centered Strip -->
-<div class="d-flex justify-content-center align-items-center gap-3 flex-wrap text-center" 
-     style="background-color: #007bff; padding: 10px 20px; border-radius: 20px; max-width: 600px; width: 100%; margin: 0 auto; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+<div class="d-flex justify-content-center align-items-center gap-3 flex-wrap text-center shadow" 
+     style="
+background: linear-gradient(115deg, #1a1683, #77dcf5); padding: 10px 20px; border-radius: 20px; max-width:700px; width: 100%; margin: 0 auto; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
     <h5 class="fw-bold mb-0 text-white">
         {{ $event->event ? $event->event->event_name : 'Unknown Event' }} 
         - {{ \Carbon\Carbon::parse($event->event_date)->format('F d, Y') }} 

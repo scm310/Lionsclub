@@ -28,7 +28,7 @@
             <div class="col-md-3"><input type="text" name="comapny_fullform[]" class="form-control" placeholder="Company Full Form" required></div>
             <div class="col-md-3"><input type="text" name="designation[]" class="form-control" placeholder="Designation" required></div>
             <div class="col-md-1 d-flex align-items-end">
-                <button type="button" class="btn btn-danger removeClient">X</button>
+                <button type="button" class="btn btn-danger removeClient">Delete</button>
             </div>
         </div>
     </div>
@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 <div class="col-md-3"><input type="text" name="comapny_fullform[]" class="form-control" placeholder="Company Full Form" required></div>
                 <div class="col-md-3"><input type="text" name="designation[]" class="form-control" placeholder="Designation" required></div>
                 <div class="col-md-1 d-flex align-items-end">
-                    <button type="button" class="btn btn-danger removeClient">X</button>
+                    <button type="button" class="btn btn-danger removeClient">Delete</button>
                 </div>
             </div>`;
         document.getElementById('clientFields').insertAdjacentHTML('beforeend', fieldHTML);

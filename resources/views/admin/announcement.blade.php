@@ -107,11 +107,17 @@
         padding: 10px 20px;
         /* Optional: Adjust padding to make the button bigger */
     }
+
+    @media (max-width: 767.98px) {
+    .custom-container {
+        height: 480px !important;
+    }
+}
 </style>
 
 <div class="container mt-4 white-container">
     <h2 class="mb-4 text-center custom-heading">Announcements</h2>
-    <div class="white-container rounded shadow" style="background-color: #87cefa; max-width:500px; height:400px;">
+    <div class="white-container rounded shadow custom-container" style="background-color: #87cefa; max-width:500px; height:400px;">
         <div class="container">
 
             <!-- Add this to your layout or Blade file in the <head> section -->

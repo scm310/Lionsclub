@@ -61,7 +61,7 @@
     <div class="app-brand demo">
         <a class="app-brand-link">
             <div class="logo-container" style="margin-bottom: 20px;">
-                <img src="/assets/images/logo.png" alt="" width="50" height="50">
+                <img src="/assets/images/logo.png" alt="" width="30" height="30">
                 <span class="app-brand-text demo menu-text fw-bold ms-2" style="font-size: 18px; color:rgb(241, 240, 235);">Welcome, Admin!</span>
             </div>
 
@@ -101,12 +101,14 @@
         {{-- Event End --}}
 
 
+
         <li class="menu-item {{ request()->routeIs(['members.list', 'members.add', 'admin.approve-members']) ? 'active open' : '' }}">
-            <a href="javascript:void(0);" class="menu-link has-dropdown">
-                <i class="menu-icon tf-icons bx bx-user"></i>
-                <div class="text-truncate">Members</div>
-                <i class="bx bx-chevron-down menu-arrow"></i>
-            </a>
+        <a href="javascript:void(0);" class="menu-link has-dropdown" title="Manage Management ">
+    <i class="menu-icon tf-icons bx bx-user"></i>
+    <div class="text-truncate">Member Management</div>
+    <i class="bx bx-chevron-down menu-arrow"></i>
+</a>
+
 
             <ul class="menu-sub" style="{{ request()->routeIs(['members.list', 'members.add', 'admin.approve-members']) ? 'display: block;' : 'display: none;' }}">
                 <!-- Members List -->
@@ -116,23 +118,19 @@
                     </a>
                 </li>
 
-                <!-- Add Members -->
-                <li class="menu-item {{ request()->routeIs('members.add') ? 'active' : '' }}">
-                    <a href="{{ route('members.add') }}" class="menu-link">
-                        <div class="text-truncate">Add Members</div>
-                    </a>
-                </li>
+              
 
                 <!-- Approve Member -->
                 @if(session('admin_role') === 'club_administrator')
                 <li class="menu-item {{ request()->routeIs('admin.approve-members') ? 'active' : '' }}">
                     <a href="{{ route('admin.approve-members') }}" class="menu-link">
-                        <div class="text-truncate">Approve Member</div>
+                        <div class="text-truncate">Approve Member data</div>
                     </a>
                 </li>
                 @endif
             </ul>
         </li>
+
 
 
 
@@ -213,13 +211,15 @@
                 <div class="text-truncate">Website Visitor Stats</div>
             </a>
         </li>
-
         <li class="menu-item">
-            <a href="{{ route('admin.announcement') }}" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-bar-chart-alt"></i>
-                <div class="text-truncate">Announcements</div>
-            </a>
-        </li>
+    <a href="{{ route('admin.announcement') }}" class="menu-link" title="View and manage announcements">
+        <i class="menu-icon tf-icons bx bx-microphone"></i>
+        <div class="text-truncate">Announcements</div>
+    </a>
+</li>
+
+    
+     
 
 
         <li class="menu-item {{ request()->routeIs('admin.enquiries.*') || request()->routeIs('career.enquiry.page') ? 'active open' : '' }}">
@@ -236,7 +236,7 @@
                 </li>
                 <li class="menu-item {{ request()->routeIs('admin.enquiries.donate') ? 'active' : '' }}">
                     <a href="{{ route('admin.enquiries.donate') }}" class="menu-link">
-                        <div class="text-truncate">Donation Enquiry</div>
+                        <div class="text-truncate">Donation Enquiries</div>
                     </a>
                 </li>
                 <li class="menu-item {{ request()->routeIs('career.enquiry.page') ? 'active' : '' }}">
@@ -311,6 +311,39 @@
             e.preventDefault(); // Prevent default action
             $(this).parent().toggleClass("open");
             $(this).next(".menu-sub").slideToggle(); // Toggle submenu visibility
+        });
+    });
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const dropdownLinks = document.querySelectorAll(".menu-link.has-dropdown");
+
+        dropdownLinks.forEach(link => {
+            link.addEventListener("click", function (e) {
+                e.preventDefault();
+
+                // Collapse all open submenus
+                document.querySelectorAll(".menu-item.open").forEach(item => {
+                    if (item !== this.parentElement) {
+                        item.classList.remove("open");
+                        const submenu = item.querySelector(".menu-sub");
+                        if (submenu) submenu.style.display = "none";
+                    }
+                });
+
+                // Toggle current submenu
+                const parentItem = this.closest(".menu-item");
+                const submenu = this.nextElementSibling;
+
+                if (parentItem.classList.contains("open")) {
+                    parentItem.classList.remove("open");
+                    submenu.style.display = "none";
+                } else {
+                    parentItem.classList.add("open");
+                    submenu.style.display = "block";
+                }
+            });
         });
     });
 </script>

@@ -1,7 +1,5 @@
 <?php
 
-// app/Models/Testimonial.php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -25,5 +23,3 @@ class Testimonial extends Model
         return $this->belongsTo(Member::class, 'member_id');
     }
 }
-
-

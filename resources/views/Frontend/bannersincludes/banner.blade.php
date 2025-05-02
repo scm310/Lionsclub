@@ -190,7 +190,7 @@
         banners.forEach(banner => {
             html += `
               <div class="top-ad-banner">
-           <a href="/track-click?type=top&url=${encodeURIComponent(banner.url)}&image=${encodeURIComponent(banner.image_path)}" target="_blank">
+           <a href="/track-click?type=top&url=${encodeURIComponent(banner.url)}&image=${encodeURIComponent(banner.image_path)}" target="_blank" style="height:-webkit-fill-available;">
 
                       <img src="/storage/app/public/${banner.image_path}" alt="Banner Image" class="ad-banner-image" loading="lazy"/>
                   </a>

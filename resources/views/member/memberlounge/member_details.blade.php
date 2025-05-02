@@ -49,7 +49,7 @@
             gap: 10px;
             padding: 0 10px;
             width: 100%;
-            margin-left: -22px;
+            margin-left: 16px;
         }
 
         .tab-btn {
@@ -57,90 +57,101 @@
             padding: 6px 10px;
         }
     }
+
+    .scrollable-content {
+        overflow-y: auto;
+      
+        padding-right: 5px;
+
+        /* Hide scrollbar */
+        scrollbar-width: none; /* Firefox */
+        -ms-overflow-style: none;  /* IE and Edge */
+    }
+
+    .scrollable-content::-webkit-scrollbar {
+        display: none; /* Chrome, Safari, Opera */
+    }
+
+    .responsive-card {
+        height: 400px;
+    }
+
+    @media (max-width: 767.98px) {
+        .responsive-card {
+            height: 700px;
+        }
+    }
 </style>
 
-<div id="memberDetailsContainer" class="member-details-container" style="display: none; background: linear-gradient(115deg, #0f0b8c, #77dcf5); color: white;">
+<div id="memberDetailsContainer" class="member-details-container" style="display: none; background:#fffd8c; color: white;">
     <div class="member-details-content">
-        <button class="close-btn" onclick="closeMemberDetails()" style="color: white;">✖</button>
+        <button class="close-btn" onclick="closeMemberDetails()" style="margin-top: -10px;">✖</button>
 
         <!-- Tabs -->
-        <div class="tabs text-center mt-3">
-            <button class="tab-btn active" onclick="showTab('personal')">Personal</button>
-            <button class="tab-btn " onclick="showTab('account')">Account</button>
-            <button class="tab-btn" onclick="showTab('contact')">Contact</button>
-            <button class="tab-btn" onclick="showTab('membership')">Membership</button>
-            <button class="tab-btn" onclick="showTab('service')">Service</button>
-            <button class="tab-btn" onclick="showTab('project')">Project</button> <!-- New Tab -->
-            <button class="tab-btn" onclick="showTab('client')">Client</button> <!-- New Tab -->
-            <button class="tab-btn" onclick="showTab('testimonial')">Testimonial</button> <!-- New Tab -->
-        </div>
+<!-- Tabs -->
+<div class="tabs text-center mt-3" style="position: sticky; top: -12px; z-index: 1000; background: #fffd8c; padding: 10px 0;">
+    <button class="tab-btn active" onclick="showTab('personal')" style="background: linear-gradient(115deg, #0f0b8c, #77dcf5); color: white; border: none;">Personal</button>
+    <button class="tab-btn" onclick="showTab('company')" style="background: linear-gradient(115deg, #0f0b8c, #77dcf5); color: white; border: none;">Company </button>
+    <button class="tab-btn" onclick="showTab('product')" style="background: linear-gradient(115deg, #0f0b8c, #77dcf5); color: white; border: none;">Products</button>
+    <button class="tab-btn" onclick="showTab('service')" style="background: linear-gradient(115deg, #0f0b8c, #77dcf5); color: white; border: none;">Services</button>
+    <button class="tab-btn" onclick="showTab('project')" style="background: linear-gradient(115deg, #0f0b8c, #77dcf5); color: white; border: none;">Projects</button>
+
+</div>
+
+
+
 
         <!-- Tab Content -->
         <div id="tabContent">
             <!-- Account Tab -->
-            <div id="account" class="tab-pane active">
-                <div class="card" style="background: rgba(255, 255, 255, 0.1); border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.2);"><br>
-                    <h6 class="text-center text-white">Account Details</h6>
-                    <div class="card-body" style="color: white;">
-                        <p><strong>Multiple District:</strong> <span id="multipleDistrict"></span></p>
-                        <p><strong>District:</strong> <span id="district"></span></p>
-                        <p><strong>Account Name:</strong> <span id="accountName"></span></p>
-                    </div>
-                </div>
-            </div>
+            <div id="personal" class="tab-pane active" style="background: linear-gradient(115deg, rgb(15, 11, 140), rgb(119, 220, 245)); border-radius: 10px;">
+    <div class="card p-3 responsive-card" style="background: rgba(255, 255, 255, 0.1); border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.2); color: white;">
+        <h6 class="text-center text-white">Member  Details</h6>
+        <div class="text-center mb-3">
+            <img id="profilePic" src="" alt="Profile Picture" style="width: 100px; height: 100px; object-fit: cover; border-radius: 10px; border: 3px solid white;">
+        </div>
 
-            <!-- Personal Tab -->
-            <div id="personal" class="tab-pane">
+        <!-- Scrollable content starts here -->
+        <div class="scrollable-content" style="border: 1px solid rgba(255,255,255,0.4); border-radius: 8px; padding: 10px;">
+            <table class="table table-bordered text-white mb-0">
+                <tbody>
+                    <!-- Personal Details FIRST -->
+                    <tr><th colspan="2" class="text-center">Personal Details</th></tr>
+                    <tr><td>Member Role</td><td><span id="memberRole"></span></td></tr>
+                    <tr><td>Member ID</td><td><span id="memberId"></span></td></tr>
+                    <tr><td>Salutation</td><td><span id="salutation"></span></td></tr>
+                    <tr><td>First Name</td><td><span id="firstName"></span></td></tr>
+                    <tr><td>Last Name</td><td><span id="lastName"></span></td></tr>
+                    <tr><td>Suffix</td><td><span id="suffix"></span></td></tr>
+                    <tr><td>Spouse Name</td><td><span id="spouseName"></span></td></tr>
+                    <tr><td>Date of Birth</td><td><span id="dob"></span></td></tr>
+                    <tr><td>Anniversary</td><td><span id="anniversary"></span></td></tr>
 
-                <div class="card p-3" style="background: rgba(255, 255, 255, 0.1); border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.2); color: white;">
-                    <h6 class="text-center text-white">Personal Detail</h6>
-                    <div class="d-flex align-items-start gap-3 mb-3">
-                        <div class="flex-grow-1">
-                            <p id="memberRole" style="font-size: 13px; margin-bottom: 0;"></p>
-                            <p><strong>Member ID:</strong> <span id="memberId"></span></p>
-                            <p><strong>Salutation:</strong> <span id="salutation"></span></p>
-                            <p><strong>First Name:</strong> <span id="firstName"></span></p>
-                            <p><strong>Last Name:</strong> <span id="lastName"></span></p>
-                            <p><strong>Suffix:</strong> <span id="suffix"></span></p>
-                            <p><strong>Spouse Name:</strong> <span id="spouseName"></span></p>
-                            <p><strong>Date of Birth:</strong> <span id="dob"></span></p>
-                            <p><strong>Anniversary:</strong> <span id="anniversary"></span></p>
-                        </div>
-                        <div class="flex-shrink-0">
-                            <img id="profilePic" src="" alt="Profile Picture" style="width: 100px; height: 100px; object-fit: cover; border-radius: 10px; border: 3px solid white;">
-                        </div>
-                    </div>
-                </div>
-            </div>
+               
 
-            <!-- Contact Tab -->
-            <div id="contact" class="tab-pane">
-                <div class="card p-3" style="background: rgba(255, 255, 255, 0.1); border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.2); color: white;">
-                    <h6 class="text-center text-white">Contact </h6>
-                    <p><strong>Preferred Email:</strong> <span id="preferredEmail"></span></p>
-                    <p><strong>Personal Email:</strong> <span id="email"></span></p>
-                    <p><strong>Work Email:</strong> <span id="workEmail"></span></p>
-                    <p><strong>Alternate Email:</strong> <span id="alternateEmail"></span></p>
-                    <p><strong>Preferred Phone:</strong> <span id="preferredPhone"></span></p>
-                    <p><strong>Mobile:</strong> <span id="phone"></span></p>
-                    <p><strong>Work Number:</strong> <span id="workNumber"></span></p>
-                    <p><strong>Home Number:</strong> <span id="homeNumber"></span></p>
-                </div>
-            </div>
+                    <!-- Contact Details -->
+                    <tr><th colspan="2" class="text-center">Contact Details</th></tr>
+                    <tr><td>Preferred Email</td><td><span id="preferredEmail"></span></td></tr>
+                    <tr><td>Personal Email</td><td><span id="email"></span></td></tr>
+                    <tr><td>Work Email</td><td><span id="workEmail"></span></td></tr>
+                    <tr><td>Alternate Email</td><td><span id="alternateEmail"></span></td></tr>
+                    <tr><td>Preferred Phone</td><td><span id="preferredPhone"></span></td></tr>
+                    <tr><td>Mobile</td><td><span id="phone"></span></td></tr>
+                    <tr><td>Work Number</td><td><span id="workNumber"></span></td></tr>
+                    <tr><td>Home Number</td><td><span id="homeNumber"></span></td></tr>
 
-            <!-- Membership Tab -->
-            <div id="membership" class="tab-pane">
-                <div class="card p-3" style="background: rgba(214, 174, 174, 0.1); border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.2); color: white;">
-                    <h6 class="text-center text-white">Membership </h6>
-                    <p><strong>Membership Type:</strong> <span id="membershipType"></span></p>
-                    <p><strong>Membership Full Type:</strong> <span id="membershipFullType"></span></p>
-                </div>
-            </div>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
 
 
             {{-- service --}}
 
-            <div id="service" class="tab-pane">
+            <div id="service" class="tab-pane" style="background: linear-gradient(115deg, rgb(15, 11, 140), rgb(119, 220, 245));border-radius: 10px">
                 <div class="card p-3" style="background: rgba(255, 255, 255, 0.1); border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.2); color: white;">
                     <h6 class="text-center text-white">Services</h6>
                     <div id="servicesContainer"></div>
@@ -149,7 +160,7 @@
 
 
             <!-- Project Tab -->
-            <div id="project" class="tab-pane">
+            <div id="project" class="tab-pane" style="background: linear-gradient(115deg, rgb(15, 11, 140), rgb(119, 220, 245));    border-radius: 10px">
 
                 <div class="card p-3" style="background: rgba(255, 255, 255, 0.1); border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.2); color: white;">
                     <h6 class="text-center text-white">Projects </h6>
@@ -160,39 +171,33 @@
                 </div>
             </div>
 
-            <!-- Client Tab -->
-            <div id="client" class="tab-pane">
-                <div class="card p-3" style="background: rgba(255, 255, 255, 0.1); border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.2); ">
-                    <h6 class="text-center text-white">Clients </h6>
-                    <div class="table-responsive">
-                        <table class="table  table-hover text-white">
-                            <thead class="table-light text-dark" style="background: #1e90ff">
-                                <tr>
-                                    <th>Client Name</th>
-                                    <th>Company Name</th>
-                                    <th>Company Full Form</th>
-                                    <th>Designation</th>
-                                </tr>
-                            </thead>
-                            <tbody id="clientsTableBody">
-                                <!-- Dynamic rows will be inserted here -->
-                            </tbody>
-                        </table>
-                    </div>
+            <div id="product" class="tab-pane" style="background: linear-gradient(115deg, rgb(15, 11, 140), rgb(119, 220, 245));    border-radius: 10px">
 
-                </div>
-            </div>
+<div class="card p-3" style="background: rgba(255, 255, 255, 0.1); border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.2); color: white;">
+    <h6 class="text-center text-white">Products </h6>
+    <div id="productContainer">
 
+    </div>
 
-            <!-- Testimonial Tab -->
-            <div id="testimonial" class="tab-pane">
-                <div class="card p-3" style="background: rgba(255, 255, 255, 0.1); border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.2); color: white;">
-                    <h6 class="text-center text-white">Testimonials </h6>
-                    <div id="testimonialsContainer">
+    
 
-                    </div>
-                </div>
-            </div>
+</div>
+</div>
+
+<div id="company" class="tab-pane" style="background: linear-gradient(115deg, rgb(15, 11, 140), rgb(119, 220, 245));    border-radius: 10px">
+
+<div class="card p-3" style="background: rgba(255, 255, 255, 0.1); border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.2); color: white;">
+    <h6 class="text-center text-white">Company Details </h6>
+    <div id="companyContainer">
+
+    </div>
+
+    
+
+</div>
+</div>
+
+      
 
         </div>
     </div>

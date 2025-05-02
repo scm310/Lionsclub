@@ -14,7 +14,7 @@
             overflow-y: auto;
             display: none;
             transition: all 0.3s ease;
-            padding: 20px;
+            padding: 10px;
             margin-top: 100px;
             border-radius: 24px;
         }
@@ -158,7 +158,7 @@
         /* ❌ Clear Button inside input */
         .clear-btn {
             position: absolute;
-            right: 90px;
+            right: 109px;
             /* Adjust depending on button size */
             top: 50%;
             transform: translateY(-50%);
@@ -284,6 +284,8 @@
             margin-top: -3px;
             margin-bottom: 0rem;
         }
+
+
     </style>
 
     <!-- Main Content Wrapper -->
@@ -311,7 +313,8 @@
                                 </a>
                             @endif
 
-                            <button type="submit" class="btn custom-btn">Search</button>
+                            <button type="submit" class="btn" style="background: linear-gradient(115deg, #0f0b8c, #77dcf5); color: white; border: none; padding: 4px 16px; border-radius: 5px;">Search</button>
+
                         </div>
                     </div>
                 </form>
@@ -322,7 +325,7 @@
                     @foreach ($members as $member)
                         <div class="member-card" style="width: 100%;">
 
-                            <div class="card text-center shadow-sm border-0 d-flex flex-column justify-content-between"
+                            <div class="card text-center shadow-sm border-0 d-flex flex-column justify-content-between "
                                 onclick="showMemberDetails({!! htmlspecialchars(
                                     json_encode([
                                         'profile' => $member->profile_photo,
@@ -356,6 +359,9 @@
                                         'clients' => $member->client ?? [],
                                         'projects' => $member->project ?? [],
                                         'services' => $member->service ?? [],
+                                        'products' => $member->product ?? [],
+                                        'companies' => $member->company ?? [],
+
                                     ]),
                                     ENT_QUOTES,
                                     'UTF-8',
@@ -429,10 +435,6 @@
             document.getElementById('firstName').innerText = member.firstName + ' ' + member.lastName;
             document.getElementById('memberRole').innerText = member.role;
 
-            // Account tab
-            document.getElementById('multipleDistrict').innerText = member.multipleDistrict || 'NA';
-            document.getElementById('district').innerText = member.district || 'NA';
-            document.getElementById('accountName').innerText = member.accountName || 'NA';
 
             // Personal tab
             document.getElementById('memberId').innerText = member.memberId || 'NA';
@@ -454,103 +456,12 @@
             document.getElementById('workNumber').innerText = member.workNumber || 'NA';
             document.getElementById('homeNumber').innerText = member.homeNumber || 'NA';
 
-            // Membership tab
-            document.getElementById('membershipType').innerText = member.membershipType || 'NA';
-            document.getElementById('membershipFullType').innerText = member.membershipFullType || 'NA';
 
 
 
-            // Testimonials Section
-            const testimonialsContainer = document.getElementById('testimonialsContainer');
-
-            if (member.testimonials && member.testimonials.length > 0) {
-                testimonialsContainer.innerHTML = '';
-
-                member.testimonials.forEach(testimonial => {
-                    // Outer card
-                    const card = document.createElement('div');
-                    card.classList.add('card', 'mb-3', 'shadow-sm', 'border-0');
-                    card.style.background = 'rgba(255, 255, 255, 0.1)';
-                    card.style.color = 'white';
-
-                    const row = document.createElement('div');
-                    row.classList.add('row', 'g-0');
-
-                    // Left side: image
-                    const imageCol = document.createElement('div');
-                    imageCol.classList.add('col-md-4', 'text-center', 'd-flex', 'align-items-center',
-                        'justify-content-center');
-
-                    const clientImage = document.createElement('img');
-                    clientImage.src = testimonial.image ? `/storage/app/public/${testimonial.image}` :
-                        '/assets/images/default-client.png';
-                    clientImage.alt = testimonial.client_name || 'Client Image';
-                    clientImage.classList.add('img-fluid', 'rounded-circle', 'p-2');
-                    clientImage.style.maxWidth = '120px';
-                    imageCol.appendChild(clientImage);
-
-                    // Right side: content
-                    const contentCol = document.createElement('div');
-                    contentCol.classList.add('col-md-8');
-
-                    const cardBody = document.createElement('div');
-                    cardBody.classList.add('card-body');
-
-                    const testimonialContent = document.createElement('p');
-                    testimonialContent.classList.add('card-text', 'fst-italic','text-center');
-                    testimonialContent.innerText = `"${testimonial.testimonial_content || ''}"`;
-
-                    const clientInfo = document.createElement('p');
-                    clientInfo.classList.add('card-text', 'mt-2','text-center');
-                    clientInfo.innerHTML = `
-            <strong>${testimonial.client_name || 'N/A'}</strong><br>
-            ${testimonial.designation || 'N/A'}<br>
-            ${testimonial.company_name || 'N/A'}
-        `;
 
 
-                    cardBody.appendChild(clientInfo);
-                    contentCol.appendChild(cardBody);
-                    cardBody.appendChild(testimonialContent);
 
-                    // Combine all
-                    row.appendChild(imageCol);
-                    row.appendChild(contentCol);
-                    card.appendChild(row);
-                    testimonialsContainer.appendChild(card);
-                });
-
-            } else {
-                testimonialsContainer.innerHTML = '<p class="text-white">No testimonials available.</p>';
-            }
-
-
-            //clients
-
-            const clientsTableBody = document.getElementById('clientsTableBody');
-            clientsTableBody.innerHTML = ''; // Clear any existing rows
-
-
-            console.log(member.clients);
-            if (member.clients && member.clients.length > 0) {
-                member.clients.forEach(client => {
-                    const row = document.createElement('tr');
-
-                    row.innerHTML = `
-
-            <td>${client.client_name || 'N/A'}</td>
-            <td>${client.company_name || 'N/A'}</td>
-            <td>${client.comapny_fullform || 'N/A'}</td>
-            <td>${client.designation || 'N/A'}</td>
-        `;
-
-                    clientsTableBody.appendChild(row);
-                });
-            } else {
-                const emptyRow = document.createElement('tr');
-                emptyRow.innerHTML = `<td colspan="5">No clients available.</td>`;
-                clientsTableBody.appendChild(emptyRow);
-            }
 
 //project
 const projectsContainer = document.getElementById('projectsContainer');
@@ -620,10 +531,127 @@ if (member.projects && member.projects.length > 0) {
         projectsContainer.appendChild(row);
     });
 } else {
-    projectsContainer.innerHTML = '<p class="text-white">No projects available.</p>';
+    projectsContainer.innerHTML = '<div style="display: flex; justify-content: center; align-items: center; height: 100%;"><p class="text-white m-0">No projects available.</p></div>';
+
 }
 
+//products
 
+const productContainer = document.getElementById('productContainer');
+
+if (member.products && member.products.length > 0) {
+    productContainer.innerHTML = '';
+
+    member.products.forEach((product) => {
+        // Create row for each card
+        const row = document.createElement('div');
+        row.classList.add('row', 'mb-4');
+
+        const col = document.createElement('div');
+        col.classList.add('col-12');
+
+        // Card
+        const card = document.createElement('div');
+        card.classList.add('card', 'shadow-sm', 'border-0','px-2');
+        card.style.background = 'rgba(255, 255, 255, 0.1)';
+        card.style.color = 'white';
+
+        // Row inside card
+        const cardInnerRow = document.createElement('div');
+        cardInnerRow.classList.add('row', 'g-0', 'align-items-center');
+
+        // Image column
+        const imageCol = document.createElement('div');
+        imageCol.classList.add('col-md-4');
+
+        const productImage = document.createElement('img');
+        productImage.src = product.product_image ? `/storage/app/public/${product.product_image}` :
+            '/assets/images/default-product.png';
+        productImage.classList.add('img-fluid', 'rounded-start');
+        productImage.alt = product.product_name || 'Product Image';
+
+        imageCol.appendChild(productImage);
+
+        // Content column
+        const contentCol = document.createElement('div');
+        contentCol.classList.add('col-md-8');
+
+        const cardBody = document.createElement('div');
+        cardBody.classList.add('card-body');
+
+        const title = document.createElement('h6');
+        title.classList.add('card-title','text-white','text-center','mb-1');
+        title.innerText = product.product_name || 'Unnamed Product';
+
+        cardBody.appendChild(title);
+        contentCol.appendChild(cardBody);
+
+        // Assemble card
+        cardInnerRow.appendChild(imageCol);
+        cardInnerRow.appendChild(contentCol);
+        card.appendChild(cardInnerRow);
+        col.appendChild(card);
+        row.appendChild(col);
+        productContainer.appendChild(row);
+    });
+} else {
+    productContainer.innerHTML = '<div style="display: flex; justify-content: center; align-items: center; height: 100%;"><p class="text-white m-0">No products available.</p></div>';
+}
+
+//company
+
+const companyContainer = document.getElementById('companyContainer');
+
+if (member.companies && member.companies.length > 0) {
+    companyContainer.innerHTML = '';
+
+    member.companies.forEach((company) => {
+        const row = document.createElement('div');
+        row.classList.add('row', 'mb-4');
+
+        const col = document.createElement('div');
+        col.classList.add('col-12');
+
+        const card = document.createElement('div');
+        card.classList.add('card', 'shadow-sm', 'border-0');
+        card.style.background = 'rgba(255, 255, 255, 0.1)';
+        card.style.color = 'white';
+
+        const body = document.createElement('div');
+        body.classList.add('card-body');
+        const name = document.createElement('h5');
+name.classList.add('card-title', 'text-center');
+name.textContent = company.company_name || 'Unnamed Company';
+name.style.color = 'white'; // Set text color to white
+
+
+        const industry = document.createElement('p');
+        industry.classList.add('card-text');
+        industry.innerHTML = `<strong>Industry:</strong> ${company.industry || 'N/A'}`;
+
+        const designation = document.createElement('p');
+        designation.classList.add('card-text');
+        designation.innerHTML = `<strong>Designation:</strong> ${company.designation || 'N/A'}`;
+
+        const website = document.createElement('p');
+        website.classList.add('card-text');
+        website.innerHTML = `<strong>Website:</strong> <a href="${company.website}" target="_blank" class="text-white">${company.website}</a>`;
+
+        body.appendChild(name);
+        body.appendChild(industry);
+        body.appendChild(designation);
+        if (company.website) body.appendChild(website);
+
+        card.appendChild(body);
+        col.appendChild(card);
+        row.appendChild(col);
+
+        companyContainer.appendChild(row);
+    });
+
+} else {
+    companyContainer.innerHTML = '<div style="display: flex; justify-content: center; align-items: center; height: 100%;"><p class="text-white m-0">No company information available.</p></div>';
+}
 
             //services
 
@@ -672,7 +700,8 @@ image.style.objectFit = 'cover';
     });
 
 } else {
-    servicesContainer.innerHTML = '<p class="text-white">No services available.</p>';
+    servicesContainer.innerHTML = '<div style="display: flex; justify-content: center; align-items: center; height: 100%;"><p class="text-white m-0">No services available.</p></div>';
+
 }
 
 

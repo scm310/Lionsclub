@@ -13,7 +13,6 @@ class CareerEnquiryController extends Controller
         $jobs = CareerEnquiry::orderBy('id', 'desc')->get();
         return view('admin.enquiries.Career', compact('enquiries', 'jobs'));
     }
-    
 
     public function store(Request $request)
     {
@@ -36,17 +35,53 @@ class CareerEnquiryController extends Controller
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
+        // Format salary to "2 - 3 Lacs PA" style
+        $validated['salary'] = $this->formatSalary($validated['salary']);
+
         if ($request->hasFile('image')) {
             $image = $request->file('image');
-            $imageName = time() . '_' . $image->getClientOriginalName(); // Create a unique name
+            $imageName = time() . '_' . $image->getClientOriginalName();
             $image->storeAs('career_images', $imageName, 'public');
-            $validated['image'] = $imageName; // Only storing the image name
+            $validated['image'] = $imageName;
         }
 
         CareerEnquiry::create($validated);
 
         return redirect()->back()->with('success', 'Career Enquiry submitted successfully!');
     }
+    
+
+    private function formatSalary($input)
+    {
+        $input = preg_replace('/\s+/', '', $input); // remove all spaces
+    
+        if (preg_match('/^(\d+)-(\d+)$/', $input, $matches)) {
+            $min = (int) $matches[1];
+            $max = (int) $matches[2];
+    
+            if ($min >= 10000000 && $max >= 10000000) {
+                return round($min / 10000000) . ' - ' . round($max / 10000000) . ' Crore PA';
+            } elseif ($min >= 100000 && $max >= 100000) {
+                return round($min / 100000) . ' - ' . round($max / 100000) . ' Lacs PA';
+            } else {
+                return $min . ' - ' . $max . ' PA';
+            }
+        } elseif (preg_match('/^\d+$/', $input)) {
+            $value = (int) $input;
+    
+            if ($value >= 10000000) {
+                return round($value / 10000000) . ' Crore PA';
+            } elseif ($value >= 100000) {
+                return round($value / 100000) . ' Lacs PA';
+            } else {
+                return $value . ' PA';
+            }
+        }
+    
+        // Leave non-numeric or textual values like "Negotiable" as is
+        return $input;
+    }
+    
 
 
 
@@ -72,23 +107,26 @@ class CareerEnquiryController extends Controller
             'contact_email' => 'nullable|email',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
-
+    
         $career = CareerEnquiry::findOrFail($id);
-
+    
         // Handle image upload if new file is uploaded
         if ($request->hasFile('image')) {
             $image = $request->file('image');
-            $imageName = time() . '_' . $image->getClientOriginalName(); // Create a unique name
+            $imageName = time() . '_' . $image->getClientOriginalName();
             $image->storeAs('career_images', $imageName, 'public');
-            $career->image = $imageName; // Store only the image name
+            $career->image = $imageName;
         }
-
+    
         $career->job_posted = $request->job_posted;
         $career->openings = $request->openings;
         $career->job_title = $request->job_title;
         $career->company_name = $request->company_name;
         $career->experience = $request->experience;
-        $career->salary = $request->salary;
+    
+        // Format salary
+        $career->salary = $this->formatSalary($request->salary);
+    
         $career->job_description = $request->job_description;
         $career->job_location = $request->job_location;
         $career->employment_type = $request->employment_type;
@@ -98,11 +136,12 @@ class CareerEnquiryController extends Controller
         $career->contact_person = $request->contact_person;
         $career->contact_details = $request->contact_details;
         $career->contact_email = $request->contact_email;
-
+    
         $career->save();
-
+    
         return redirect()->route('career.enquiry.page')->with('success', 'Job Post updated successfully!');
     }
+    
 
     public function edit($id)
     {
