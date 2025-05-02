@@ -148,3 +148,59 @@
         document.getElementById('eventDetailsContainer').classList.add('d-none');
     }
 </script>
+
+
+<!-- No date script-->
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const monthLinks = document.querySelectorAll(".month-link");
+        const eventRows = document.querySelectorAll(".event-row");
+        const eventsContainer = document.getElementById("completedEventsList"); // Make sure this ID is correct
+
+        function filterCompletedEvents(selectedMonth) {
+            let hasEvents = false;
+
+            eventRows.forEach(row => {
+                if (row.getAttribute("data-month") === selectedMonth) {
+                    row.style.display = "block";
+                    hasEvents = true;
+                } else {
+                    row.style.display = "none";
+                }
+            });
+
+
+            document.getElementById("noCompletedEvents")?.remove();
+
+
+            if (!hasEvents) {
+                const noDataMessage = document.createElement("p");
+                noDataMessage.id = "noCompletedEvents";
+                noDataMessage.className = "text-light text-start w-100 pe-4 fs-6";
+                noDataMessage.textContent = "No events were conducted.";
+                eventsContainer.appendChild(noDataMessage);
+            }
+        }
+
+        monthLinks.forEach(link => {
+            link.addEventListener("click", function(e) {
+                e.preventDefault();
+
+                monthLinks.forEach(btn => btn.classList.remove("active"));
+                this.classList.add("active");
+
+                const selectedMonth = this.getAttribute("data-month");
+                filterCompletedEvents(selectedMonth);
+            });
+        });
+
+        const currentMonth = new Date().toLocaleString('default', { month: 'long' });
+        const currentMonthButton = document.querySelector(`.month-link[data-month="${currentMonth}"]`);
+
+        if (currentMonthButton) {
+            currentMonthButton.classList.add("active");
+            filterCompletedEvents(currentMonth);
+        }
+    });
+</script>
